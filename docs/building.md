@@ -6,7 +6,7 @@
 
 The pinned source-preparation export, all 17 ports, the current product overlay, Home source, its signed prebuilt APK, boot animation, artwork and checksums. It is an overlay repository, not a mirror of the full Android source tree. Private signing keys, app data and workstation-specific deployment tools are excluded.
 
-The r5 ISO was derived from the compiled r4 platform through a verified branding/launcher/app-seed delta. A clean full r5 build from this public repository has **not** been completed. The source lock contains 1,216 projects, while the image record reports a distinct 1,215-project manifest. Consequently the instructions below are a preparation path for contributors, not a promise of an identical ISO.
+The r5 ISO was derived from the compiled r4 platform through a verified branding/launcher/app-seed delta. A clean full r5 build from this public repository has **not** been completed. The source lock contains 1,216 projects; the upstream `proprietary_` exclusion rule yields the embedded 1,215-project manifest and its exact recorded hash. The instructions below remain a preparation path for contributors, not a promise of an identical ISO.
 
 ## Host and storage
 
@@ -81,4 +81,4 @@ The lunch form above is the one used by the original pinned builder. This public
 
 Home's prebuilt APK is the r5 signed artifact. The private Home release key is deliberately excluded. Rebuilding Home with your own key is suitable for a fork, but does not produce an in-place signature-compatible update to the official prebuilt. Android itself remains an unofficial userdebug image; there is no production verified-boot or OTA signing service here.
 
-A release source bundle contains this selected public tree and notices. It is not the old workstation backup and cannot reproduce private migration steps. The [roadmap](roadmap.md) tracks a complete clean source build, manifest reconciliation, additional license inventory and installer validation.
+A release source bundle contains this selected public tree and notices. It is not the old workstation backup and cannot reproduce private migration steps. The [roadmap](roadmap.md) tracks a complete clean source build, additional license inventory and installer validation. The exported/embedded manifest relationship has already been [verified](../releases/manifest-verification.json).

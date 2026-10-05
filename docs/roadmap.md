@@ -13,7 +13,7 @@ r5 is the first public snapshot of a working dedicated StremioBox installation. 
 
 ## Make the build repeatable
 
-- [ ] Reconcile the exported 1,216-project source lock with the embedded 1,215-project image manifest.
+- [x] Verify that upstream's proprietary-project filter maps the 1,216-project source lock to the embedded 1,215-project manifest, with an exact SHA-256 match.
 - [ ] Complete and document a clean full public source build with pinned host/vendor inputs.
 - [ ] Extend machine-readable third-party binary/license inventory and source-offer documentation.
 - [ ] Define a release signing policy, rollback path and managed update channel.

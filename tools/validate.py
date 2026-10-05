@@ -64,6 +64,19 @@ def main() -> int:
         raise ValueError('Source manifest project count mismatch')
     if hashlib.sha256(manifest.read_bytes()).hexdigest() != lock['manifest_sha256']:
         raise ValueError('Source manifest hash mismatch')
+    filtered = b''.join(line for line in manifest.read_bytes().splitlines(keepends=True)
+                        if b'proprietary_' not in line)
+    filtered_sha = hashlib.sha256(filtered).hexdigest()
+    filtered_count = len(ET.fromstring(filtered).findall('project'))
+    metadata = image['packaged_metadata']
+    if (filtered_sha != metadata['source_manifest_sha256']
+            or filtered_count != metadata['source_manifest_projects']):
+        raise ValueError('Upstream-filtered source manifest does not match the image record')
+    relation = json.loads((ROOT / 'releases/manifest-verification.json').read_text(encoding='utf-8'))
+    if (relation['export']['sha256'] != lock['manifest_sha256']
+            or relation['embedded']['sha256'] != filtered_sha
+            or relation['embedded']['projects'] != filtered_count):
+        raise ValueError('Manifest verification record is inconsistent')
     for project in projects:
         if not re.fullmatch('[0-9a-f]{40}', project.get('revision', '')):
             raise ValueError('Every source project must use a pinned commit')

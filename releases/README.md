@@ -1,6 +1,6 @@
 # Release files
 
-`r5.json` pins the ISO filename, byte count, SHA-256 and ordered download pieces. `r5-image-verification.json` retains selected public image checks. `source-lock.json` records the selected platform, launcher and branding input bytes.
+`r5.json` pins the ISO filename, byte count, SHA-256 and ordered download pieces. `r5-image-verification.json` retains selected public image checks. `source-lock.json` records the selected platform, launcher and branding input bytes. `manifest-verification.json` shows how upstream's proprietary-project filter produces the exact embedded source manifest.
 
 Use `python3 tools/download.py` from the repository root to fetch and reconstruct the image, or `--offline` to assemble already-downloaded pieces. The final ISO hash is checked independently of the part hashes.
 

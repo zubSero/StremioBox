@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "filter": "grep -Ev \"proprietary_\"",
+  "build_rule": "platform/patches/0015-build-manifest-readonly-sandbox.patch",
+  "excluded_project": "vendor/silead/proprietary/firmware",
+  "export": {
+    "projects": 1216,
+    "sha256": "17121dc9af2df060a9d32168cc7539e02989bfdbef62b1b6cacef44dfc237166"
+  },
+  "embedded": {
+    "projects": 1215,
+    "sha256": "63fadc66ce88d2d115ccde417dc8cd8c45bab09624738cf5f8bc09c3ed9b4980"
+  },
+  "matches_image_verification": true
+}

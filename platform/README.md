@@ -2,7 +2,7 @@
 
 [Project](../README.md) · [Build guide](../docs/building.md)
 
-`manifest.xml` is the unchanged 1,216-project pinned source-preparation export. `input-lock.json` records its hash, the 17 ports and additional upstream binary inputs. The shipped image verification record contains a different 1,215-project manifest; see the build guide before making reproducibility claims.
+`manifest.xml` is the unchanged 1,216-project pinned source-preparation export. `input-lock.json` records its hash, the 17 ports and additional upstream binary inputs. Upstream's build-manifest filter excludes the Silead proprietary firmware project; the filtered bytes exactly match the embedded 1,215-project manifest hash. See [the verification record](../releases/manifest-verification.json) and the build guide for the remaining clean-build scope.
 
 `product/` installs at `device/local/nuc10_tv` in the full source tree. It includes the Stremio bridge, HDR/subtitle helpers, update guard, authenticated ADB init, GPU configuration, Home prebuilt and first-boot seeding service. The original signed Stremio APK is an external build input, supplied separately and verified by hash.
 
