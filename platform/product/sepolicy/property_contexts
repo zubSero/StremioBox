@@ -1,0 +1,3 @@
+ro.vendor.nuc.product       u:object_r:vendor_nuc_config_prop:s0 exact int
+ro.vendor.nuc.hdr10         u:object_r:vendor_nuc_config_prop:s0 exact bool
+ro.vendor.nuc.p010_gpu_only u:object_r:vendor_nuc_config_prop:s0 exact bool

@@ -1,0 +1,12 @@
+* text=auto eol=lf
+# Preserve byte identity for source/asset hashes exported from the working build.
+platform/** -text
+launcher/** -text
+docs/assets/** -text
+*.py text eol=lf
+*.sh text eol=lf
+*.patch -text
+*.xml -text
+*.png binary
+*.apk binary
+*.zip binary

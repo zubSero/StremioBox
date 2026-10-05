@@ -1,0 +1,65 @@
+{
+  "state": "Pinned Mesa host tools installed and actual imports verified",
+  "versions": {
+    "meson": "1.7.2",
+    "Mako": "1.3.10",
+    "MarkupSafe": "3.0.3",
+    "PyYAML": "6.0.3",
+    "packaging": "25.0",
+    "ply": "3.11"
+  },
+  "wheels": [
+    {
+      "package": "meson",
+      "version": "1.7.2",
+      "filename": "meson-1.7.2-py3-none-any.whl",
+      "source_url": "https://files.pythonhosted.org/packages/e5/2b/46bda4ef5a7ae4135dbfe27fc0368c44e5a349a897a54fdf2cedb8dcb66e/meson-1.7.2-py3-none-any.whl",
+      "sha256": "82c6818dc81743c96de3a458f06175776ebfde4081195ea31ea6971838f25e38"
+    },
+    {
+      "package": "Mako",
+      "version": "1.3.10",
+      "filename": "mako-1.3.10-py3-none-any.whl",
+      "source_url": "https://files.pythonhosted.org/packages/87/fb/99f81ac72ae23375f22b7afdb7642aba97c00a713c217124420147681a2f/mako-1.3.10-py3-none-any.whl",
+      "sha256": "baef24a52fc4fc514a0887ac600f9f1cff3d82c61d4d700a1fa84d597b88db59"
+    },
+    {
+      "package": "MarkupSafe",
+      "version": "3.0.3",
+      "filename": "markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "source_url": "https://files.pythonhosted.org/packages/3c/2e/8d0c2ab90a8c1d9a24f0399058ab8519a3279d1bd4289511d74e909f060e/markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "d6dd0be5b5b189d31db7cda48b91d7e0a9795f31430b7f271219ab30f1d3ac9d"
+    },
+    {
+      "package": "PyYAML",
+      "version": "6.0.3",
+      "filename": "pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "source_url": "https://files.pythonhosted.org/packages/8b/9d/b3589d3877982d4f2329302ef98a8026e7f4443c765c46cfecc8858c6b4b/pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "ba1cc08a7ccde2d2ec775841541641e4548226580ab850948cbfda66a1befcdc"
+    },
+    {
+      "package": "packaging",
+      "version": "25.0",
+      "filename": "packaging-25.0-py3-none-any.whl",
+      "source_url": "https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl",
+      "sha256": "29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"
+    },
+    {
+      "package": "ply",
+      "version": "3.11",
+      "filename": "ply-3.11-py2.py3-none-any.whl",
+      "source_url": "https://files.pythonhosted.org/packages/a3/58/35da89ee790598a0700ea49b2a66594140f44dec458c07e8e3d4979137fc/ply-3.11-py2.py3-none-any.whl",
+      "sha256": "096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"
+    }
+  ],
+  "nested_ninja_jobs": 2,
+  "scope": "Build host only; no Android payload change",
+  "ubuntu_packages": [
+    "cmake=3.28.3-1build7",
+    "glslang-tools=15.1.0-2~ubuntu0.24.04.2",
+    "gperf=3.1-1build1",
+    "ninja-build=1.11.1-2",
+    "pkg-config=1.8.1-2build1",
+    "python3-venv=3.12.3-0ubuntu2.1"
+  ]
+}

@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+vendor_public_prop(vendor_nuc_config_prop)
+
+# These immutable product flags contain no private data and are used by the
+# codec and composer, including framework callers in the generic x86 tree.
+get_prop(domain, vendor_nuc_config_prop)

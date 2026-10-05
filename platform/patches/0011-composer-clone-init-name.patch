@@ -1,0 +1,16 @@
+diff --git a/graphics/composer/2.1/default_clone/Android.bp b/graphics/composer/2.1/default_clone/Android.bp
+--- a/graphics/composer/2.1/default_clone/Android.bp
++++ b/graphics/composer/2.1/default_clone/Android.bp
+@@ -15,7 +15,7 @@ cc_binary {
+     vendor: true,
+     relative_install_path: "hw",
+     srcs: ["service.cpp"],
+-    init_rc: ["android.hardware.graphics.composer@2.1-service.rc"],
++    init_rc: ["android.hardware.graphics.composer@2.1-service-clone.rc"],
+     header_libs: [
+         "android.hardware.graphics.composer@2.1-passthrough",
+     ],
+diff --git a/graphics/composer/2.1/default_clone/android.hardware.graphics.composer@2.1-service.rc b/graphics/composer/2.1/default_clone/android.hardware.graphics.composer@2.1-service-clone.rc
+similarity index 100%
+rename from graphics/composer/2.1/default_clone/android.hardware.graphics.composer@2.1-service.rc
+rename to graphics/composer/2.1/default_clone/android.hardware.graphics.composer@2.1-service-clone.rc

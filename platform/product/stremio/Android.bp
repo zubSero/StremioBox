@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: Apache-2.0
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+cc_library_shared {
+    name: "libnuc_stremio_adapter",
+    stem: "libplayer",
+    relative_install_path: "nuc-stremio",
+    compile_multilib: "64",
+    srcs: ["player-bridge.c", "hdr-mpv-surface.c"],
+    header_libs: ["jni_headers"],
+    shared_libs: ["libdl", "liblog", "libnativewindow"],
+    c_std: "gnu11",
+    cflags: ["-Wall", "-Wextra", "-Werror"],
+    stl: "none",
+}
+
+java_library {
+    name: "nuc_stremio_hdr",
+    srcs: ["HdrBridge.java", "SubtitleSync.java"],
+    sdk_version: "current",
+    installable: true,
+}
+
+java_library {
+    name: "nuc_stremio_guard",
+    srcs: ["UpdateGuard.java"],
+    sdk_version: "current",
+    installable: true,
+}
+
+sh_binary {
+    name: "nuc-stremio-guard",
+    src: "start.sh",
+    init_rc: ["init.nuc-stremio.rc"],
+}
+
+prebuilt_etc {
+    name: "nuc-stremio-reconcile",
+    src: "reconcile.sh",
+    filename: "reconcile.sh",
+    sub_dir: "nuc-stremio",
+}
+
+prebuilt_etc {
+    name: "nuc-stremio-boot-approved",
+    src: "boot-approved.sh",
+    filename: "boot-approved.sh",
+    sub_dir: "nuc-stremio",
+}

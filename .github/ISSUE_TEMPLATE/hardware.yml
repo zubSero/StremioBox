@@ -1,0 +1,29 @@
+name: Hardware compatibility report
+description: Share results from another configuration or a repeatable hardware test.
+title: "[Hardware] "
+labels: [hardware, needs-triage]
+body:
+  - type: input
+    id: revision
+    attributes:
+      label: Revision
+    validations:
+      required: true
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Public hardware models and PCI/USB IDs
+      description: No serial numbers, MAC addresses or account details.
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Test results
+      description: Boot, network, Bluetooth, ordinary keys after reboot, HDR playback, HDMI audio and standby/wake. Include test duration.
+    validations:
+      required: true
+  - type: textarea
+    id: failures
+    attributes:
+      label: Failures or untested areas

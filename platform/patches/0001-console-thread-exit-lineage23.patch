@@ -1,0 +1,41 @@
+--- a/services/surfaceflinger/DisplayDevice.cpp
++++ b/services/surfaceflinger/DisplayDevice.cpp
+@@ -243,11 +243,8 @@
+ void ConsoleManagerThread::requestExit()
+ {
+     Thread::requestExit();
+-    if (sSignalCatcherPid != 0) {
+-        // wake the thread up
+-        kill(sSignalCatcherPid, SIGINT);
+-        // wait for it...
+-    }
++    // The bounded signal wait observes the exit flag. No process-directed
++    // SIGINT is needed, including during overlapping display recreation.
+ }
+ 
+ bool ConsoleManagerThread::threadLoop()
+@@ -257,8 +254,13 @@
+     sigaddset(&mask, vm.relsig);
+     sigaddset(&mask, vm.acqsig);
+ 
+-    int sig = 0;
+-    sigwait(&mask, &sig);
++    // requestExitAndWait() sets Thread's exit flag without invoking our
++    // requestExit() override. Bound this wait so display recreation can join
++    // the thread even when the virtual terminal never sends another signal.
++    const timespec timeout = {0, 200000000};
++    const int sig = sigtimedwait(&mask, nullptr, &timeout);
++    if (exitPending()) return false;
++    if (sig < 0) return true;
+ 
+     hw_module_t const* mod;
+     gralloc_module_t const* gr = NULL;
+@@ -506,7 +508,7 @@
+     mOrientation = orientation;
+ 
+ #ifdef CONSOLE_MANAGER
+-    if (isPrimary()) {
++    if (isPrimary() && mConsoleManagerThread == nullptr) {
+         mConsoleManagerThread = sp<ConsoleManagerThread>::make(mFlinger, mDisplayToken);
+     }
+ #endif

@@ -1,0 +1,12 @@
+--- a/src/egl/drivers/dri2/platform_android.c
++++ b/src/egl/drivers/dri2/platform_android.c
+@@ -789,6 +789,9 @@
+       {HAL_PIXEL_FORMAT_RGBA_8888, PIPE_FORMAT_RGBA8888_UNORM},
+       {HAL_PIXEL_FORMAT_RGBX_8888, PIPE_FORMAT_RGBX8888_UNORM},
+       {HAL_PIXEL_FORMAT_RGB_565, PIPE_FORMAT_B5G6R5_UNORM},
++      /* HDR client targets require a native 10-bit RGB EGL configuration.
++       * Only DRI configs supported by the GPU are added below. */
++      {HAL_PIXEL_FORMAT_RGBA_1010102, PIPE_FORMAT_R10G10B10A2_UNORM},
+       /* This must be after HAL_PIXEL_FORMAT_RGBA_8888, we only keep BGRA
+        * visual if it turns out RGBA visual is not available.
+        */

@@ -1,0 +1,16 @@
+--- a/ui/build/soong.go
++++ b/ui/build/soong.go
+@@ -226,6 +226,13 @@
+ 
+ 	commonArgs = append(commonArgs, "-l", filepath.Join(pb.config.FileListDir(), "Android.bp.list"))
+ 	invocationEnv := make(map[string]string)
++	// The primary builder runs with an isolated environment. Propagate these
++	// runtime settings only for the constrained NUC image build host.
++	if os.Getenv("NUC_BUILD_LOW_MEMORY") == "1" {
++		invocationEnv["GOMAXPROCS"] = "4"
++		invocationEnv["GOMEMLIMIT"] = "22GiB"
++		invocationEnv["GOGC"] = "100"
++	}
+ 	if pb.debugPort != "" {
+ 		//debug mode
+ 		commonArgs = append(commonArgs, "--delve_listen", pb.debugPort,

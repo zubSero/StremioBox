@@ -1,0 +1,19 @@
+diff --git a/build/tasks/build-manifest_xml.mk b/build/tasks/build-manifest_xml.mk
+--- a/build/tasks/build-manifest_xml.mk
++++ b/build/tasks/build-manifest_xml.mk
+@@ -16,9 +16,15 @@
+ MANIFEST_EXCLUDES := |$(MANIFEST_EXCLUDES)
+ endif
+ 
++ifneq ($(strip $(LINEAGE_BUILD_MANIFEST_FILE)),)
++$(INSTALLED_BUILD_MANIFEST_XML_TARGET): $(LINEAGE_BUILD_MANIFEST_FILE)
++	mkdir -p $(dir $@)
++	grep -Ev "proprietary_$(MANIFEST_EXCLUDES)" $(LINEAGE_BUILD_MANIFEST_FILE) > $@
++else
+ $(INSTALLED_BUILD_MANIFEST_XML_TARGET):
+ 	mkdir -p $(dir $@)
+ 	python3 .repo/repo/repo manifest -o - -r | grep -Ev "proprietary_$(MANIFEST_EXCLUDES)" > $@
++endif
+ 
+ .PHONY: build-manifest.xml
+ build-manifest.xml: $(INSTALLED_BUILD_MANIFEST_XML_TARGET)

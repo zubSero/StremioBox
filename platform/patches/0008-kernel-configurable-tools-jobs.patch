@@ -1,0 +1,27 @@
+--- a/build/tasks/kernel.mk
++++ b/build/tasks/kernel.mk
+@@ -8,9 +8,9 @@
+ #      http://www.apache.org/licenses/LICENSE-2.0
+ #
+ 
+-TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r584948b/bin
+-TARGET_RUST_PATH := prebuilts/rust-toolchain/linux-x86/1.93.1/bin
+-TARGET_BINDGEN_PATH := prebuilts/clang-tools-kernel/linux-x86/bin
++TARGET_CLANG_PATH ?= prebuilts/clang/host/linux-x86/clang-r584948b/bin
++TARGET_RUST_PATH ?= prebuilts/rust-toolchain/linux-x86/1.93.1/bin
++TARGET_BINDGEN_PATH ?= prebuilts/clang-tools-kernel/linux-x86/bin
+ 
+ ifneq ($(TARGET_NO_KERNEL),true)
+ 
+@@ -76,9 +76,9 @@
+ 
+ KBUILD_OUTPUT := $(TARGET_OUT_INTERMEDIATES)/kernel
+ ifeq ($(HOST_OS),darwin)
+-KBUILD_JOBS := $(shell /usr/sbin/sysctl -n hw.ncpu)
++KBUILD_JOBS ?= $(shell /usr/sbin/sysctl -n hw.ncpu)
+ else
+-KBUILD_JOBS := $(shell echo $$((1-(`cat /sys/devices/system/cpu/present`))))
++KBUILD_JOBS ?= $(shell echo $$((1-(`cat /sys/devices/system/cpu/present`))))
+ endif
+ 
+ mk_kernel := + $(hide) prebuilts/build-tools/$(HOST_PREBUILT_TAG)/bin/make -j$(KBUILD_JOBS) -l$$(($(KBUILD_JOBS)+2)) \

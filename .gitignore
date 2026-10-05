@@ -1,0 +1,19 @@
+# Images and build output belong in Releases, never in Git history.
+*.iso
+*.iso.[0-9][0-9][0-9]
+*.partial
+downloads/
+out/
+.repo/
+.venv/
+__pycache__/
+*.py[cod]
+# Release signing material and local device state.
+*.p12
+*.jks
+*.keystore
+*.pem
+adbkey*
+.android/
+.env
+key-password.txt

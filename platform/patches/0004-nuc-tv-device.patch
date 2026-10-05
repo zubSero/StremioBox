@@ -1,0 +1,27 @@
+--- a/device.mk
++++ b/device.mk
+@@ -203,7 +203,11 @@
+ $(call inherit-product-if-exists,device/common/gps/gps_as.mk)
+ 
+ # Get the hardware acceleration libraries
++ifeq ($(NUC10_TV_BUILD),true)
++$(call inherit-product,device/local/nuc10_tv/nuc10_gpu.mk)
++else
+ $(call inherit-product-if-exists,$(LOCAL_PATH)/gpu/gpu_mesa.mk)
++endif
+ 
+ # Get the sensors hals
+ $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)
+--- a/libinit/init_x86.cpp
++++ b/libinit/init_x86.cpp
+@@ -89,6 +89,10 @@
+ 
+ void vendor_load_properties() {
+     set_dalvik_heap();
++    if (GetProperty("ro.vendor.nuc.product", "0") == "1") {
++        // Keep this product's identity and authenticated ADB configuration.
++        return;
++    }
+     set_misc_properties();
+     set_properties_from_dmi_id();
+ }

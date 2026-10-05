@@ -1,0 +1,29 @@
+--- a/Android.mk
++++ b/Android.mk
+@@ -17,8 +17,9 @@
+ ifneq ($(filter x86%,$(TARGET_ARCH)),)
+ LOCAL_PATH := $(call my-dir)
+ 
+-RELEASE_OS_TITLE := LineageOS
+-SHORTEN_RELEASE_OS_TITLE := LOS21
++RELEASE_OS_TITLE ?= LineageOS
++SHORTEN_RELEASE_OS_TITLE ?= LOS21
++RELEASE_ISO_PREFIX ?= lineage
+ VER := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)
+ 
+ include $(CLEAR_VARS)
+@@ -134,12 +135,12 @@
+ 	$(hide) rm -rf $@
+ 	$(ACP) -pr $(dir $<) $@
+ 	$(hide) sed -i "s|OS_TITLE|$(if $(RELEASE_OS_TITLE),$(RELEASE_OS_TITLE),Android-x86)|" $@/boot/grub/grub.cfg
+-	$(hide) sed -i "s|BlissOSLive|$(OS_LABEL)|" $@/boot/grub/grub.cfg
++	$(hide) sed -i "s|BlissOSLive|$(DISK_LABEL)|" $@/boot/grub/grub.cfg
+ 	$(hide) sed -i "s|CMDLINE|$(BOARD_KERNEL_CMDLINE)|" $@/boot/grub/grub.cfg
+ 	$(hide) sed -i "s|VER|$(VER)|" $@/boot/grub/grub.cfg
+ 	$(hide) echo "$(BOARD_KERNEL_CMDLINE)" > $@/cmdline.txt
+ 
+-ISO_IMAGE := $(PRODUCT_OUT)/lineage-$(LINEAGE_VERSION).iso
++ISO_IMAGE := $(PRODUCT_OUT)/$(RELEASE_ISO_PREFIX)-$(LINEAGE_VERSION).iso
+ $(ISO_IMAGE): $(iso_dir) $(BUILT_IMG)
+ 	@echo ----- Making iso image ------
+ 	PATH="/sbin:/usr/sbin:/bin:/usr/bin"; \

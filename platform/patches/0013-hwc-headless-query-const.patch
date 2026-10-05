@@ -1,0 +1,12 @@
+diff --git a/hwc2_device/HwcDisplay.h b/hwc2_device/HwcDisplay.h
+--- a/hwc2_device/HwcDisplay.h
++++ b/hwc2_device/HwcDisplay.h
+@@ -210,7 +210,7 @@
+    * to prevent the crash. See:
+    * https://source.android.com/devices/graphics/hotplug#handling-common-scenarios
+    */
+-  bool IsInHeadlessMode() {
++  bool IsInHeadlessMode() const {
+     return !pipeline_;
+   }
+ 

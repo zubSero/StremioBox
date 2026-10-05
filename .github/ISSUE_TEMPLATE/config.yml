@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and setup help
+    url: https://github.com/zubSero/StremioBox/discussions
+    about: Ask general questions and share setup experiences.
+  - name: Private vulnerability report
+    url: https://github.com/zubSero/StremioBox/security/advisories/new
+    about: Please report security vulnerabilities privately.

@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: Apache-2.0
+# ADB authentication remains enabled by the Lineage userdebug configuration.
+# First-use host authorization is stored in private /data, never in the image.
+on early-init
+    # This product packages Mesa's ANV driver for the NUC Comet Lake GPU.
+    # Select it before the generic x86 init script or an app loads Vulkan.
+    setprop ro.hardware.vulkan intel
+
+on boot
+    setprop service.adb.root 1
+    setprop persist.adb.tcp.port 5555
+    setprop service.adb.tcp.port 5555
+    start adbd
+
+on property:sys.boot_completed=1
+    setprop service.adb.tcp.port 5555
+    start adbd
+
+    # AX201 USB radio on the NUC's measured internal port. Keep its controller
+    # powered during display standby; leave pairing/privacy to Android.
+    write /sys/bus/usb/devices/1-10/power/control on
+    write /sys/bus/usb/devices/1-10/power/wakeup enabled

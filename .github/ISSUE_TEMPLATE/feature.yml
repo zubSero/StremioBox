@@ -1,0 +1,17 @@
+name: Feature request
+description: Suggest a focused improvement for StremioBox.
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What would this help you do?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior and relevant hardware
+    validations:
+      required: true

@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT
+on post-fs-data
+    mkdir /data/local/stremiobox 0700 root root
+
+on property:sys.boot_completed=1
+    start stremiobox-firstboot
+
+service stremiobox-firstboot /system/bin/stremiobox-firstboot
+    class late_start
+    user root
+    group root system log inet
+    seclabel u:r:su:s0
+    disabled
+    oneshot

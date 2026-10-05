@@ -1,0 +1,20 @@
+--- a/ci_tests/ci_test_package_zip.go
++++ b/ci_tests/ci_test_package_zip.go
+@@ -297,10 +297,13 @@
+ 			continue
+ 		}
+ 
+-		f := strings.TrimPrefix(installedFile.String(), productOut+"/")
+-		if strings.HasPrefix(f, "out") {
+-			continue
+-		}
++		// Only device files under this product belong in the device test ZIP.
++		// A host tool can use an absolute OUT_DIR and need not start with "out".
++		productPrefix := productOut + "/"
++		if !strings.HasPrefix(installedFile.String(), productPrefix) {
++			continue
++		}
++		f := strings.TrimPrefix(installedFile.String(), productPrefix)
+ 		if strings.HasPrefix(f, "system/") {
+ 			f = strings.Replace(f, "system/", "DATA/", 1)
+ 		}

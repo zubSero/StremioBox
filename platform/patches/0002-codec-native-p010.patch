@@ -1,0 +1,265 @@
+--- a/codec2/C2FFMPEGVideoDecodeInterface.cpp
++++ b/codec2/C2FFMPEGVideoDecodeInterface.cpp
+@@ -131,6 +131,7 @@
+                 .withFields({
+                     C2F(mProfileLevel, profile).oneOf({
+                             C2Config::PROFILE_HEVC_MAIN,
++                            C2Config::PROFILE_HEVC_MAIN_10,
+                             C2Config::PROFILE_HEVC_MAIN_STILL}),
+                     C2F(mProfileLevel, level).oneOf({
+                             C2Config::LEVEL_HEVC_MAIN_1,
+--- a/codec2/C2FFMPEGVideoUtils.h
++++ b/codec2/C2FFMPEGVideoUtils.h
+@@ -43,12 +43,12 @@
+     virtual ~C2FFMPEGVideoUtils() = default;
+ 
+     bool isGrallocMinigbm() const;
+-    uint32_t getPixelFormat(bool flexible) const;
++    uint32_t getPixelFormat(bool flexible, AVPixelFormat nativeFormat = AV_PIX_FMT_NONE) const;
+ #ifdef CONFIG_VAAPI
+-    uint32_t getVAFormat() const;
+-    uint32_t getVAFOURCCFormat() const;
++    uint32_t getVAFormat(AVPixelFormat nativeFormat = AV_PIX_FMT_NONE) const;
++    uint32_t getVAFOURCCFormat(AVPixelFormat nativeFormat = AV_PIX_FMT_NONE) const;
+ #endif
+-    uint32_t getDRMFOURCCFormat() const;
++    uint32_t getDRMFOURCCFormat(AVPixelFormat nativeFormat = AV_PIX_FMT_NONE) const;
+     enum AVPixelFormat getAVFormat() const;
+     bool mSwapVAColorRGB;
+     PixelFormatType getPixelFormatType() const;
+--- a/codec2/C2FFMPEGVideoUtils.cpp
++++ b/codec2/C2FFMPEGVideoUtils.cpp
+@@ -38,7 +38,12 @@
+     return PixelFormatType::UNKNOWN;
+ }
+ 
+-uint32_t C2FFMPEGVideoUtils::getPixelFormat(bool flexible) const {
++uint32_t C2FFMPEGVideoUtils::getPixelFormat(bool flexible, AVPixelFormat nativeFormat) const {
++    // Native VA surfaces must match the decoder's actual software layout.
++    // Preserve existing RGB overrides and software/copy-buffer behavior.
++    if (getPixelFormatType() == PixelFormatType::YUV_420 && nativeFormat == AV_PIX_FMT_P010) {
++        return HAL_PIXEL_FORMAT_YCBCR_P010;
++    }
+     switch (getPixelFormatType()) { // Now switching on an enum
+         case PixelFormatType::YUV_420:
+             if (flexible) { // Corrected comparison here
+@@ -59,7 +64,12 @@
+ }
+ 
+ #ifdef CONFIG_VAAPI
+-uint32_t C2FFMPEGVideoUtils::getVAFormat() const {
++uint32_t C2FFMPEGVideoUtils::getVAFormat(AVPixelFormat nativeFormat) const {
++    // Native VA surfaces must match the decoder's actual software layout.
++    // Preserve existing RGB overrides and software/copy-buffer behavior.
++    if (getPixelFormatType() == PixelFormatType::YUV_420 && nativeFormat == AV_PIX_FMT_P010) {
++        return VA_RT_FORMAT_YUV420_10;
++    }
+     switch (getPixelFormatType()) {
+         case PixelFormatType::YUV_420:
+             return VA_RT_FORMAT_YUV420;
+@@ -75,7 +85,12 @@
+     return VA_RT_FORMAT_YUV420;
+ }
+ 
+-uint32_t C2FFMPEGVideoUtils::getVAFOURCCFormat() const {
++uint32_t C2FFMPEGVideoUtils::getVAFOURCCFormat(AVPixelFormat nativeFormat) const {
++    // Native VA surfaces must match the decoder's actual software layout.
++    // Preserve existing RGB overrides and software/copy-buffer behavior.
++    if (getPixelFormatType() == PixelFormatType::YUV_420 && nativeFormat == AV_PIX_FMT_P010) {
++        return VA_FOURCC_P010;
++    }
+     switch (getPixelFormatType()) {
+         case PixelFormatType::YUV_420:
+             return VA_FOURCC_NV12;
+@@ -93,7 +108,12 @@
+ }
+ #endif
+ 
+-uint32_t C2FFMPEGVideoUtils::getDRMFOURCCFormat() const {
++uint32_t C2FFMPEGVideoUtils::getDRMFOURCCFormat(AVPixelFormat nativeFormat) const {
++    // Native VA surfaces must match the decoder's actual software layout.
++    // Preserve existing RGB overrides and software/copy-buffer behavior.
++    if (getPixelFormatType() == PixelFormatType::YUV_420 && nativeFormat == AV_PIX_FMT_P010) {
++        return DRM_FORMAT_P010;
++    }
+     switch (getPixelFormatType()) {
+         case PixelFormatType::YUV_420:
+             return DRM_FORMAT_NV12;
+--- a/codec2/C2FFMPEGVideoDecodeComponent.h
++++ b/codec2/C2FFMPEGVideoDecodeComponent.h
+@@ -143,6 +143,7 @@
+     std::unordered_map<VASurfaceID, std::shared_ptr<C2GraphicBlock>> mAvailableSurfaces;
+     int mSurfaceWidth;
+     int mSurfaceHeight;
++    uint32_t mSurfacePixelFormat;
+ #endif
+ };
+ 
+--- a/codec2/C2FFMPEGVideoDecodeComponent.cpp
++++ b/codec2/C2FFMPEGVideoDecodeComponent.cpp
+@@ -256,6 +256,7 @@
+     mBlockPool.reset();
+     mSurfaceWidth = -1;
+     mSurfaceHeight = -1;
++    mSurfacePixelFormat = 0;
+ #endif
+ }
+ 
+@@ -1077,11 +1078,19 @@
+         }
+     }
+ 
++    uint32_t outputPixelFormat = mUtils->getPixelFormat(false);
+ #if CONFIG_VAAPI
+-    if (mFrame->format == AV_PIX_FMT_VAAPI && mIntf->getPixelFormat() != mUtils->getPixelFormat(true)) {
+-        ALOGD("outputFrame: pixel format changed - %#x", mUtils->getPixelFormat(true));
+-
+-        C2StreamPixelFormatInfo::output format(0u, mUtils->getPixelFormat(true));
++    if (mFrame->format == AV_PIX_FMT_VAAPI) {
++        if (!mFrame->hw_frames_ctx) return C2_CORRUPTED;
++        const auto* frames = reinterpret_cast<const AVHWFramesContext*>(mFrame->hw_frames_ctx->data);
++        outputPixelFormat = mUtils->getPixelFormat(true, frames->sw_format);
++    }
++#endif
++    // Also restore software output metadata after a native-buffer fallback.
++    if (mIntf->getPixelFormat() != outputPixelFormat) {
++        ALOGD("outputFrame: pixel format changed - %#x", outputPixelFormat);
++
++        C2StreamPixelFormatInfo::output format(0u, outputPixelFormat);
+         std::vector<std::unique_ptr<C2SettingResult>> failures;
+ 
+         err = mIntf->config({ &format }, C2_MAY_BLOCK, &failures);
+@@ -1093,6 +1102,7 @@
+         }
+     }
+ 
++#if CONFIG_VAAPI
+     if (mHeldSurfaces.size() >= mIntf->getOutputDelay()) {
+         err = reconfigureOutputDelay(configUpdate);
+         if (err != C2_OK) {
+@@ -1385,14 +1395,25 @@
+     }
+ 
+     AVVAAPIDeviceContext* hwctx = (AVVAAPIDeviceContext*)hwfc->device_ctx->hwctx;
+-
+-    if (mCtx->coded_width != mSurfaceWidth || mCtx->coded_height != mSurfaceHeight) {
++    const uint32_t pixelFormat = mUtils->getPixelFormat(true, hwfc->sw_format);
++    uint64_t consumerUsage = mIntf->getConsumerUsage();
++    if (pixelFormat == HAL_PIXEL_FORMAT_YCBCR_P010 &&
++            base::GetBoolProperty("ro.vendor.nuc.p010_gpu_only", false)) {
++        // Gen9's Y-tiled P010 is decoded/sampled by the GPU, not scanned out.
++        consumerUsage &= ~uint64_t(GRALLOC_USAGE_SW_READ_MASK | GRALLOC_USAGE_SW_WRITE_MASK |
++                                  GRALLOC_USAGE_HW_COMPOSER);
++        consumerUsage |= GRALLOC_USAGE_HW_TEXTURE;
++    }
++
++    if (mCtx->coded_width != mSurfaceWidth || mCtx->coded_height != mSurfaceHeight ||
++            pixelFormat != mSurfacePixelFormat) {
+         ALOGD("getBufferVAAPI[%p]: set surface dimension to %d x %d, surfaces = %zd, held = %zd, pending = %zd, available = %zd",
+               hwfc, mCtx->coded_width, mCtx->coded_height, mSurfaces.size(), mHeldSurfaces.size(), mPendingSurfaces.size(), mAvailableSurfaces.size());
+         mPendingSurfaces.clear();
+         mAvailableSurfaces.clear();
+         mSurfaceWidth = mCtx->coded_width;
+         mSurfaceHeight = mCtx->coded_height;
++        mSurfacePixelFormat = pixelFormat;
+     }
+ 
+     c2_status_t err;
+@@ -1401,11 +1422,11 @@
+ 
+     while (!block) {
+         if (mAvailableSurfaces.empty()) {
+-            err = mBlockPool->fetchGraphicBlock(mSurfaceWidth, mSurfaceHeight, mUtils->getPixelFormat(true),
+-                                                { mIntf->getConsumerUsage(), (uint64_t)BufferUsage::VIDEO_DECODER }, &block);
++            err = mBlockPool->fetchGraphicBlock(mSurfaceWidth, mSurfaceHeight, pixelFormat,
++                                                { consumerUsage, (uint64_t)BufferUsage::VIDEO_DECODER }, &block);
+             if (err != C2_OK) {
+                 ALOGE("getBufferVAAPI[%p]: failed to fetch graphic block %d x %d (%#x) err = %d",
+-                      hwfc, mSurfaceWidth, mSurfaceHeight, mUtils->getPixelFormat(true), err);
++                      hwfc, mSurfaceWidth, mSurfaceHeight, pixelFormat, err);
+                 return AVERROR(ENOMEM);
+             }
+             desc.set(block);
+@@ -1449,7 +1470,8 @@
+ 
+     auto s_it = mSurfaces.find(desc.getId());
+     if (s_it != mSurfaces.end()) {
+-        if (s_it->second.width != mSurfaceWidth || s_it->second.height != mSurfaceHeight) {
++        if (s_it->second.width != mSurfaceWidth || s_it->second.height != mSurfaceHeight ||
++                s_it->second.format != desc.format) {
+ #if DEBUG_FRAMES
+             ALOGD("getBufferVAAPI[%p]: destroying incompatible surface %#x (%d x %d) for buffer %d (%d x %d).",
+                   hwfc, s_it->second.surfaceId, s_it->second.width, s_it->second.height,
+@@ -1468,7 +1490,7 @@
+     if (s_it == mSurfaces.end()) {
+         int bufferPrimeFd = static_cast<int>(block->handle()->data[0]);
+ 
+-        VADRMPRIMESurfaceDescriptor descriptor;
++        VADRMPRIMESurfaceDescriptor descriptor = {};
+         VASurfaceAttrib attributes[2] = {
+             {
+                 .type = VASurfaceAttribMemoryType,
+@@ -1484,7 +1506,7 @@
+             }
+         };
+ 
+-        descriptor.fourcc = mUtils->getVAFOURCCFormat();
++        descriptor.fourcc = mUtils->getVAFOURCCFormat(hwfc->sw_format);
+         descriptor.width = mSurfaceWidth;
+         descriptor.height = mSurfaceHeight;
+         descriptor.num_objects = 1;
+@@ -1507,38 +1529,41 @@
+         } else {
+             // Determine Bytes Per Pixel (BPP)
+             int bpp = 1;
+-            uint32_t currentPixelFormat = mUtils->getPixelFormat(false);
++            uint32_t currentPixelFormat = mUtils->getPixelFormat(false, hwfc->sw_format);
+ 
+             if (currentPixelFormat == HAL_PIXEL_FORMAT_RGBX_8888 ||
+                 currentPixelFormat == HAL_PIXEL_FORMAT_BGRA_8888) {
+                 bpp = 4;
+-            } else if (currentPixelFormat == HAL_PIXEL_FORMAT_RGB_565) {
++            } else if (currentPixelFormat == HAL_PIXEL_FORMAT_RGB_565 ||
++                       currentPixelFormat == HAL_PIXEL_FORMAT_YCBCR_P010) {
+                 bpp = 2;
+             }
+ 
+-            bool isYUV = (currentPixelFormat == HAL_PIXEL_FORMAT_YV12);
++            bool isYUV = (currentPixelFormat == HAL_PIXEL_FORMAT_YV12 ||
++                          currentPixelFormat == HAL_PIXEL_FORMAT_YCBCR_P010);
+ 
+             // gbm does not support YUV, so always assume linear buffer
+             descriptor.objects[0].drm_format_modifier = 0;
+             descriptor.objects[0].fd = bufferPrimeFd;
+-            descriptor.objects[0].size = isYUV ?
+-                descriptor.layers[0].offset[1] + desc.stride * ALIGN(desc.height / 2, 32) :
+-                desc.stride * desc.height * bpp; // Multiply by bpp
+-
+-            descriptor.layers[0].drm_format = mUtils->getDRMFOURCCFormat();
++
++            descriptor.layers[0].drm_format = mUtils->getDRMFOURCCFormat(hwfc->sw_format);
+             descriptor.layers[0].num_planes = isYUV ? 2 : 1;
+ 
+             descriptor.layers[0].pitch[0] = desc.stride * bpp;
+-            descriptor.layers[0].pitch[1] = isYUV ? desc.stride : 0;
++            descriptor.layers[0].pitch[1] = isYUV ? desc.stride * bpp : 0;
+             descriptor.layers[0].pitch[2] = 0;
+             descriptor.layers[0].pitch[3] = 0;
+             descriptor.layers[0].offset[0] = 0;
+-            descriptor.layers[0].offset[1] = isYUV ? desc.stride * ALIGN(desc.height, 32) : 0;
++            descriptor.layers[0].offset[1] = isYUV ? desc.stride * bpp * ALIGN(desc.height, 32) : 0;
+             descriptor.layers[0].offset[2] = 0;
+             descriptor.layers[0].offset[3] = 0;
+-        }
+-
+-        vas = vaCreateSurfaces(hwctx->display, mUtils->getVAFormat(),
++            // Compute the exported size only after plane offsets/pitches exist.
++            descriptor.objects[0].size = isYUV ?
++                descriptor.layers[0].offset[1] + descriptor.layers[0].pitch[1] * ALIGN(desc.height / 2, 32) :
++                desc.stride * desc.height * bpp;
++        }
++
++        vas = vaCreateSurfaces(hwctx->display, mUtils->getVAFormat(hwfc->sw_format),
+                                mSurfaceWidth, mSurfaceHeight, &surfaceId, 1, attributes, 2);
+ 
+         if (vas != VA_STATUS_SUCCESS) {

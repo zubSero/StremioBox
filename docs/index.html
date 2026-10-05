@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080c1c">
+  <meta name="description" content="Turn your Intel NUC into a dedicated StremioBox. Android 16, a remote-friendly Home screen and tested 4K HDR10 hardware playback. Independent community preview.">
+  <link rel="canonical" href="https://zubsero.github.io/StremioBox/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="StremioBox — Your NUC. Your remote. Your movie night.">
+  <meta property="og:description" content="A dedicated Android TV experience for Intel NUC, built around Stremio. Explore the r5 preview, source and test results.">
+  <meta property="og:url" content="https://zubsero.github.io/StremioBox/">
+  <meta property="og:image" content="https://zubsero.github.io/StremioBox/assets/boot-screen.png">
+  <meta property="og:image:width" content="1672">
+  <meta property="og:image:height" content="941">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="StremioBox — Ready for movie night.">
+  <meta name="twitter:image" content="https://zubsero.github.io/StremioBox/assets/boot-screen.png">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="stylesheet" href="style.css">
+  <title>StremioBox — Ready for movie night.</title>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="wordmark" href="#" aria-label="StremioBox home"><img src="assets/logo.png" width="44" height="44" alt=""><span>StremioBox</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#experience">Experience</a>
+      <a href="#hardware">Hardware</a>
+      <a href="#download">Download</a>
+      <a class="nav-github" href="https://github.com/zubSero/StremioBox">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <a class="release-pill" href="https://github.com/zubSero/StremioBox/releases/tag/r5"><span class="status-dot" aria-hidden="true"></span> r5 community preview <span aria-hidden="true">↗</span></a>
+        <h1 id="hero-title">Your NUC.<br><span>Ready for<br>movie night.</span></h1>
+        <p class="hero-description">A dedicated Android TV experience, built around Stremio. Pick up your remote, settle in and make a small Intel box the heart of your living room.</p>
+        <div class="actions">
+          <a class="button primary" href="#download">Get StremioBox <span aria-hidden="true">↓</span></a>
+          <a class="button secondary" href="https://github.com/zubSero/StremioBox">Explore the source <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-tags"><span>Android 16</span><span>Intel x86_64</span><span>HDR10 tested</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="ambient" aria-hidden="true"></div>
+        <div class="brand-display"><img src="assets/boot-screen.png" width="1672" height="941" alt="StremioBox play emblem and wordmark in violet and blue"></div>
+        <div class="visual-caption"><span class="tiny-square" aria-hidden="true"></span> A home for your next film.</div>
+      </div>
+    </section>
+
+    <div class="spec-strip" aria-label="Project highlights">
+      <div class="wrap spec-inner"><span>4K <small>HEVC Main10</small></span><span>HDR10 <small>on the tested Intel path</small></span><span>Bluetooth <small>Homatics B21</small></span><span>Your apps <small>one remote-friendly Home</small></span></div>
+    </div>
+
+    <section class="wrap section" id="experience" aria-labelledby="experience-title">
+      <div class="section-heading"><p class="eyebrow">MADE FOR THE SOFA</p><h2 id="experience-title">Less setup.<br>More movie night.</h2><p>A consistent look from boot to Home, with the fixes that made our NUC feel at home next to the TV.</p></div>
+      <div class="feature-grid">
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">◈</span><h3>A Home of its own</h3><p>Matching boot art, a dark blue and violet Home screen, and D-pad tiles for Stremio, settings and your other apps.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/branding.md">Meet the brand kit <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">▷</span><h3>The player you know</h3><p>Stremio's usual mpv interface and controls, with Intel hardware decoding and a tested 10-bit HDR10 output path.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/architecture.md">See how playback works <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">⌁</span><h3>Ready after reboot</h3><p>Packaged fixes load again at boot. Ordinary Homatics keys work after reboot on our test installation.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/testing.md">Read the test results <span aria-hidden="true">↗</span></a></article>
+      </div>
+      <figure class="home-preview">
+        <div class="preview-bar"><span><span class="status-dot" aria-hidden="true"></span> StremioBox Home</span><span>Actual NUC capture</span></div>
+        <img src="assets/home.png" alt="The running StremioBox Home screen, with Open Stremio, Settings and Apps tiles" loading="lazy">
+        <figcaption>Your remote, one clear starting point. The installed r5 interface keeps its original Dutch labels.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section hardware-section" id="hardware" aria-labelledby="hardware-title">
+      <div class="wrap hardware-layout">
+        <div class="section-heading"><p class="eyebrow">TESTED, WITH CONTEXT</p><h2 id="hardware-title">One small box.<br>A specific target.</h2><p>r5 is a preview for the Intel NUC10i5FNH. We publish what we checked, including the limits.</p><a class="text-link" href="https://github.com/zubSero/StremioBox/blob/main/docs/hardware.md">Full compatibility matrix <span aria-hidden="true">↗</span></a></div>
+        <div class="hardware-panel">
+          <dl><div><dt>Computer</dt><dd>Intel NUC10i5FNH</dd></div><div><dt>Graphics</dt><dd>Intel UHD · Comet Lake GT2</dd></div><div><dt>Bluetooth / remote</dt><dd>Intel AX201 · Homatics B21</dd></div><div><dt>Display</dt><dd>LG HDR TV over HDMI</dd></div><div><dt>Platform</dt><dd>Android 16 · LineageOS 23.2</dd></div></dl>
+          <div class="tested-note"><span class="status-dot" aria-hidden="true"></span><p>4K HEVC Main10 at ~24 fps, HDR10, audible HDMI sound and display-standby recovery were checked. Long-duration soak and a separate final-r5 physical power-button retest are still pending.</p></div>
+        </div>
+      </div>
+      <p class="wrap limits">Other hardware, Dolby Vision, HLG, AV1, VLC/ExoPlayer, 4K60, true S3 sleep and HDMI-CEC are not verified.</p>
+    </section>
+
+    <section class="wrap section" id="download" aria-labelledby="download-title">
+      <div class="download-panel">
+        <div class="download-copy"><p class="eyebrow">START YOUR NEXT FILM NIGHT</p><h2 id="download-title">Meet StremioBox r5.</h2><p>Download the preview, try a live boot and pair your own remote. No personal accounts or Bluetooth bonds come with the image.</p><div class="actions"><a class="button primary" href="https://github.com/zubSero/StremioBox/releases/tag/r5">Open the release <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/zubSero/StremioBox/blob/main/docs/installation.md">Installation guide <span aria-hidden="true">→</span></a></div></div>
+        <div class="command-panel"><div class="command-top"><span>Verified download helper</span><div class="platform-tabs" role="group" aria-label="Command platform"><button type="button" class="active" data-platform="windows" aria-pressed="true">Windows</button><button type="button" data-platform="linux" aria-pressed="false">Linux / macOS</button></div></div><pre><code id="download-command">git clone https://github.com/zubSero/StremioBox.git
+cd StremioBox
+py tools/download.py --output downloads</code></pre><div class="command-bottom"><span>Two parts → one SHA-256 verified ISO</span><button type="button" id="copy-command">Copy commands</button></div><p id="copy-status" class="copy-status" role="status" aria-live="polite"></p></div>
+      </div>
+      <p class="download-footnote">About 6 GB free while assembling. Back up before disk installation. Userdebug preview: permissive SELinux and authenticated network ADB. <a href="https://github.com/zubSero/StremioBox/blob/main/SECURITY.md">Security and update scope</a>.</p>
+    </section>
+
+    <section class="wrap section faq-section" aria-labelledby="faq-title">
+      <div class="section-heading"><p class="eyebrow">A FEW GOOD QUESTIONS</p><h2 id="faq-title">Before you plug in.</h2></div>
+      <div class="faq-list">
+        <details><summary>Is this an official Stremio release?</summary><p>No. StremioBox is an independent community project built around Stremio and an Android TV base. It is not endorsed by Stremio or LineageOS. Their software and trademarks retain their original terms.</p></details>
+        <details><summary>Is this a custom replacement player?</summary><p>Home is our own launcher. Playback retains Stremio's usual mpv interface and controls, with a compatibility-checked native bridge and HDR/subtitle helpers. VLC and ExoPlayer have not been independently validated.</p></details>
+        <details><summary>Do the fixes survive reboot and updates?</summary><p>Reboots retain the packaged fixes. The tested same-version Stremio reinstall retained the integration, but a future app layout needs review. Replacing the OS requires an image containing these ports. There is no managed OTA channel yet.</p></details>
+        <details><summary>Can I build or customize it?</summary><p>The repository includes 17 ports, product sources, Home source and the brand kit. r5 is a controlled branding/launcher repack of the compiled r4 platform. A clean public full rebuild and source-manifest reconciliation are still roadmap items. Start with the <a href="https://github.com/zubSero/StremioBox/blob/main/docs/building.md">build guide</a>.</p></details>
+      </div>
+    </section>
+
+    <section class="wrap community"><div><p class="eyebrow">BUILT IN THE OPEN</p><h2>Bring your box.<br>Share what you find.</h2></div><div><p>Help test another setup, improve a patch or make the next film night a little smoother.</p><div class="actions"><a class="button secondary" href="https://github.com/zubSero/StremioBox/discussions">Join the discussion <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/zubSero/StremioBox/blob/main/CONTRIBUTING.md">Contribute <span aria-hidden="true">→</span></a></div></div></section>
+  </main>
+
+  <footer class="wrap footer"><div><a class="wordmark" href="#"><img src="assets/logo.png" width="32" height="32" alt=""><span>StremioBox</span></a><p>Your NUC. Your remote. Your movie night.</p></div><div class="footer-links"><a href="https://github.com/zubSero/StremioBox">Source</a><a href="https://github.com/zubSero/StremioBox/blob/main/THIRD_PARTY_NOTICES.md">Licenses &amp; credits</a><a href="https://github.com/zubSero/StremioBox/blob/main/README.nl.md" lang="nl">Nederlands</a><p>Independent community project · r5 preview</p></div></footer>
+  <script src="site.js" defer></script>
+</body>
+</html>

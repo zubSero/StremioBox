@@ -1,0 +1,43 @@
+--- a/bootstrap/bootstrap.go
++++ b/bootstrap/bootstrap.go
+@@ -19,6 +19,7 @@
+ 	"fmt"
+ 	"path/filepath"
+ 	"runtime"
++	"sort"
+ 	"strings"
+ 
+ 	"github.com/google/blueprint"
+@@ -833,12 +834,7 @@
+ 			pool = "console"
+ 		}
+ 
+-		envAssignments := ""
+-		for k, v := range i.Env {
+-			// NB: This is rife with quoting issues but we don't care because we trust
+-			// soong_ui to not abuse this facility too much
+-			envAssignments += k + "=" + v + " "
+-		}
++		envAssignments := primaryBuilderEnvAssignments(i.Env)
+ 
+ 		// Build the main build.ninja
+ 		ctx.Build(pctx, blueprint.BuildParams{
+@@ -914,3 +910,18 @@
+ 	toolDir := ctx.Config().(BootstrapConfig).HostToolDir()
+ 	return filepath.Join(toolDir, "go", ctx.ModuleName(), ctx.ModuleSubDir(), "gen")
+ }
++
++// primaryBuilderEnvAssignments keeps Ninja's command hash stable across runs.
++func primaryBuilderEnvAssignments(env map[string]string) string {
++	keys := make([]string, 0, len(env))
++	for key := range env {
++		keys = append(keys, key)
++	}
++	sort.Strings(keys)
++	assignments := ""
++	for _, key := range keys {
++		// Keep the trusted caller's existing assignment and quoting semantics.
++		assignments += key + "=" + env[key] + " "
++	}
++	return assignments
++}

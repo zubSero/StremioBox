@@ -1,0 +1,11 @@
+--- a/keylayout/Vendor_0957_Product_0006.kl
++++ b/keylayout/Vendor_0957_Product_0006.kl
+@@ -12,7 +12,7 @@
+ # a new key layout file with the required keyboard configuration.
+ #
+ 
+-key 116   POWER
++key 116   POWER        WAKE
+ key usage 0x0c01bb TV_INPUT
+ key 156   BOOKMARK
+ key 217   ASSIST       WAKE

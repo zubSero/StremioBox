@@ -1,0 +1,12 @@
+{
+  "state": "Pinned AOSP tokenizer change prepared; application and tests tracked separately",
+  "upstream_commit": "0d45a6a15770ca3ec5d0d2264983c057aae41939",
+  "upstream_url": "https://android.googlesource.com/platform/packages/providers/TelephonyProvider/%2B/0d45a6a15770ca3ec5d0d2264983c057aae41939%5E%21/",
+  "upstream_diff_sha256": "4d3f4a83a8f40a1625d523736b4269382aca93331eefa3cc51048ca9015e66cb",
+  "upstream_diff_bytes": 25608,
+  "repository": "frameworks/base",
+  "path": "core/java/android/database/sqlite/SQLiteTokenizer.java",
+  "patch": "install/nuc-release/source-patches/0014-sqlite-tokenizer-bracket-check.patch",
+  "patch_sha256": "ecaaf8d142c4471138aa121512a6a3b91b688d0058750034b17a2eb40fc78869",
+  "adaptation": "Only the repository-relative filename was changed; all tokenizer hunks are upstream."
+}

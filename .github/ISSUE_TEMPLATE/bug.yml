@@ -1,0 +1,37 @@
+name: Bug report
+description: A reproducible playback, remote, boot or standby problem.
+title: "[Bug] "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: "Include public model names and steps. Redact tokens, accounts, serials, MACs and private network addresses from logs."
+  - type: input
+    id: revision
+    attributes:
+      label: Revision and Stremio version
+      placeholder: r5 / Stremio TV 1.10.4 x86_64
+    validations:
+      required: true
+  - type: textarea
+    id: hardware
+    attributes:
+      label: Hardware
+      description: NUC/PC, GPU, Bluetooth adapter, remote and display models.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps, expected result and actual result
+    validations:
+      required: true
+  - type: textarea
+    id: media
+    attributes:
+      label: Playback details, if relevant
+      description: Codec/profile, resolution, frame rate, HDR format and audio/subtitle tracks. No private stream links.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs or screenshots

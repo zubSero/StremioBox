@@ -1,0 +1,98 @@
+--- a/codec2/C2FFMPEGVideoDecodeComponent.h
++++ b/codec2/C2FFMPEGVideoDecodeComponent.h
+@@ -132,12 +132,13 @@
+         uint64_t igbpId;
+         VASurfaceID surfaceId;
+ 
+-        int getId() const { return igbpSlot; }
+-        void set(const std::shared_ptr<C2GraphicBlock>& block);
++        uint64_t bufferId;
++        uint64_t getId() const { return bufferId; }
++        bool set(const std::shared_ptr<C2GraphicBlock>& block);
+     };
+ 
+     std::shared_ptr<C2BlockPool> mBlockPool;
+-    std::unordered_map<int, SurfaceDescriptor> mSurfaces;
++    std::unordered_map<uint64_t, SurfaceDescriptor> mSurfaces;
+     std::unordered_map<VASurfaceID, std::shared_ptr<C2GraphicBlock>> mHeldSurfaces;
+     std::unordered_map<VASurfaceID, std::shared_ptr<C2GraphicBlock>> mPendingSurfaces;
+     std::unordered_map<VASurfaceID, std::shared_ptr<C2GraphicBlock>> mAvailableSurfaces;
+--- a/codec2/C2FFMPEGVideoDecodeComponent.cpp
++++ b/codec2/C2FFMPEGVideoDecodeComponent.cpp
+@@ -21,6 +21,7 @@
+ #include <android/hardware/graphics/common/1.2/types.h>
+ #include <log/log.h>
+ #include <algorithm>
++#include <sys/stat.h>
+ 
+ #include <SimpleC2Interface.h>
+ #include "C2FFMPEGVideoDecodeComponent.h"
+@@ -1369,9 +1370,22 @@
+ // uses a margin of 7~8 buffers on top of configured output delay, so it's unlikely the
+ // codec will stall.
+ 
+-void C2FFMPEGVideoDecodeComponent::SurfaceDescriptor::set(const std::shared_ptr<C2GraphicBlock>& block) {
++bool C2FFMPEGVideoDecodeComponent::SurfaceDescriptor::set(const std::shared_ptr<C2GraphicBlock>& block) {
++    // A16's AIDL allocator supplies AHWB handles without BufferQueue slots.
++    // Initialize the optional BQ fields and key VA imports by the backing
++    // DMA-BUF inode, which stays the same across duplicated file descriptors.
++    generation = 0;
++    igbpId = 0;
++    igbpSlot = 0;
+     android::_UnwrapNativeCodec2GrallocMetadata(block->handle(),
+             &width, &height, &format, &usage, &stride, &generation, &igbpId, &igbpSlot);
++    struct stat info = {};
++    if (block->handle()->numFds < 1 || fstat(block->handle()->data[0], &info) != 0) {
++        ALOGE("SurfaceDescriptor: DMA-BUF identity unavailable");
++        return false;
++    }
++    bufferId = static_cast<uint64_t>(info.st_ino);
++    return bufferId != 0;
+ }
+ 
+ int C2FFMPEGVideoDecodeComponent::getBufferVAAPI(AVHWFramesContext* hwfc, AVFrame* frame, bool forceAllocator) {
+@@ -1429,7 +1443,7 @@
+                       hwfc, mSurfaceWidth, mSurfaceHeight, pixelFormat, err);
+                 return AVERROR(ENOMEM);
+             }
+-            desc.set(block);
++            if (!desc.set(block)) return AVERROR(EINVAL);
+ 
+             auto s_it = mSurfaces.find(desc.getId());
+             if (s_it != mSurfaces.end()) {
+@@ -1461,7 +1475,7 @@
+ #endif
+             block = std::move(a_it->second);
+             mAvailableSurfaces.erase(a_it);
+-            desc.set(block);
++            if (!desc.set(block)) return AVERROR(EINVAL);
+         }
+     }
+ 
+@@ -1473,7 +1487,7 @@
+         if (s_it->second.width != mSurfaceWidth || s_it->second.height != mSurfaceHeight ||
+                 s_it->second.format != desc.format) {
+ #if DEBUG_FRAMES
+-            ALOGD("getBufferVAAPI[%p]: destroying incompatible surface %#x (%d x %d) for buffer %d (%d x %d).",
++            ALOGD("getBufferVAAPI[%p]: destroying incompatible surface %#x (%d x %d) for buffer %" PRIu64 " (%d x %d).",
+                   hwfc, s_it->second.surfaceId, s_it->second.width, s_it->second.height,
+                   desc.getId(), desc.width, desc.height);
+ #endif
+@@ -1573,7 +1587,7 @@
+         }
+ 
+ #if DEBUG_FRAMES
+-        ALOGD("getBufferVAAPI[%p]: created surface %#x (%d x %d) for buffer %d",
++        ALOGD("getBufferVAAPI[%p]: created surface %#x (%d x %d) for buffer %" PRIu64 "",
+               hwfc, surfaceId, mSurfaceWidth, mSurfaceHeight, desc.getId());
+ #endif
+ 
+@@ -1598,7 +1612,7 @@
+     mHeldSurfaces.emplace(surfaceId, std::move(block));
+ 
+ #if DEBUG_FRAMES
+-    ALOGD("getBufferVAAPI[%p]: using surface %#x (%d x %d) for buffer %d, held = %zd",
++    ALOGD("getBufferVAAPI[%p]: using surface %#x (%d x %d) for buffer %" PRIu64 ", held = %zd",
+           hwfc, surfaceId, mSurfaceWidth, mSurfaceHeight, desc.getId(), mHeldSurfaces.size());
+ #endif
+ 

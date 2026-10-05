@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "scope": "r5 selected platform, launcher and brand inputs; documentation/tools may evolve",
+  "files": {
+    "docs/assets/boot-screen.png": {
+      "bytes": 1068319,
+      "sha256": "c41e161859f51800a7f6225095b91f415ccc8c9f796f2d3170a6e17a02277518"
+    },
+    "docs/assets/home.png": {
+      "bytes": 3593856,
+      "sha256": "1147cca3f9aee55950ea5692708a77b73ddd7700f260efe781ae8dec898c1516"
+    },
+    "docs/assets/logo.png": {
+      "bytes": 548569,
+      "sha256": "cb77a7152c6919c4052022b66c23df34b0f4a1a6fcf93d5c7755cc836ee3cb55"
+    },
+    "docs/assets/prompts.json": {
+      "bytes": 3560,
+      "sha256": "b690eb41e9afdbe24d47643688d2a40f720409d6ce0bc6bc5f2b223cd7ef10b7"
+    },
+    "docs/assets/tv-wallpaper.png": {
+      "bytes": 1165848,
+      "sha256": "542c0763ba2769a0a4081583705c56d38862c16a3475cf05063b9ccf260711a5"
+    },
+    "launcher/AndroidManifest.xml": {
+      "bytes": 1519,
+      "sha256": "bc01df66d8f70d2fe7554681468fdcb54f8307f437ea4960d7247815e3410a7c"
+    },
+    "launcher/LICENSE": {
+      "bytes": 1080,
+      "sha256": "3244e318c3886b53113737739178031bd339f4cf56e6bcacf8d6a094f3f5446f"
+    },
+    "launcher/README.md": {
+      "bytes": 1498,
+      "sha256": "d4afdeeca17c0ad277288a60c75e672115832335557f662f3f8e51b0f413be7a"
+    },
+    "launcher/src/local/stremiobox/home/HomeActivity.java": {
+      "bytes": 8608,
+      "sha256": "c18972ba6df6b89131f7cfe5aba65921ee8db79424642320463e72c36ac39d8d"
+    },
+    "platform/host/mesa-input-lock.json": {
+      "bytes": 2985,
+      "sha256": "277ac72c11b52166401c7fbe628ed2da59063fba45f1d760c712a9446bad9357"
+    },
+    "platform/host/mesa-requirements.lock": {
+      "bytes": 558,
+      "sha256": "eb723bf30904940c4e4be0254dcf0f8e8d6e6163e3edbf93cc12494446fe52c6"
+    },
+    "platform/input-lock.json": {
+      "bytes": 5925,
+      "sha256": "dd54013838b76c6625a5f91e8a190fa6a87ba411d848c7b242e713cc5cd09513"
+    },
+    "platform/manifest.xml": {
+      "bytes": 294340,
+      "sha256": "17121dc9af2df060a9d32168cc7539e02989bfdbef62b1b6cacef44dfc237166"
+    },
+    "platform/patches/0001-console-thread-exit-lineage23.patch": {
+      "bytes": 1411,
+      "sha256": "86706fd1d5eeed6567be2decdbec26b5c86d61e9f54ca5eaf786e265d1a5792c"
+    },
+    "platform/patches/0002-codec-native-p010.patch": {
+      "bytes": 12145,
+      "sha256": "0701f55e99d8a523544fef15cf04428d3c0324d5e4dabf6a34a94e37d4c7c8be"
+    },
+    "platform/patches/0003-hwc-hdr10.patch": {
+      "bytes": 16740,
+      "sha256": "23621dec547afd67a13337fd65d8b4e04dacfb702aab6c59699dd8406ec89000"
+    },
+    "platform/patches/0004-nuc-tv-device.patch": {
+      "bytes": 783,
+      "sha256": "d234d1fcd93e35eced32f29aa1892399b6863fcc44cb495aec4c9f026c9efa3b"
+    },
+    "platform/patches/0005-mesa-android-ten-bit-visual.patch": {
+      "bytes": 667,
+      "sha256": "cc236d6445d7caf8f4b9a4f5b23270b3bd51c2a27be8bc5e09aad51ec6184a4b"
+    },
+    "platform/patches/0006-homatics-power-wake.patch": {
+      "bytes": 302,
+      "sha256": "6d9f0bb2918df535eae78f2089c0772aa964d1eedb7cfad60912fc39a61eba57"
+    },
+    "platform/patches/0007-soong-low-memory-host.patch": {
+      "bytes": 630,
+      "sha256": "f5176ef8b77cdc5bc154ef06864d0faa611eea54cd599eb57a58793770e48f07"
+    },
+    "platform/patches/0008-kernel-configurable-tools-jobs.patch": {
+      "bytes": 1074,
+      "sha256": "5c1480b9770e261f2e6ab34a077c0823547f064d7e8d50138d3cf2db2c6eefd0"
+    },
+    "platform/patches/0009-product-iso-branding.patch": {
+      "bytes": 1131,
+      "sha256": "3ff2e7d158c4924a5d601bcb16cdaa39398943876d75087d6777863f5c3d644f"
+    },
+    "platform/patches/0010-test-package-absolute-output.patch": {
+      "bytes": 672,
+      "sha256": "5e327f8f11424cfae9e38e40f91c0d1e048b2a406c70a4e48db431808415a7e4"
+    },
+    "platform/patches/0011-composer-clone-init-name.patch": {
+      "bytes": 976,
+      "sha256": "2a0186428ef6c47706e9f9a711b186694b18da74d13085ce6bcb58f5aaa045ff"
+    },
+    "platform/patches/0012-bootstrap-stable-builder-env.patch": {
+      "bytes": 1208,
+      "sha256": "4cc095990da39119eba3ee94e971ff6477b13019e590c16cf0a74ef3adeb5ac6"
+    },
+    "platform/patches/0013-hwc-headless-query-const.patch": {
+      "bytes": 366,
+      "sha256": "be76f0de1c74ec1d4f9e23275a095c8e9e82d0024e6aea808aa3e0c1f685f392"
+    },
+    "platform/patches/0014-sqlite-tokenizer-bracket-check.patch": {
+      "bytes": 3552,
+      "sha256": "ecaaf8d142c4471138aa121512a6a3b91b688d0058750034b17a2eb40fc78869"
+    },
+    "platform/patches/0014-sqlite-tokenizer-upstream.json": {
+      "bytes": 824,
+      "sha256": "18334fc1ee63ccb77eb52d4b708b04fc0a933ebd6a778b6767c82d1961f2373b"
+    },
+    "platform/patches/0015-build-manifest-readonly-sandbox.patch": {
+      "bytes": 719,
+      "sha256": "618949ac4779d17b0be1e28afd0736b6022399d4164f10bbc7b17634be58cc4b"
+    },
+    "platform/patches/0016-codec-ahwb-buffer-identity.patch": {
+      "bytes": 4250,
+      "sha256": "d19c8c2f09aa8c1622ee63a0eeb21e8249a4e7344f258ea28c4479f00b0c3381"
+    },
+    "platform/patches/0017-display-standby-no-synthetic-wake.patch": {
+      "bytes": 1714,
+      "sha256": "3a2e64aa49c0710303efbb641f4814eac367fb693cb89ffda8d95348c28131e4"
+    },
+    "platform/product/AndroidProducts.mk": {
+      "bytes": 155,
+      "sha256": "4e997ed123fda17832a1ccdb961802fe2182908aaf5626a7b62e1efc5a5d5b3d"
+    },
+    "platform/product/BoardConfig.mk": {
+      "bytes": 1696,
+      "sha256": "ca62555145f43a0bfddee4d84d6e37cf6362aa4b311e8400989b0c725908d766"
+    },
+    "platform/product/init.nuc-adb.rc": {
+      "bytes": 874,
+      "sha256": "73c858cdad0458c7208c4f740f0deaa1d2992517b800bcc5ecb4bb0f2b1a7809"
+    },
+    "platform/product/lineage_nuc10_tv.mk": {
+      "bytes": 2828,
+      "sha256": "dd52293c9a5d5cbea9fdcd09552991e04796d11965ec3ff16b6a9a051d1991f2"
+    },
+    "platform/product/nuc10_gpu.mk": {
+      "bytes": 779,
+      "sha256": "37cdbf6ad7bc96f6e00937cc56c1b1f08388fec2b411baf12469213d918dd12d"
+    },
+    "platform/product/sepolicy/property.te": {
+      "bytes": 274,
+      "sha256": "3bc2e79b7ca80891c108c5cfa03fd9761d1c33abcd147df0157671a687fb99ea"
+    },
+    "platform/product/sepolicy/property_contexts": {
+      "bytes": 227,
+      "sha256": "3a8b821a771a7fb7bc1e403f0d2b1a7b1b65f37d3832a0a5888eb22416e43658"
+    },
+    "platform/product/stremio/Android.bp": {
+      "bytes": 1155,
+      "sha256": "07a0ac362587755c24297f93e0ee662d8190f470bd1847379f87546adcad34dc"
+    },
+    "platform/product/stremio/boot-approved.sh": {
+      "bytes": 1495,
+      "sha256": "421f03a1f86d54f45d7811f42f0f5cd1d4fe47e2800a0ab6fc1ffa18dcbefbfa"
+    },
+    "platform/product/stremio/hdr-mpv-surface.c": {
+      "bytes": 3760,
+      "sha256": "1d778cbf7c1d1d6f5fb7f412050afd888df7815b248ea4b8b391025f68dc8772"
+    },
+    "platform/product/stremio/HdrBridge.java": {
+      "bytes": 12887,
+      "sha256": "bb255f2dab7a107b1c9c12cd503e70821763b5a49c3b1938b162d7fe2629559b"
+    },
+    "platform/product/stremio/init.nuc-stremio.rc": {
+      "bytes": 570,
+      "sha256": "baf2001cf9ae64e7b22b90959e20c7bf8c445a1d9d3dff2cda2e48a713725541"
+    },
+    "platform/product/stremio/player-bridge.c": {
+      "bytes": 18631,
+      "sha256": "9a1d73ce0a58d2ab2615c63bcb6a7f6c9959fcbf656c094f037e5e8d73d21b0f"
+    },
+    "platform/product/stremio/reconcile.sh": {
+      "bytes": 3949,
+      "sha256": "c9b67e6c8a348d3bfc3ce116387cb726ca167b38f96f5c18eb14aec2444dba4d"
+    },
+    "platform/product/stremio/start.sh": {
+      "bytes": 269,
+      "sha256": "608b3f55cffd5a3d40a86f1c88861dfd8d205e14241a4feaa4de66434fa1416c"
+    },
+    "platform/product/stremio/SubtitleSync.java": {
+      "bytes": 5198,
+      "sha256": "508d74828cebd765c56ce77be2ac6e927c6f57e6450cedd2fd6f17eaa106cd39"
+    },
+    "platform/product/stremio/UpdateGuard.java": {
+      "bytes": 13099,
+      "sha256": "b734e095a2d5d2da89de76168ba271682b2739ddcda8bb395f4ab54f60d63054"
+    },
+    "platform/product/stremiobox/Android.bp": {
+      "bytes": 536,
+      "sha256": "57dc0f8c54f9629dfb0d5296e3468fadaf8c2f3218f381a109af2bd7e2cdacf7"
+    },
+    "platform/product/stremiobox/bootanimation.zip": {
+      "bytes": 1068570,
+      "sha256": "f3b07d51df1f9ca7629a3525ac5f80b3d11d4e730aea649fd00c2df1d4fdb16b"
+    },
+    "platform/product/stremiobox/branding.mk": {
+      "bytes": 377,
+      "sha256": "27a8ff1f7ae07a34aeccabf92e48ae758a09d27896bc42b00a79c222067afe52"
+    },
+    "platform/product/stremiobox/firstboot.sh": {
+      "bytes": 799,
+      "sha256": "b6747fde29d2fc49a51211167ed7d0b687854c0009db9d62ccbd68f85701d5a0"
+    },
+    "platform/product/stremiobox/home/StremioBoxHome.apk": {
+      "bytes": 1684027,
+      "sha256": "10981753754250fedaf08c5ceaf1501a37287653e0db867280d02f3b1f7e6232"
+    },
+    "platform/product/stremiobox/init.stremiobox.rc": {
+      "bytes": 337,
+      "sha256": "46d9b9731ff21fa793ec26ca3f167df3dca515edeef860d796b1f475d7af67e2"
+    },
+    "platform/product/stremiobox/LICENSE": {
+      "bytes": 1080,
+      "sha256": "3244e318c3886b53113737739178031bd339f4cf56e6bcacf8d6a094f3f5446f"
+    },
+    "platform/README.md": {
+      "bytes": 2453,
+      "sha256": "42c1ab3931c0c1600329afd58f3046c05fbbc3401a84d0db98d181ec61e944c1"
+    }
+  }
+}

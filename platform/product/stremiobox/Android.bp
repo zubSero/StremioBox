@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: MIT
+package { default_applicable_licenses: ["stremiobox_license"] }
+license {
+    name: "stremiobox_license",
+    visibility: [":__subpackages__"],
+    license_kinds: ["SPDX-license-identifier-MIT"],
+    license_text: ["LICENSE"],
+}
+android_app_import {
+    name: "StremioBoxHome",
+    apk: "home/StremioBoxHome.apk",
+    presigned: true,
+    product_specific: true,
+    overrides: ["Catapult"],
+}
+sh_binary {
+    name: "stremiobox-firstboot",
+    src: "firstboot.sh",
+    init_rc: ["init.stremiobox.rc"],
+}

@@ -1,0 +1,45 @@
+--- a/suspend/1.0/default/SystemSuspend.cpp
++++ b/suspend/1.0/default/SystemSuspend.cpp
+@@ -428,13 +428,16 @@
+     //  returns from suspend, the wakelocks and SuspendCounter will not have
+     //  changed.
+     auto autosuspendLock = std::unique_lock(mAutosuspendLock);
++    const bool displayStandby = getSleepState() == "none";
+     bool success = WriteStringToFd(getSleepState(), mStateFd);
+     autosuspendLock.unlock();
+ 
+     if (!success) {
+         PLOG(VERBOSE) << "error writing to /sys/power/state for forceSuspend";
+     }
+-    mPwrbtnd->sendKeyWakeup();
++    // "none" keeps the kernel running for display standby. It has no
++    // kernel resume to report; a synthetic wake would undo the user's sleep.
++    if (!displayStandby) mPwrbtnd->sendKeyWakeup();
+ 
+     // Set a property to indicate that the device is awake
+     SetProperty("suspend.device_is_awake", "1");
+@@ -540,6 +543,7 @@
+             }
+ 
+             bool success;
++            bool displayStandby = false;
+             {
+                 auto tokensLock = std::lock_guard(mAutosuspendClientTokensLock);
+                 checkAutosuspendClientsLivenessLocked();
+@@ -565,6 +569,7 @@
+                     PLOG(VERBOSE) << "error writing to /sys/power/wakeup_count";
+                     continue;
+                 }
++                displayStandby = getSleepState() == "none";
+                 success = WriteStringToFd(getSleepState(), mStateFd);
+                 shouldSleep = true;
+ 
+@@ -573,7 +578,7 @@
+ 
+             if (!success) {
+                 PLOG(VERBOSE) << "error writing to /sys/power/state";
+-            } else {
++            } else if (!displayStandby) {
+                 mPwrbtnd->sendKeyWakeup();
+             }
+ 
