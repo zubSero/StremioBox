@@ -50,8 +50,10 @@ The helper downloads two release parts, verifies their SHA-256 hashes and recons
 <details>
 <summary>r5 image identity</summary>
 
-File: `StremioBox-Android16-r5-nuc10_tv.iso`  
-Size: **2,873,884,672 bytes**  
+File: `StremioBox-Android16-r5-nuc10_tv.iso`
+
+Size: **2,873,884,672 bytes**
+
 SHA-256:
 
 ```text
