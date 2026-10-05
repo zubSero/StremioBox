@@ -1,0 +1,16 @@
+{
+  "revision": 6,
+  "iso_sha256": "f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550",
+  "mode": "Actual fresh-data UEFI live ISO boot in QEMU/KVM, no SSD attached",
+  "boot_completed": true,
+  "home_version": "1.1",
+  "home_version_code": 2,
+  "english_home_activity_resumed": true,
+  "english_home_visually_confirmed": true,
+  "virtual_graphics_limitation": "QEMU's virtual graphics swaps red and blue image channels. English labels were visually checked here; the public screenshot and correct artwork colors were verified on the physical Intel NUC.",
+  "home_apk_sha256": "088d354170bb5029dfcde96047115f8881893c47831379d7a398e9efb599d6ec",
+  "original_signed_stremio_seed_sha256": "3a9f86646ba18f4f11073dfbb01e10b1d4019e78d89ba58ec3de79f36f6cfc8c",
+  "firstboot_marker_verified": true,
+  "test_guest_setup": "Provisioned only ephemeral guest settings to reach Home",
+  "scope": "UEFI startup, package scan, original app seed and English Home; not disk installer or physical GPU/Bluetooth/HDR testing"
+}
