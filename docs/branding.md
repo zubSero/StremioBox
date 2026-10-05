@@ -9,7 +9,7 @@
 | [Transparent logo](assets/logo.png) | Project icon, badges and profile use |
 | [Boot / banner art](assets/boot-screen.png) | Boot artwork and repository hero |
 | [TV wallpaper](assets/tv-wallpaper.png) | Launcher background |
-| [Actual Home screenshot](assets/home.png) | Demonstrates the running NUC interface |
+| [Actual Home screenshot](assets/home-english-1.1.png) | Demonstrates the running NUC interface |
 | [Boot animation](../platform/product/stremiobox/bootanimation.zip) | Packaged static boot loop |
 | [Generation prompts](assets/prompts.json) | Provenance of the project artwork |
 

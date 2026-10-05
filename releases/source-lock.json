@@ -225,6 +225,10 @@
     "platform/README.md": {
       "bytes": 2596,
       "sha256": "780dfa91845860f7ebfd6fbaf45c6d18f97868c94ed063ceee617efceb86d48c"
+    },
+    "docs/assets/home-english-1.1.png": {
+      "bytes": 3610929,
+      "sha256": "4b4f2cb4669438151a5d88ee9ca8d30f46481ab08af795ee754ea937279d1a87"
     }
   }
 }

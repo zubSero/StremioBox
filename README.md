@@ -29,7 +29,7 @@ Turn a small Intel PC into a living-room box with a clean, remote-friendly Home 
 - **HDMI picture and sound after display standby.** Playback recovery and audible HDMI output were checked on the unchanged native platform. Display standby keeps Android running; deep S3 sleep is outside the tested scope.
 - **Fixes in the image.** Native platform patches and the compatibility-checked Stremio adapter load again after boot. Updates that change the app's internals require renewed validation.
 
-![The actual StremioBox Home screen on the tested NUC](docs/assets/home.png)
+![The actual StremioBox Home screen on the tested NUC](docs/assets/home-english-1.1.png)
 
 ## Get started
 
