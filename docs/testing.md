@@ -1,8 +1,8 @@
-# r5 validation report
+# r5 platform and r6 Home validation
 
 [Back to the project](../README.md) · [Download identity](../releases/r5.json)
 
-The release ISO has SHA-256 `37a6aa352809ba4960842b90dfd83ad89fc82dc1c82fe24828cdf2f63c576265`. Results below describe the final r5 system on the [test configuration](hardware.md), unless a narrower scope is stated. Private device logs and accounts are not published.
+The original r5 ISO has SHA-256 `37a6aa352809ba4960842b90dfd83ad89fc82dc1c82fe24828cdf2f63c576265`. Results below describe the final r5 system on the [test configuration](hardware.md), unless a narrower scope is stated. Private device logs and accounts are not published.
 
 ## Physical NUC
 
@@ -42,3 +42,9 @@ Physical Homatics power-button cycle on final r5, multi-hour playback/thermal so
 GitHub Actions validates source/asset locks, release metadata, local documentation links and helper syntax. Download tests cover reconstruction, corrupt parts, an invalid final image, interrupted transfers and preservation of existing output. Source-preparation tests cover pinned revisions, conflicts and rollback. CI does not compile Android or replace physical hardware testing.
 
 The real 2,873,884,672-byte release image was also reconstructed offline with the public download helper and matched its original SHA-256. The website was rendered in an isolated browser at desktop, 390 px and 320 px viewport widths; image loading, layout bounds, download-command tabs, copy feedback and expandable questions were checked.
+
+## r6 English Home checks
+
+The r6 ISO has SHA-256 `f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550`. Only the Home APK changes against r5: 19,581 other system entries retain their contents, modes, ownership, xattrs and symlinks. Kernel, initrd and recovery hashes are unchanged. See [the delta](../releases/r6-home-delta.json) and [image record](../releases/r6-image-verification.json).
+
+The signed English Home 1.1 update was installed on the physical r5 NUC. Package version 2/1.1 and all visible English labels were checked, and the update/English UI survived an ordinary reboot. The current screenshot is an actual capture of this Home interface. This does not claim that the physical NUC was reflashed with r6 or that the full playback matrix was rerun for a text-only launcher change.

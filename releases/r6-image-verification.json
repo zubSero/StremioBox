@@ -1,0 +1,86 @@
+{
+  "state": "Offline image and complete Home-only delta verified; runtime tests recorded separately",
+  "revision": 6,
+  "source_ports": 17,
+  "derivation": "Verified r5 platform; only English Home 1.1 APK replaced; no platform compile",
+  "base_revision": 5,
+  "base_iso_sha256": "37a6aa352809ba4960842b90dfd83ad89fc82dc1c82fe24828cdf2f63c576265",
+  "files": {
+    "kernel": {
+      "bytes": 22695936,
+      "sha256": "ef8272b23a55d12d72ce7707f242453dd63f0a731540be98bcf201ad33ecef14"
+    },
+    "initrd.img": {
+      "bytes": 1858644,
+      "sha256": "0727d709c6056f4e9bac9471672f6c2e8cec7d5f063d9596a789c1a71f4b0958"
+    },
+    "ramdisk-recovery.img": {
+      "bytes": 15514747,
+      "sha256": "a64e5bb50c1b296f40b85b1eaf90a7020fdfc0c86efbe61961833eff33e0f291"
+    },
+    "system.efs": {
+      "bytes": 2446458880,
+      "sha256": "bbe0204a15d5c99c3c8e25964e36d6037571d7358f7a746bfbd5e1eeae9a4594"
+    },
+    "StremioBox-Android16-r6-nuc10_tv.iso": {
+      "bytes": 2874343424,
+      "sha256": "f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550"
+    }
+  },
+  "packaged_components": [
+    "system/bin/hw/android.system.suspend-service",
+    "system/bin/nuc-stremio-guard",
+    "system/bin/surfaceflinger",
+    "system/etc/init/init.nuc-adb.rc",
+    "system/etc/init/init.nuc-stremio.rc",
+    "system/etc/nuc-stremio/boot-approved.sh",
+    "system/etc/nuc-stremio/reconcile.sh",
+    "system/framework/nuc_stremio_guard.jar",
+    "system/framework/nuc_stremio_hdr.jar",
+    "system/lib64/nuc-stremio/libplayer.so",
+    "system/vendor/bin/hw/android.hardware.media.c2-ffmpeg-service",
+    "system/vendor/etc/selinux/vendor_sepolicy.cil",
+    "system/vendor/lib64/hw/hwcomposer.drm_minigbm.so",
+    "system/vendor/lib64/hw/vulkan.intel.so",
+    "system/vendor/lib64/iHD_drv_video.so"
+  ],
+  "packaged_metadata": {
+    "filesystem_layout": "EROFS container with raw ext4 system.img",
+    "inner_system_image_sha256": "679cd42ff88f6ecf2fa5af62d271b37cb41c14272f3afe3034fce913322db8ff",
+    "source_manifest_projects": 1215,
+    "source_manifest_sha256": "63fadc66ce88d2d115ccde417dc8cd8c45bab09624738cf5f8bc09c3ed9b4980",
+    "comet_lake_sof_sha256": "c5119cfca9c4bdf5ab87a87af08fb8fb2bf92767e0f070ea4eb52a877f10359e",
+    "intel_driver_modules": {
+      "i915": {
+        "path": "lib/modules/6.18.21-zenith+/kernel/drivers/gpu/drm/i915/i915.ko",
+        "sha256": "0fbe29ef9bc619c7115516a09ceed64d3a1cb5fa7bef5a036e6352eba5fbb007",
+        "bytes": 8597552
+      },
+      "btintel": {
+        "path": "lib/modules/6.18.21-zenith+/kernel/drivers/bluetooth/btintel.ko",
+        "sha256": "97883de67463d6259b924bfa1fc2e08cd6b55f63353421360d72550b58c1388c",
+        "bytes": 126672
+      },
+      "btusb": {
+        "path": "lib/modules/6.18.21-zenith+/kernel/drivers/bluetooth/btusb.ko",
+        "sha256": "1005c531ffb56d9e0d40a5073dbc28034dda4bb907e18251ace877cc19606e30",
+        "bytes": 134816
+      },
+      "iwlwifi": {
+        "path": "lib/modules/6.18.21-zenith+/kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko",
+        "sha256": "7307e6469080119b04a20fcbaa303e42a5e57cc420a7cb151a72afc1a4afffc0",
+        "bytes": 905640
+      }
+    }
+  },
+  "authenticated_adb": true,
+  "private_data_included": false,
+  "app_seed_sha256": "3a9f86646ba18f4f11073dfbb01e10b1d4019e78d89ba58ec3de79f36f6cfc8c",
+  "evidence_scope": "Selected public image hashes and a summarized test report; private device logs are not distributed.",
+  "home": {
+    "version": "1.1",
+    "version_code": 2,
+    "language": "en",
+    "sha256": "088d354170bb5029dfcde96047115f8881893c47831379d7a398e9efb599d6ec"
+  }
+}

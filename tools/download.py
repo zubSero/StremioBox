@@ -171,7 +171,7 @@ def obtain(data: dict, output: Path, offline: bool = False) -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--manifest', type=Path, default=ROOT / 'releases/r5.json')
+    parser.add_argument('--manifest', type=Path, default=ROOT / 'releases/r6.json')
     parser.add_argument('--output', type=Path, default=Path('downloads'))
     parser.add_argument('--offline', action='store_true', help='Assemble only already-downloaded parts')
     args = parser.parse_args()

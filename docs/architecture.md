@@ -31,3 +31,7 @@ Display standby keeps Android alive. The suspend-service patch removes synthetic
 The native Android platform was compiled in r4 with all 17 ports. r5 is a controlled image repack adding branding, Home, first-boot app seeding and boot-menu art. Its recorded delta checks unchanged files and metadata against r4. Publishing r5 does not imply that a second full platform compile occurred.
 
 The preserved source-preparation manifest contains 1,216 pinned projects. The upstream build-manifest rule retained by port 0015 excludes lines containing `proprietary_`, removing the Silead firmware project from the embedded manifest. Applying that filter yields 1,215 projects and exactly the recorded image-manifest SHA-256. Repository validation checks this relationship; [the verification record](../releases/manifest-verification.json) identifies both inputs. A clean public full rebuild remains pending, and this repository does not claim byte-for-byte reproducibility of the ISO.
+
+## r6 English Home delta
+
+r6 replaces Home 1.0 with English Home 1.1 (version code 2), signed by the same release key. Its [full delta](../releases/r6-home-delta.json) identifies exactly one changed file and 19,581 preserved system entries. Kernel, initrd, recovery, native code, boot art and first-boot Stremio seeding remain the verified r5 inputs. The physical NUC can install Home 1.1 as a regular signed app update; a fresh r6 installation gets it directly from the system image.

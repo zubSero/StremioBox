@@ -1,5 +1,15 @@
 # Changelog
 
+## r6 - English Home
+
+- Changed all original Home labels and availability messages to English.
+- Added Home 1.1 (version code 2), signed with the existing Home release key.
+- Included the English APK in a new ISO through a verified Home-only filesystem delta.
+- Updated the GitHub/Home screenshot from the actual NUC and matched the website presentation.
+- Preserved the r5 native platform and all other system file contents, permissions, ownership, xattrs and symlinks.
+
+The existing r5 box can update Home with the standalone signed APK. Historical r5 downloads remain unchanged.
+
 ## r5 — public preview
 
 First public StremioBox release for the Intel NUC10i5FNH test configuration.

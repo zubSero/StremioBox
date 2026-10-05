@@ -6,7 +6,7 @@
 
 The pinned source-preparation export, all 17 ports, the current product overlay, Home source, its signed prebuilt APK, boot animation, artwork and checksums. It is an overlay repository, not a mirror of the full Android source tree. Private signing keys, app data and workstation-specific deployment tools are excluded.
 
-The r5 ISO was derived from the compiled r4 platform through a verified branding/launcher/app-seed delta. A clean full r5 build from this public repository has **not** been completed. The source lock contains 1,216 projects; the upstream `proprietary_` exclusion rule yields the embedded 1,215-project manifest and its exact recorded hash. The instructions below remain a preparation path for contributors, not a promise of an identical ISO.
+The r5 ISO was derived from the compiled r4 platform through a verified branding/launcher/app-seed delta. A clean full public build from this public repository has **not** been completed. The source lock contains 1,216 projects; the upstream `proprietary_` exclusion rule yields the embedded 1,215-project manifest and its exact recorded hash. The instructions below remain a preparation path for contributors, not a promise of an identical ISO.
 
 ## Host and storage
 
@@ -79,6 +79,21 @@ The lunch form above is the one used by the original pinned builder. This public
 
 ## Signing and reproducibility
 
-Home's prebuilt APK is the r5 signed artifact. The private Home release key is deliberately excluded. Rebuilding Home with your own key is suitable for a fork, but does not produce an in-place signature-compatible update to the official prebuilt. Android itself remains an unofficial userdebug image; there is no production verified-boot or OTA signing service here.
+Home's current prebuilt APK is English Home 1.1, included in r6. The private Home release key is deliberately excluded. Rebuilding Home with your own key is suitable for a fork, but does not produce an in-place signature-compatible update to the official prebuilt. Android itself remains an unofficial userdebug image; there is no production verified-boot or OTA signing service here.
 
 A release source bundle contains this selected public tree and notices. It is not the old workstation backup and cannot reproduce private migration steps. The [roadmap](roadmap.md) tracks a complete clean source build, additional license inventory and installer validation. The exported/embedded manifest relationship has already been [verified](../releases/manifest-verification.json).
+
+## Reproduce the English Home delta from r5
+
+The public r6 repack helper was exercised against the verified r5 ISO. On a Linux host with root/loop-mount access, install `erofs-utils`, `e2fsprogs` and `xorriso`. Keep at least 24 GiB free for temporary image data and 4 GiB for the output. The temporary workspace is released when the operation completes.
+
+```sh
+sudo python3 tools/repack_home.py \
+  --base-iso /absolute/path/StremioBox-Android16-r5-nuc10_tv.iso \
+  --base-record releases/r5-image-verification.json \
+  --home-apk platform/product/stremiobox/home/StremioBoxHome.apk \
+  --home-sha256 088d354170bb5029dfcde96047115f8881893c47831379d7a398e9efb599d6ec \
+  --output /absolute/path/StremioBox-Android16-r6-nuc10_tv.iso
+```
+
+The helper inventories every system entry, replaces only Home APK content while retaining its metadata, verifies the compressed result and replays the hybrid boot structures. It rejects an existing output image. Filesystem/container timestamps and tool versions can change the final ISO bytes, so this validates the controlled delta rather than promising an identical binary hash.

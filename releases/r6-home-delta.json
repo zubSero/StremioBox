@@ -1,0 +1,31 @@
+{
+  "base_revision": 5,
+  "revision": 6,
+  "changed_file": "system/product/app/StremioBoxHome/StremioBoxHome.apk",
+  "before": {
+    "mode": 420,
+    "uid": 0,
+    "gid": 0,
+    "xattrs": {
+      "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+    },
+    "kind": "file",
+    "bytes": 1684027,
+    "sha256": "10981753754250fedaf08c5ceaf1501a37287653e0db867280d02f3b1f7e6232"
+  },
+  "after": {
+    "mode": 420,
+    "uid": 0,
+    "gid": 0,
+    "xattrs": {
+      "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+    },
+    "kind": "file",
+    "bytes": 1684027,
+    "sha256": "088d354170bb5029dfcde96047115f8881893c47831379d7a398e9efb599d6ec"
+  },
+  "unchanged_entries": 19581,
+  "all_other_file_contents_modes_ownership_xattrs_symlinks_preserved": true,
+  "kernel_initrd_recovery_preserved": true,
+  "uefi_bios_gpt_preserved": true
+}

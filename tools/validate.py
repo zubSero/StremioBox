@@ -50,13 +50,18 @@ def relative_link(file: Path, target: str, ids=None) -> None:
 
 
 def main() -> int:
-    release = json.loads((ROOT / 'releases/r5.json').read_text(encoding='utf-8'))
-    validate_manifest(release)
-    image = json.loads((ROOT / 'releases/r5-image-verification.json').read_text(encoding='utf-8'))
-    if image['files'][release['image']['name']] != {k: release['image'][k] for k in ('bytes', 'sha256')}:
-        raise ValueError('Image verification and release manifest disagree')
-    if image['private_data_included'] is not False:
-        raise ValueError('Release must exclude private data')
+    releases = sorted(path for path in (ROOT / 'releases').glob('r*.json')
+                      if re.fullmatch(r'r\d+\.json', path.name))
+    if not releases:
+        raise ValueError('No release manifests found')
+    for path in releases:
+        release = json.loads(path.read_text(encoding='utf-8'))
+        validate_manifest(release)
+        image = json.loads(path.with_name(path.stem + '-image-verification.json').read_text(encoding='utf-8'))
+        if image['files'][release['image']['name']] != {k: release['image'][k] for k in ('bytes', 'sha256')}:
+            raise ValueError('Image verification and release manifest disagree')
+        if image['private_data_included'] is not False:
+            raise ValueError('Release must exclude private data')
     lock = json.loads((ROOT / 'platform/input-lock.json').read_text(encoding='utf-8'))
     manifest = ROOT / 'platform/manifest.xml'
     projects = ET.fromstring(manifest.read_bytes()).findall('project')
@@ -95,6 +100,14 @@ def main() -> int:
             raise ValueError(f'Locked source/asset size mismatch: {name}')
         if hashlib.sha256(path.read_bytes()).hexdigest() != spec['sha256']:
             raise ValueError(f'Locked source/asset hash mismatch: {name}')
+    english = json.loads((ROOT / 'releases/r6-image-verification.json').read_text(encoding='utf-8'))
+    home = ROOT / 'platform/product/stremiobox/home/StremioBoxHome.apk'
+    if hashlib.sha256(home.read_bytes()).hexdigest() != english['home']['sha256']:
+        raise ValueError('Current Home prebuilt differs from the r6 packaged Home')
+    delta = json.loads((ROOT / 'releases/r6-home-delta.json').read_text(encoding='utf-8'))
+    if (delta['changed_file'] != 'system/product/app/StremioBoxHome/StremioBoxHome.apk'
+            or delta['after']['sha256'] != english['home']['sha256']):
+        raise ValueError('English Home delta is inconsistent with the release')
     secret = re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bgh[pousr]_[A-Za-z0-9]{30,}|\bgithub_pat_[A-Za-z0-9_]{30,}')
     private = re.compile(r'[A-Z]:[\\/]Users[\\/][^\s\\/]+'
                          r'|[A-Z]:[\\/]bt' r'-debug|/mnt/c/bt' r'-debug'

@@ -1,14 +1,14 @@
 {
   "schema": 1,
-  "scope": "r5 selected platform, launcher and brand inputs; documentation/tools may evolve",
+  "scope": "r6 selected platform, English Home 1.1 and brand inputs; documentation/tools may evolve",
   "files": {
     "docs/assets/boot-screen.png": {
       "bytes": 1068319,
       "sha256": "c41e161859f51800a7f6225095b91f415ccc8c9f796f2d3170a6e17a02277518"
     },
     "docs/assets/home.png": {
-      "bytes": 3593856,
-      "sha256": "1147cca3f9aee55950ea5692708a77b73ddd7700f260efe781ae8dec898c1516"
+      "bytes": 3610929,
+      "sha256": "4b4f2cb4669438151a5d88ee9ca8d30f46481ab08af795ee754ea937279d1a87"
     },
     "docs/assets/logo.png": {
       "bytes": 548569,
@@ -24,19 +24,19 @@
     },
     "launcher/AndroidManifest.xml": {
       "bytes": 1519,
-      "sha256": "bc01df66d8f70d2fe7554681468fdcb54f8307f437ea4960d7247815e3410a7c"
+      "sha256": "bbdca0fecc2e34d8c6a3c6c5337194a66ff380176fe1871f105ff8a7390c3302"
     },
     "launcher/LICENSE": {
       "bytes": 1080,
       "sha256": "3244e318c3886b53113737739178031bd339f4cf56e6bcacf8d6a094f3f5446f"
     },
     "launcher/README.md": {
-      "bytes": 1498,
-      "sha256": "d4afdeeca17c0ad277288a60c75e672115832335557f662f3f8e51b0f413be7a"
+      "bytes": 1471,
+      "sha256": "9a9af42b538fa575adb64c1163e5dda24d5d7038bd911bfe01466803ac47412c"
     },
     "launcher/src/local/stremiobox/home/HomeActivity.java": {
-      "bytes": 8608,
-      "sha256": "c18972ba6df6b89131f7cfe5aba65921ee8db79424642320463e72c36ac39d8d"
+      "bytes": 8597,
+      "sha256": "95c38c91643eb56aa42dd9cbb6fdefdc307dc296078dcc3f90c863bfa2b2c239"
     },
     "platform/host/mesa-input-lock.json": {
       "bytes": 2985,
@@ -212,7 +212,7 @@
     },
     "platform/product/stremiobox/home/StremioBoxHome.apk": {
       "bytes": 1684027,
-      "sha256": "10981753754250fedaf08c5ceaf1501a37287653e0db867280d02f3b1f7e6232"
+      "sha256": "088d354170bb5029dfcde96047115f8881893c47831379d7a398e9efb599d6ec"
     },
     "platform/product/stremiobox/init.stremiobox.rc": {
       "bytes": 337,

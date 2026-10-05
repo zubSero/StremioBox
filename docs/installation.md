@@ -1,8 +1,8 @@
-# Install StremioBox r5
+# Install StremioBox r6
 
 [Back to the project](../README.md) · [Hardware](hardware.md) · [Troubleshooting](troubleshooting.md)
 
-r5 targets the Intel NUC10i5FNH. Have a USB keyboard available for firmware menus and initial setup. The Homatics remote can be paired after Android starts.
+r6 targets the Intel NUC10i5FNH. Have a USB keyboard available for firmware menus and initial setup. The Homatics remote can be paired after Android starts.
 
 ## 1. Download and verify
 
@@ -20,7 +20,7 @@ py tools/download.py --output downloads
 powershell -File tools/download.ps1 -OutputDirectory downloads
 ```
 
-The ISO is distributed as `.iso.001` and `.iso.002`. These are sequential raw pieces, not two bootable images and not a ZIP archive. The helper validates each piece and the reconstructed ISO against the [r5 manifest](../releases/r5.json). It keeps verified parts so rerunning can reuse them; an interrupted part restarts its own transfer. Existing unrelated output is never overwritten.
+The ISO is distributed as `.iso.001` and `.iso.002`. These are sequential raw pieces, not two bootable images and not a ZIP archive. The helper validates each piece and the reconstructed ISO against the [r6 manifest](../releases/r6.json). It keeps verified parts so rerunning can reuse them; an interrupted part restarts its own transfer. Existing unrelated output is never overwritten.
 
 If you downloaded the two pieces yourself, put them together in a folder and run:
 
@@ -31,9 +31,9 @@ python3 tools/download.py --output downloads --offline
 Expect about 6 GB free while parts and the final image coexist. After a successful verification you can remove the two part files yourself. Keep the ISO and its hash.
 
 ```text
-StremioBox-Android16-r5-nuc10_tv.iso
-2,873,884,672 bytes
-SHA-256: 37a6aa352809ba4960842b90dfd83ad89fc82dc1c82fe24828cdf2f63c576265
+StremioBox-Android16-r6-nuc10_tv.iso
+2,874,343,424 bytes
+SHA-256: f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
 ```
 
 Checksums detect corruption and bind the pieces to this release; they are not a separate publisher signature. Always obtain the script and manifest from this project's repository or release.
@@ -69,3 +69,13 @@ adb connect <your-box-address>:5555
 ```
 
 Authorize your own computer on the device when prompted. No developer key is shipped in the ISO. See [security and updates](../SECURITY.md) before exposing maintenance access to other networks.
+
+## English Home update for an existing r5 box
+
+The r6 image includes English Home 1.1. If you already installed r5, the signed `StremioBoxHome-1.1-en.apk` release asset updates only Home, without replacing the native platform. With your authorized ADB connection:
+
+```sh
+adb install -r StremioBoxHome-1.1-en.apk
+```
+
+The update uses the same release certificate and survives reboot. Installing Home alone does not add the Android/HDR fixes to a different OS. The historical r5 ISO retains its original Dutch Home 1.0; choose r6 for a fresh English installation.

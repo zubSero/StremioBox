@@ -57,7 +57,7 @@ public final class HomeActivity extends Activity {
             if (intent == null) throw new IllegalStateException();
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } catch (RuntimeException e) {
-            Toast.makeText(this, "Deze app is nog niet beschikbaar.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "This app isn't available yet.", Toast.LENGTH_SHORT).show();
         }
     }
     @Override public void onCreate(Bundle state) {
@@ -75,15 +75,15 @@ public final class HomeActivity extends Activity {
         root.addView(content, new FrameLayout.LayoutParams(-1, -1));
 
         LinearLayout header = new LinearLayout(this); header.setGravity(Gravity.CENTER_VERTICAL);
-        TextView home = text("THUIS", 13, 0xffb0b2d6); home.setLetterSpacing(0.20f);
+        TextView home = text("HOME", 13, 0xffb0b2d6); home.setLetterSpacing(0.20f);
         header.addView(home, new LinearLayout.LayoutParams(0, dp(30), 1));
         clock = text("", 15, 0xffe7e8fa); header.addView(clock);
         content.addView(header);
-        TextView title = text("Filmavond begint hier.", 32, Color.WHITE);
+        TextView title = text("Movie night starts here.", 32, Color.WHITE);
         title.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(-1, -2);
         titleParams.topMargin = dp(33); content.addView(title, titleParams);
-        TextView hint = text("Films en series, klaar op het grote scherm.", 15, 0xffb2b7d8);
+        TextView hint = text("Movies and series, ready for the big screen.", 15, 0xffb2b7d8);
         LinearLayout.LayoutParams hintParams = new LinearLayout.LayoutParams(-1, -2);
         hintParams.topMargin = dp(8); content.addView(hint, hintParams);
 
@@ -97,7 +97,7 @@ public final class HomeActivity extends Activity {
         hero.setContentDescription("Open Stremio"); primary = hero;
         LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(dp(395), dp(94)); hp.topMargin = dp(23);
         content.addView(hero, hp);
-        TextView appLabel = text("Apps en instellingen", 14, 0xffbec2e0);
+        TextView appLabel = text("Apps & settings", 14, 0xffbec2e0);
         LinearLayout.LayoutParams ap = new LinearLayout.LayoutParams(-1, -2); ap.topMargin = dp(28); ap.bottomMargin = dp(13);
         content.addView(appLabel, ap);
         HorizontalScrollView scroll = new HorizontalScrollView(this);
@@ -109,7 +109,7 @@ public final class HomeActivity extends Activity {
     private void fillApps() {
         apps.removeAllViews();
         Intent settings = new Intent(Settings.ACTION_SETTINGS);
-        addApp("Instellingen", getDrawable(android.R.drawable.ic_menu_preferences), settings);
+        addApp("Settings", getDrawable(android.R.drawable.ic_menu_preferences), settings);
         Map<String, ResolveInfo> found = new TreeMap<>();
         for (String category : new String[]{Intent.CATEGORY_LEANBACK_LAUNCHER, Intent.CATEGORY_LAUNCHER}) {
             for (ResolveInfo r : getPackageManager().queryIntentActivities(new Intent(Intent.ACTION_MAIN).addCategory(category), 0)) {

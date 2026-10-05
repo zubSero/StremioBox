@@ -2,7 +2,7 @@
 
 [Back to the project](../README.md)
 
-**Your NUC. Your remote. Your movie night.** The brand uses deep navy, violet and cool blue, with a luminous play emblem and enough contrast to read from the sofa. The installed Home screen retains its original Dutch line: “Filmavond begint hier.”
+**Your NUC. Your remote. Your movie night.** The brand uses deep navy, violet and cool blue, with a luminous play emblem and enough contrast to read from the sofa. Home 1.1 uses English throughout, including "Movie night starts here.", "Apps & settings" and "Settings".
 
 | Asset | Purpose |
 | --- | --- |

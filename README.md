@@ -1,6 +1,6 @@
 <div align="center">
 
-![StremioBox — your NUC, ready for movie night](docs/assets/boot-screen.png)
+![StremioBox â€” your NUC, ready for movie night](docs/assets/boot-screen.png)
 
 # StremioBox
 
@@ -8,32 +8,32 @@
 
 A dedicated Android TV experience for Intel NUC, built around Stremio.
 
-[![Release r5](https://img.shields.io/badge/release-r5%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r5)
+[![Release r6](https://img.shields.io/badge/release-r6%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r6)
 [![Android 16](https://img.shields.io/badge/Android-16-65dfc1?style=flat-square&logo=android&logoColor=white)](docs/architecture.md)
 [![Checks](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml/badge.svg)](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml)
 [![Platform x86_64](https://img.shields.io/badge/platform-x86__64-73c8ff?style=flat-square)](docs/hardware.md)
 
-[**Download r5**](https://github.com/zubSero/StremioBox/releases/tag/r5) · [**Project website**](https://zubsero.github.io/StremioBox/) · [**Install**](docs/installation.md) · [**Nederlands**](README.nl.md)
+[**Download r6**](https://github.com/zubSero/StremioBox/releases/tag/r6) Â· [**Project website**](https://zubsero.github.io/StremioBox/) Â· [**Install**](docs/installation.md) Â· [**Nederlands**](README.nl.md)
 
 </div>
 
 Turn a small Intel PC into a living-room box with a clean, remote-friendly Home screen. StremioBox combines an Android 16 / LineageOS 23.2 TV base with our StremioBox branding, Intel graphics fixes, Bluetooth remote improvements and Stremio playback integration.
 
-**r5 is a hardware-specific preview.** It is tested on an Intel NUC10i5FNH with Intel UHD graphics, Intel AX201 Bluetooth, a Homatics B21 remote and an LG HDR TV. Read the [tested hardware and limits](docs/hardware.md) before trying another machine.
+**r6 is a hardware-specific preview.** It is tested on an Intel NUC10i5FNH with Intel UHD graphics, Intel AX201 Bluetooth, a Homatics B21 remote and an LG HDR TV. Read the [tested hardware and limits](docs/hardware.md) before trying another machine.
 
 ## Made for the sofa
 
-- **A home for movie night.** StremioBox Home, matching boot art and a dark blue / violet visual identity. Open Stremio, Android settings and your other apps with the D-pad.
+- **A home for movie night.** English StremioBox Home 1.1, matching boot art and a dark blue / violet visual identity. Open Stremio, Android settings and your other apps with the D-pad.
 - **4K HDR10 through the usual player.** HEVC Main10 hardware decoding, P010 buffers and HDMI HDR metadata on the tested NUC. Stremio's existing mpv controls remain available.
 - **Bluetooth that survives a reboot.** Ordinary Homatics keys work after reboot without repeating the pairing combination on the tested installation.
-- **HDMI picture and sound after display standby.** Playback recovery and audible HDMI output were checked on r5. Display standby keeps Android running; deep S3 sleep is outside the tested scope.
+- **HDMI picture and sound after display standby.** Playback recovery and audible HDMI output were checked on the unchanged native platform. Display standby keeps Android running; deep S3 sleep is outside the tested scope.
 - **Fixes in the image.** Native platform patches and the compatibility-checked Stremio adapter load again after boot. Updates that change the app's internals require renewed validation.
 
 ![The actual StremioBox Home screen on the tested NUC](docs/assets/home.png)
 
 ## Get started
 
-1. Open the [r5 release](https://github.com/zubSero/StremioBox/releases/tag/r5), or clone this repository and use the download helper below.
+1. Open the [r6 release](https://github.com/zubSero/StremioBox/releases/tag/r6), or clone this repository and use the download helper below.
 2. Read the [installation guide](docs/installation.md). Start with the live boot option and keep a backup before installing to disk.
 3. Finish Android setup, pair your remote, then sign in to Stremio with your own account.
 
@@ -48,29 +48,29 @@ On Windows, run `py tools/download.py --output downloads`, or use `powershell -F
 The helper downloads two release parts, verifies their SHA-256 hashes and reconstructs the ISO. It verifies the final image too. The ISO stays out of Git, so a normal clone is small. Allow about **6 GB free** while downloading and assembling it.
 
 <details>
-<summary>r5 image identity</summary>
+<summary>r6 image identity</summary>
 
-File: `StremioBox-Android16-r5-nuc10_tv.iso`
+File: `StremioBox-Android16-r6-nuc10_tv.iso`
 
-Size: **2,873,884,672 bytes**
+Size: **2,874,343,424 bytes**
 
 SHA-256:
 
 ```text
-37a6aa352809ba4960842b90dfd83ad89fc82dc1c82fe24828cdf2f63c576265
+f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
 ```
 
-Machine-readable [download manifest](releases/r5.json) · [image verification](releases/r5-image-verification.json)
+Machine-readable [download manifest](releases/r6.json) Â· [image verification](releases/r6-image-verification.json)
 
 </details>
 
 ## What has been checked?
 
-| Area | r5 result | Scope |
+| Area | Platform result | Scope |
 | --- | --- | --- |
 | HEVC Main10 / HDR10 | Hardware decoding, 10-bit output and TV HDR mode confirmed | 4K at about 24 fps; short playback tests |
 | HDMI audio | Audible output before and after standby | Primary HDMI output; passthrough formats not certified |
-| Homatics B21 | Ordinary keys after a full reboot | Physical power-button cycle on final r5 still needs a separate retest |
+| Homatics B21 | Ordinary keys after a full reboot | Physical power-button cycle still needs a separate retest |
 | Display standby | Picture, sound and Bluetooth return | Android stays running; not deep suspend |
 | Subtitles | Disabled state and language/audio switches checked | External SRT regression cases |
 | Boot / first setup | Physical NUC reboot and fresh-data UEFI live boot checked | Destructive disk installer not exercised on the live NUC |
@@ -81,13 +81,13 @@ See the [test report](docs/testing.md) for durations, frame counters and remaini
 
 ```text
 Stremio + its existing mpv interface
-             ↓
+             â†“
 Compatibility-checked player bridge + subtitle / HDR helpers
-             ↓
-Android MediaCodec → Intel VAAPI → P010 → DRM composer → HDMI HDR10
+             â†“
+Android MediaCodec â†’ Intel VAAPI â†’ P010 â†’ DRM composer â†’ HDMI HDR10
 ```
 
-r5 uses the compiled r4 platform with a verified branding, launcher and first-boot app delta. It is **not a new full platform compilation**. This repository carries the 17 source ports, product overlay, launcher source and pinned source export. See [architecture](docs/architecture.md) and the [build guide](docs/building.md) for the exact scope and reproducibility limits.
+r6 carries English Home 1.1. Its verified Home-only delta preserves the r5 system and compiled r4 native platform, including the existing playback/Bluetooth fixes. It is **not a new full platform compilation**. This repository carries the 17 source ports, product overlay, launcher source and pinned source export. See [architecture](docs/architecture.md) and the [build guide](docs/building.md) for the exact scope and reproducibility limits.
 
 ## Explore the project
 
@@ -95,11 +95,11 @@ r5 uses the compiled r4 platform with a verified branding, launcher and first-bo
 | --- | --- |
 | Downloads and setup | [Installation](docs/installation.md) |
 | Supported hardware | [Compatibility matrix](docs/hardware.md) |
-| How the fixes work | [Architecture](docs/architecture.md) · [17 platform ports](platform/README.md) |
-| Source builds | [Build guide](docs/building.md) · [Home launcher](launcher/README.md) |
+| How the fixes work | [Architecture](docs/architecture.md) Â· [17 platform ports](platform/README.md) |
+| Source builds | [Build guide](docs/building.md) Â· [Home launcher](launcher/README.md) |
 | Logo, boot art and wallpaper | [Brand kit](docs/branding.md) |
-| What's next | [Roadmap](docs/roadmap.md) · [Changelog](CHANGELOG.md) |
-| Help and contributions | [Discussions](https://github.com/zubSero/StremioBox/discussions) · [Contributing](CONTRIBUTING.md) |
+| What's next | [Roadmap](docs/roadmap.md) Â· [Changelog](CHANGELOG.md) |
+| Help and contributions | [Discussions](https://github.com/zubSero/StremioBox/discussions) Â· [Contributing](CONTRIBUTING.md) |
 
 ## Security and updates
 
