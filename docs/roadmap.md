@@ -13,7 +13,8 @@ The current Intel NUC preview includes English Home and the playback, audio, Blu
 
 ## Simplify installation
 
-- [ ] Offer one direct ISO download from a project-controlled release mirror so ordinary installation does not require Python or manual part assembly.
+- [x] Provide Python-free local ISO assembly: a double-click Windows launcher, native PowerShell and a Linux/macOS shell helper, with matching manifests and SHA-256 verification.
+- [ ] Offer one direct ISO download from a project-controlled release mirror to avoid split downloads altogether.
 - [ ] Validate the USB installation path on a spare disk and document the first-start flow.
 - [ ] Build and test a portable root-ADB installation/update package for supported existing Android layouts.
 - [ ] Validate an internal-disk installation path from Linux and a network-boot package for users without removable media. See [USB-free options](without-usb.md).

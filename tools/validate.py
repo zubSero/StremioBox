@@ -57,6 +57,13 @@ def main() -> int:
     for path in releases:
         release = json.loads(path.read_text(encoding='utf-8'))
         validate_manifest(release)
+        native = path.with_name(path.stem + '-download.txt')
+        if native.exists():
+            records = ['release ' + release['release']]
+            for kind, spec in [('image', release['image']), *[('part', p) for p in release['parts']]]:
+                records.append(f"{kind} {spec['name']} {spec['bytes']} {spec['sha256']}")
+            if native.read_text(encoding='utf-8') != '\n'.join(records) + '\n':
+                raise ValueError('Native shell manifest differs from the JSON release manifest')
         image = json.loads(path.with_name(path.stem + '-image-verification.json').read_text(encoding='utf-8'))
         if image['files'][release['image']['name']] != {k: release['image'][k] for k in ('bytes', 'sha256')}:
             raise ValueError('Image verification and release manifest disagree')

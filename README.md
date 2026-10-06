@@ -38,8 +38,8 @@ StremioBox is a bootable Android TV system image based on Android 16 / LineageOS
 
 The current download is **Intel NUC Preview — English Home**. It includes all fixes from the initial public image and adds the English Home 1.1 update. [Read the changes](CHANGELOG.md#english-home).
 
-1. Download the [download helper ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-download-helper.zip) and extract it.
-2. Open a terminal in the extracted folder. With Python 3.10 or newer, run `py tools/download.py --output downloads` on Windows, or `python3 tools/download.py --output downloads` on Linux/macOS.
+1. Download the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-native-download.zip) and extract it.
+2. **Windows:** double-click `Download-StremioBox.cmd`. **Linux/macOS:** open a terminal in the extracted folder and run `bash tools/download.sh --output downloads`. No Python is required.
 3. Follow the [USB boot and installation guide](docs/installation.md). Allow about **6 GB free** for the download and assembled image.
 4. After Android starts, pair your remote and sign in to Stremio with your own account. No accounts or add-ons are configured in the image.
 

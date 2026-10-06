@@ -3,8 +3,8 @@
 const command = document.getElementById('download-command');
 const copyStatus = document.getElementById('copy-status');
 const commands = {
-  windows: 'git clone https://github.com/zubSero/StremioBox.git\ncd StremioBox\npy tools/download.py --output downloads',
-  linux: 'git clone https://github.com/zubSero/StremioBox.git\ncd StremioBox\npython3 tools/download.py --output downloads'
+  windows: 'git clone https://github.com/zubSero/StremioBox.git\ncd StremioBox\npowershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/download.ps1 -OutputDirectory downloads',
+  linux: 'git clone https://github.com/zubSero/StremioBox.git\ncd StremioBox\nbash tools/download.sh --output downloads'
 };
 document.querySelectorAll('[data-platform]').forEach(button => {
   button.addEventListener('click', () => {

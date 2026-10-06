@@ -7,6 +7,14 @@ This history describes the downloadable images and their verified behavior. Date
 | [Intel NUC Preview — English Home](#english-home) | 2026-10-05 | English Home 1.1, an update APK for existing installations and a fresh installation image | [`r6`](https://github.com/zubSero/StremioBox/releases/tag/r6) |
 | [Intel NUC Preview — Initial Release](#initial-release) | 2026-10-05 | First public image with StremioBox Home and the Intel playback, audio, Bluetooth and subtitle fixes | [`r5`](https://github.com/zubSero/StremioBox/releases/tag/r5) |
 
+## Download tooling update — 2026-10-06
+
+- Added a Python-free Windows download ZIP with a double-click launcher and native PowerShell 5.1 helper.
+- Added a Linux/macOS shell helper using curl and system SHA-256 tools; matching shell/JSON manifests are checked in CI.
+- Added native-helper regression checks for corruption, wrong final hashes, invalid manifests, offline assembly and preservation of existing output.
+- Documented a 7-Zip split-combination alternative, ADB app updates and the current limits of USB-free system installation.
+- The installation ISO, Android platform and Home APK retain their original bytes. This changes how the release is downloaded, not the installed system.
+
 <a id="english-home"></a>
 
 ## Intel NUC Preview — English Home

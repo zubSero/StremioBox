@@ -41,6 +41,8 @@ Physical Homatics power-button cycles on the public platform, multi-hour playbac
 
 GitHub Actions validates source/asset locks, release metadata, local documentation links and helper syntax. Download tests cover reconstruction, corrupt parts, an invalid final image, interrupted transfers and preservation of existing output. Source-preparation tests cover pinned revisions, conflicts and rollback. CI does not compile Android or replace physical hardware testing.
 
+The Python-free helpers also have corruption, wrong-final-hash, offline, manifest-validation and existing-output tests. CI runs the actual Windows PowerShell 5.1 helper on Windows and the shell helper on Linux; Python runs the contributor test harness, but is not used by these download helpers. On 2026-10-06, native Windows PowerShell downloaded both English Home release pieces from GitHub and assembled the 2,874,343,424-byte ISO. The Linux shell helper assembled those pieces offline under Ubuntu/WSL, and 7-Zip 26.03 combined them with `-tsplit`. All three produced SHA-256 `f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550`. The shell helper's macOS branch uses system tools but has not yet been executed on a Mac.
+
 The real 2,873,884,672-byte release image was also reconstructed offline with the public download helper and matched its original SHA-256. The website was rendered in an isolated browser at desktop, 390 px and 320 px viewport widths; image loading, layout bounds, download-command tabs, copy feedback and expandable questions were checked.
 
 <a id="english-home-update"></a>

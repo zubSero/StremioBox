@@ -14,33 +14,62 @@ Already running StremioBox? The [ADB update guide](adb-installation.md) covers t
 | Existing StremioBox with Dutch Home | [Update Home through ADB](adb-installation.md#update-home-without-python); no USB or Python needed |
 | No USB stick | [USB-free options and their current status](without-usb.md) |
 
-## 1. Download and verify
+## 1. Download and verify without Python
 
-Download and extract the [download helper ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-download-helper.zip). Open a terminal in the extracted folder containing `tools` and `releases`, then use Python 3.10 or newer:
+Download and extract the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-native-download.zip). It is a small set of readable scripts, not an Android build toolchain. No Python installation is needed.
 
-```sh
-python3 tools/download.py --output downloads
-```
+### Windows: double-click
 
-Windows:
+1. Extract the ZIP completely; do not run it from inside the ZIP viewer.
+2. Double-click **`Download-StremioBox.cmd`**.
+3. Leave the window open until it says **ISO verified**. The image is in the extracted folder's `downloads` directory.
+
+The launcher uses Windows' built-in PowerShell 5.1. It needs no administrator access and changes no permanent PowerShell policy; its execution-policy setting applies only to this process. Organization policies can still prevent scripts from running.
+
+For a terminal or Git checkout, run from the folder containing `tools` and `releases`:
 
 ```powershell
-py tools/download.py --output downloads
-# Or, from the same folder:
-powershell -File tools/download.ps1 -OutputDirectory downloads
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/download.ps1 -OutputDirectory downloads
 ```
 
-The ISO is distributed as `.iso.001` and `.iso.002`. These are sequential raw pieces, not two bootable images and not a ZIP archive. The helper validates each piece and the reconstructed ISO against the [r6 manifest](../releases/r6.json). It keeps verified parts so rerunning can reuse them; an interrupted part restarts its own transfer. Existing unrelated output is never overwritten.
-
-Contributors can also clone [the repository](https://github.com/zubSero/StremioBox) and run the same commands from its root folder.
-
-If you downloaded the two pieces yourself, put them together in a folder and run:
+### Linux / macOS: system shell tools
 
 ```sh
-python3 tools/download.py --output downloads --offline
+bash tools/download.sh --output downloads
 ```
 
-Expect about 6 GB free while parts and the final image coexist. After a successful verification you can remove the two part files yourself. Keep the ISO and its hash.
+The helper uses Bash, curl and `sha256sum` (Linux) or `shasum` (macOS). Its output filesystem must support hard links, such as ext4 or APFS; use an ordinary local disk rather than FAT/exFAT. Windows PowerShell supports FAT/exFAT output too. The Windows and Linux paths have been exercised; a native macOS run is still pending.
+
+### Already downloaded the pieces?
+
+Put **both** release pieces in `downloads`, keeping their exact names. Use the same helper offline:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/download.ps1 -OutputDirectory downloads -Offline
+```
+
+```sh
+bash tools/download.sh --output downloads --offline
+```
+
+The pieces are sequential raw bytes, not separate bootable images. Both helpers validate every existing piece before fetching missing ones, verify each download and check the final ISO independently. They reuse verified files, reject unrelated or corrupt existing files and publish the ISO only after verification. An interrupted part restarts its transfer when you rerun; completed valid parts are reused.
+
+### Alternative: combine with 7-Zip
+
+Download [part 1](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-Android16-r6-nuc10_tv.iso.001) and [part 2](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-Android16-r6-nuc10_tv.iso.002) into the same folder. With [7-Zip](https://7-zip.org/) installed, open PowerShell there and run:
+
+```powershell
+& "$env:ProgramFiles\7-Zip\7z.exe" x -tsplit -aos -oassembled StremioBox-Android16-r6-nuc10_tv.iso.001
+Get-FileHash assembled\StremioBox-Android16-r6-nuc10_tv.iso -Algorithm SHA256
+```
+
+**Keep `-tsplit`:** it combines the pieces into an ISO. Automatic archive detection can instead open the ISO and extract its internal files. `-aos` skips an existing destination; use an empty `assembled` folder and compare the resulting hash below before using it. This command was tested with the actual release pieces and produced the original ISO hash. Unlike the native helper, this manual route requires you to compare the hash yourself.
+
+### Storage and image identity
+
+Expect about 6 GB free while parts and the final image coexist. After successful verification, you can remove the two part files yourself. Keep the ISO and its hash.
+
+GitHub limits each release asset to under 2 GiB, so this 2.87 GB ISO is published in two pieces. A tested 7-Zip compression attempt produced a 2,195,182,200-byte archive, still above that limit. The native helpers assemble the pieces automatically; a single-file mirror remains on the [roadmap](roadmap.md). See [GitHub's release limits](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
 
 ```text
 StremioBox-Android16-r6-nuc10_tv.iso
@@ -48,7 +77,9 @@ StremioBox-Android16-r6-nuc10_tv.iso
 SHA-256: f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
 ```
 
-Checksums detect corruption and bind the pieces to this release; they are not a separate publisher signature. Always obtain the script and manifest from this project's repository or release.
+The [JSON manifest](../releases/r6.json) and [shell manifest](../releases/r6-download.txt) record the same filenames, sizes and hashes; repository checks enforce that they agree. Checksums detect corruption and bind pieces to this release; they are not a separate publisher signature. Obtain scripts and manifests from this project.
+
+The original Python helper remains an optional alternative for people who already have Python 3.10+: `python3 tools/download.py --output downloads` (Windows: `py tools/download.py --output downloads`). Downloading and assembling this release does not compile Android. A full [source build](building.md) still needs Android's Linux build dependencies, including Python.
 
 ## 2. Try a live boot first
 

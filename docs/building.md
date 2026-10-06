@@ -2,6 +2,12 @@
 
 [Back to the project](../README.md) · [Platform ports](../platform/README.md) · [Launcher](../launcher/README.md)
 
+## Assemble the published ISO without a source build
+
+If you only want the installation ISO on your own computer, use the [native download helpers](installation.md#1-download-and-verify-without-python). Windows uses built-in PowerShell; Linux/macOS use shell tools. The guide also includes a tested 7-Zip alternative. None of these routes requires Python or an Android source checkout.
+
+The source-build and Home-repack workflows below are different operations. They still use Python and other Android/Linux build tools. There is no verified Python-free full Android build.
+
 ## What this repository contains
 
 The pinned source-preparation export, all 17 ports, the current product overlay, Home source, its signed prebuilt APK, boot animation, artwork and checksums. It is an overlay repository, not a mirror of the full Android source tree. Private signing keys, app data and workstation-specific deployment tools are excluded.

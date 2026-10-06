@@ -27,8 +27,8 @@ StremioBox is een opstartbaar Android TV-image op basis van Android 16 / Lineage
 
 De huidige uitgave heet **Intel NUC Preview — English Home**. Deze bevat de fixes van de eerste publieke image en het Engelse startscherm. De [uitgebreide changelog](CHANGELOG.md) beschrijft elke wijziging en de bijbehorende tests.
 
-1. Download en pak de [downloadhulp](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-download-helper.zip) uit.
-2. Open een terminal in de uitgepakte map. Met Python 3.10 of nieuwer voer je op Windows `py tools/download.py --output downloads` uit. Op Linux/macOS gebruik je `python3 tools/download.py --output downloads`.
+1. Download en pak de [downloadhulp](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-native-download.zip) uit.
+2. **Windows:** dubbelklik op `Download-StremioBox.cmd`. **Linux/macOS:** open een terminal in de uitgepakte map en voer `bash tools/download.sh --output downloads` uit. Python is niet nodig.
 3. Reserveer ongeveer 6 GB vrije ruimte. De hulp downloadt twee delen en controleert de hashes van de delen en de samengestelde ISO.
 4. Volg de [installatiegids](docs/installation.md), probeer live boot en koppel daarna je eigen remote en Stremio-account.
 
