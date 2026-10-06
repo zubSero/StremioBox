@@ -2,11 +2,11 @@
 
 [Back to the project](../README.md)
 
-r5 is the first public snapshot of a working dedicated StremioBox installation. Future items below are priorities, not promised compatibility or delivery dates.
+The current Intel NUC preview includes English Home and the playback, audio, Bluetooth and subtitle fixes described in the [changelog](../CHANGELOG.md). The next priorities are repeatable installation, longer hardware testing and a full source build. Items below are not promised compatibility or delivery dates.
 
 ## Validate the existing release
 
-- [ ] Retest the physical Homatics power button through repeated final-r5 cycles.
+- [ ] Retest the physical Homatics power button through repeated cycles on the public platform.
 - [ ] Run multi-hour HDR playback and thermal/crash soak tests.
 - [ ] Exercise the disk installer on a spare drive with recoverable partitions.
 - [ ] Gather reproducible hardware reports for other Intel NUCs.

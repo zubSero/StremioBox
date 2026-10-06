@@ -1,8 +1,8 @@
-# r5 platform and r6 Home validation
+# Test results and known limits
 
-[Back to the project](../README.md) · [Download identity](../releases/r5.json)
+[Back to the project](../README.md) · [Changelog](../CHANGELOG.md) · [Current image identity](../releases/r6.json)
 
-The original r5 ISO has SHA-256 `37a6aa352809ba4960842b90dfd83ad89fc82dc1c82fe24828cdf2f63c576265`. Results below describe the final r5 system on the [test configuration](hardware.md), unless a narrower scope is stated. Private device logs and accounts are not published.
+The physical playback tests below describe **Intel NUC Preview — Initial Release** (technical tag `r5`) on the [test configuration](hardware.md). **English Home** (`r6`) changes the launcher and preserves the native platform; its separate checks appear below. Private device logs and accounts are not published.
 
 ## Physical NUC
 
@@ -35,7 +35,7 @@ Fresh-data VM testing does not certify all Intel playback features or the destru
 
 ## Still pending
 
-Physical Homatics power-button cycle on final r5, multi-hour playback/thermal soak, destructive installer validation on a spare disk, other hardware, 4K60 and the formats listed as unverified in the [hardware matrix](hardware.md).
+Physical Homatics power-button cycles on the public platform, multi-hour playback/thermal soak, destructive installer validation on a spare disk, other hardware, 4K60 and the formats listed as unverified in the [hardware matrix](hardware.md).
 
 ## Repository CI
 
@@ -43,7 +43,9 @@ GitHub Actions validates source/asset locks, release metadata, local documentati
 
 The real 2,873,884,672-byte release image was also reconstructed offline with the public download helper and matched its original SHA-256. The website was rendered in an isolated browser at desktop, 390 px and 320 px viewport widths; image loading, layout bounds, download-command tabs, copy feedback and expandable questions were checked.
 
-## r6 English Home checks
+<a id="english-home-update"></a>
+
+## English Home update
 
 The r6 ISO has SHA-256 `f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550`. Only the Home APK changes against r5: 19,581 other system entries retain their contents, modes, ownership, xattrs and symlinks. Kernel, initrd and recovery hashes are unchanged. See [the delta](../releases/r6-home-delta.json) and [image record](../releases/r6-image-verification.json).
 

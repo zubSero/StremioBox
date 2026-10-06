@@ -2,37 +2,44 @@
 
 # StremioBox
 
-**Je NUC. Je afstandsbediening. Je filmavond.**
+**Android 16 voor een Intel NUC met Stremio op je tv.**
 
-Een eigen Android TV-ervaring voor Intel NUC, met StremioBox Home en Stremio als middelpunt. Gebaseerd op Android 16 / LineageOS 23.2, met onze fixes voor Intel-video, HDR10, HDMI-audio, Bluetooth en display-standby.
+[Download](https://github.com/zubSero/StremioBox/releases/tag/r6) · [Installatie](docs/installation.md) · [Changelog](CHANGELOG.md) · [Website](https://zubsero.github.io/StremioBox/) · [English](README.md)
 
-[Download r6](https://github.com/zubSero/StremioBox/releases/tag/r6) · [Website](https://zubsero.github.io/StremioBox/) · [Uitgebreide README](README.md)
+StremioBox is een opstartbaar Android TV-image op basis van Android 16 / LineageOS 23.2. Het bevat een startscherm voor bediening met een afstandsbediening, Stremio TV 1.10.4 en fixes voor Intel-video, HDMI-audio, Bluetooth en ondertitels. De gewone mpv-interface van Stremio, inclusief de afspeelbalk, blijft beschikbaar.
 
-## Wat werkt op onze testopstelling?
+**Deze preview is getest op één configuratie:** Intel NUC10i5FNH, Intel UHD-graphics, Intel AX201 Bluetooth, Homatics B21 en een LG HDR-tv. Andere hardware vraagt aparte tests. Langdurige afspeeltests en de schijfinstaller zijn nog niet gevalideerd; probeer eerst live boot vanaf USB.
 
-- 4K HEVC Main10 rond 24 fps met hardwaredecodering en HDR10 op de LG-tv.
-- De gewone mpv-bediening binnen Stremio; geen vervangende externe speler.
-- Homatics B21-bediening na een volledige reboot zonder opnieuw koppelen.
-- Filmbeeld, geluid en Bluetooth na display-standby.
-- Ondertitels uitzetten, ook na wisselen van audiotrack of taal.
-- Ons Engelse startscherm, bootbeeld en first-boot-installatie van de originele ondertekende Stremio-app.
+## Wat is getest?
 
-**r6 is een preview voor specifieke hardware.** Getest op de Intel NUC10i5FNH, Intel UHD / AX201, Homatics B21 en een LG HDR-tv. Andere pc's, alle codecs, Dolby Vision, VLC/Exo, 4K60, echte S3-slaap en HDMI-CEC zijn nog niet bevestigd. De fysieke Homatics-powerknop verdient nog een aparte controle op de definitieve revisie.
+| Onderdeel | Resultaat | Beperking |
+| --- | --- | --- |
+| 4K HEVC Main10 HDR10 | Hardwaredecodering, goede kleuren en HDR-modus op de tv | Korte tests rond 24 fps; geen bevestiging voor 4K60 of andere HDR-formaten |
+| HDMI-audio | Hoorbaar geluid voor en na display-standby | Bitstream-passthrough niet bevestigd |
+| Homatics B21 | Gewone toetsen werken na reboot zonder opnieuw koppelen | Fysieke powerknop verdient nog een aparte hertest |
+| Display-standby | Beeld, geluid en bediening keren terug na Android-slaap/wekcommando's | Android blijft draaien; echte S3-slaap niet getest |
+| Ondertitels | Disabled en taal-/audiowissels gecontroleerd met externe SRT | Niet ieder formaat of iedere stream getest |
+| Startscherm | Engelse Home 1.1, ook na reboot | Eigen launcher; Android en Stremio hebben hun eigen taalinstellingen |
+
+[Hardwarematrix](docs/hardware.md) · [Testresultaten](docs/testing.md)
 
 ## Downloaden
 
-```powershell
-git clone https://github.com/zubSero/StremioBox.git
-cd StremioBox
-py tools/download.py --output downloads
-```
+De huidige uitgave heet **Intel NUC Preview — English Home**. Deze bevat de fixes van de eerste publieke image en het Engelse startscherm. De [uitgebreide changelog](CHANGELOG.md) beschrijft elke wijziging en de bijbehorende tests.
 
-Het script haalt twee delen op en controleert zowel de delen als de samengestelde ISO. Reserveer ongeveer 6 GB vrije ruimte. Lees daarna de [installatie-instructies](docs/installation.md) en probeer eerst live boot; maak een back-up voordat je op schijf installeert.
+1. Download en pak de [downloadhulp](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-download-helper.zip) uit.
+2. Open een terminal in de uitgepakte map. Met Python 3.10 of nieuwer voer je op Windows `py tools/download.py --output downloads` uit. Op Linux/macOS gebruik je `python3 tools/download.py --output downloads`.
+3. Reserveer ongeveer 6 GB vrije ruimte. De hulp downloadt twee delen en controleert de hashes van de delen en de samengestelde ISO.
+4. Volg de [installatiegids](docs/installation.md), probeer live boot en koppel daarna je eigen remote en Stremio-account.
 
-De fixes zitten in het image en blijven na reboot actief. Nieuwe app- of OS-versies moeten opnieuw getest worden; er is nog geen OTA-kanaal. r6 voegt Engelse Home 1.1 toe aan het geverifieerde r5-image; de native code blijft afkomstig van het gecompileerde r4-platform. Dit is geen nieuwe volledige platformbuild.
+Heb je de eerste image met Nederlands Home al geïnstalleerd? De [losse Engelse Home-update](docs/installation.md#update-an-existing-installation) gebruikt dezelfde ondertekening en blijft na reboot actief. De technische downloadcode `r6` blijft in bestandsnamen en links staan.
 
-Deze ontwikkelbuild gebruikt permissieve SELinux en geauthenticeerde ADB op poort 5555. Gebruik een vertrouwd netwerk. De gedeelde ISO bevat geen persoonlijke accounts, Bluetooth-koppelingen of privésleutels.
+## Grenzen van deze preview
 
-[Hardware](docs/hardware.md) · [Testresultaten](docs/testing.md) · [Broncode bouwen](docs/building.md) · [Branding](docs/branding.md) · [Roadmap](docs/roadmap.md)
+Dolby Vision, HLG, AV1, VLC/ExoPlayer, 4K60, HDMI-CEC, echte S3-slaap en andere GPU's zijn nog niet bevestigd. De ontwikkelbuild gebruikt permissieve SELinux en geauthenticeerde ADB op poort 5555; gebruik een vertrouwd netwerk. Het gedeelde image bevat geen persoonlijke accounts, privésleutels of Bluetooth-koppelingen.
 
-Een onafhankelijk communityproject, zonder officiële band met Stremio of LineageOS. Zie [licenties en credits](THIRD_PARTY_NOTICES.md).
+De verpakte fixes blijven na reboot actief. Nieuwe Stremio-versies moeten opnieuw op compatibiliteit worden gecontroleerd. Er is geen automatisch OS-updatekanaal. Het Engelse image is gemaakt door Home in het geverifieerde basisimage te vervangen; een volledige Android-build vanuit deze publieke repository staat nog open.
+
+[Problemen oplossen](docs/troubleshooting.md) · [Broncode bouwen](docs/building.md) · [Roadmap](docs/roadmap.md) · [Probleem melden](https://github.com/zubSero/StremioBox/issues/new/choose)
+
+StremioBox is een onafhankelijk communityproject, zonder officiële band met Stremio of LineageOS. [Licenties en credits](THIRD_PARTY_NOTICES.md).

@@ -26,7 +26,7 @@
 | Subtitle disabled/language changes | External SRT cases verified in Stremio mpv |
 | Homatics ordinary keys after reboot | Physically verified |
 | Display standby / wake with film playing | Verified using synthetic Android sleep/wake plus physical picture/sound confirmation |
-| Physical Homatics power-button cycle on final r5 | Separate retest pending |
+| Physical Homatics power-button cycle on the public platform | Separate retest pending |
 | Intel Vulkan driver | UI rendering smoke test passed; not conformance testing |
 
 ## Not verified yet

@@ -1,116 +1,91 @@
 <div align="center">
 
-![StremioBox â€” your NUC, ready for movie night](docs/assets/boot-screen.png)
+![StremioBox](docs/assets/boot-screen.png)
 
 # StremioBox
 
-**Your NUC. Your remote. Your movie night.**
+**Android 16 for an Intel NUC running Stremio on your TV.**
 
-A dedicated Android TV experience for Intel NUC, built around Stremio.
-
-[![Release r6](https://img.shields.io/badge/release-r6%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r6)
+[![Intel NUC preview](https://img.shields.io/badge/download-Intel%20NUC%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r6)
 [![Android 16](https://img.shields.io/badge/Android-16-65dfc1?style=flat-square&logo=android&logoColor=white)](docs/architecture.md)
-[![Checks](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml/badge.svg)](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml)
-[![Platform x86_64](https://img.shields.io/badge/platform-x86__64-73c8ff?style=flat-square)](docs/hardware.md)
+[![Repository checks](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml/badge.svg)](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml)
 
-[**Download r6**](https://github.com/zubSero/StremioBox/releases/tag/r6) Â· [**Project website**](https://zubsero.github.io/StremioBox/) Â· [**Install**](docs/installation.md) Â· [**Nederlands**](README.nl.md)
+[**Download**](https://github.com/zubSero/StremioBox/releases/tag/r6) · [**Installation**](docs/installation.md) · [**Changelog**](CHANGELOG.md) · [**Website**](https://zubsero.github.io/StremioBox/) · [**Nederlands**](README.nl.md)
 
 </div>
 
-Turn a small Intel PC into a living-room box with a clean, remote-friendly Home screen. StremioBox combines an Android 16 / LineageOS 23.2 TV base with our StremioBox branding, Intel graphics fixes, Bluetooth remote improvements and Stremio playback integration.
+StremioBox is a bootable Android TV system image based on Android 16 / LineageOS 23.2. It includes a remote-operated Home screen, Stremio TV 1.10.4 and fixes for Intel video output, HDMI audio, Bluetooth reconnection and subtitles. Playback uses Stremio's existing mpv interface, including its seek bar and player controls.
 
-**r6 is a hardware-specific preview.** It is tested on an Intel NUC10i5FNH with Intel UHD graphics, Intel AX201 Bluetooth, a Homatics B21 remote and an LG HDR TV. Read the [tested hardware and limits](docs/hardware.md) before trying another machine.
+**This preview has been tested on one configuration: Intel NUC10i5FNH, Intel UHD graphics, Intel AX201 Bluetooth, a Homatics B21 remote and an LG HDR TV.** Other PCs and remotes need their own testing. The disk installer and long-duration playback tests are still pending; start with a live USB boot.
 
-## Made for the sofa
+![English Home 1.1 running on the physical Intel NUC](docs/assets/home-english-1.1.png)
 
-- **A home for movie night.** English StremioBox Home 1.1, matching boot art and a dark blue / violet visual identity. Open Stremio, Android settings and your other apps with the D-pad.
-- **4K HDR10 through the usual player.** HEVC Main10 hardware decoding, P010 buffers and HDMI HDR metadata on the tested NUC. Stremio's existing mpv controls remain available.
-- **Bluetooth that survives a reboot.** Ordinary Homatics keys work after reboot without repeating the pairing combination on the tested installation.
-- **HDMI picture and sound after display standby.** Playback recovery and audible HDMI output were checked on the unchanged native platform. Display standby keeps Android running; deep S3 sleep is outside the tested scope.
-- **Fixes in the image.** Native platform patches and the compatibility-checked Stremio adapter load again after boot. Updates that change the app's internals require renewed validation.
+## What works on the tested NUC
 
-![The actual StremioBox Home screen on the tested NUC](docs/assets/home-english-1.1.png)
+| Feature | Observed result | Current limit |
+| --- | --- | --- |
+| 4K HDR10 video | HEVC Main10 uses Intel hardware decoding; the TV enters HDR mode with correct picture and audible sound | Tested around 24 fps in short samples; 4K60 and other HDR formats are unverified |
+| Stremio controls | The existing mpv interface and seek bar remain available | VLC and ExoPlayer have not been validated |
+| HDMI audio | Sound works before and after display standby | Receiver bitstream passthrough is unverified |
+| Bluetooth remote | Ordinary Homatics keys work after reboot without repeating the pairing combination | The physical power-button cycle needs a separate retest |
+| Display standby | Film picture, sound and remote control recover after Android sleep/wake commands | Android stays running; true S3 suspend is unverified |
+| Subtitles | External SRT subtitles follow Disabled, language selection and audio-track changes | Eight development regression cases; not every subtitle format |
+| Home screen | English labels, D-pad navigation, Stremio, settings and installed apps | Home 1.1 was also checked after a physical reboot |
 
-## Get started
+[Hardware details](docs/hardware.md) · [Test methods and results](docs/testing.md)
 
-1. Open the [r6 release](https://github.com/zubSero/StremioBox/releases/tag/r6), or clone this repository and use the download helper below.
-2. Read the [installation guide](docs/installation.md). Start with the live boot option and keep a backup before installing to disk.
-3. Finish Android setup, pair your remote, then sign in to Stremio with your own account.
+## Download and try it
 
-```sh
-git clone https://github.com/zubSero/StremioBox.git
-cd StremioBox
-python3 tools/download.py --output downloads
-```
+The current download is **Intel NUC Preview — English Home**. It includes all fixes from the initial public image and adds the English Home 1.1 update. [Read the changes](CHANGELOG.md#english-home).
 
-On Windows, run `py tools/download.py --output downloads`, or use `powershell -File tools/download.ps1`.
+1. Download the [download helper ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-download-helper.zip) and extract it.
+2. Open a terminal in the extracted folder. With Python 3.10 or newer, run `py tools/download.py --output downloads` on Windows, or `python3 tools/download.py --output downloads` on Linux/macOS.
+3. Follow the [USB boot and installation guide](docs/installation.md). Allow about **6 GB free** for the download and assembled image.
+4. After Android starts, pair your remote and sign in to Stremio with your own account. No accounts or add-ons are configured in the image.
 
-The helper downloads two release parts, verifies their SHA-256 hashes and reconstructs the ISO. It verifies the final image too. The ISO stays out of Git, so a normal clone is small. Allow about **6 GB free** while downloading and assembling it.
+The helper joins two download parts into one ISO and verifies their SHA-256 hashes. The resulting ISO is about **2.87 GB**. For manual downloads, source archives and checksums, open the [release page](https://github.com/zubSero/StremioBox/releases/tag/r6).
+
+**Already using the initial image with Dutch Home?** Install the [English Home update](docs/installation.md#update-an-existing-installation) to change the launcher language. It uses the same signing certificate and survives reboot.
 
 <details>
-<summary>r6 image identity</summary>
+<summary>Image filename and checksum</summary>
 
-File: `StremioBox-Android16-r6-nuc10_tv.iso`
-
-Size: **2,874,343,424 bytes**
-
-SHA-256:
+The release's technical identifier is `r6`; existing filenames and download URLs retain it.
 
 ```text
-f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
+StremioBox-Android16-r6-nuc10_tv.iso
+2,874,343,424 bytes
+SHA-256: f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
 ```
 
-Machine-readable [download manifest](releases/r6.json) Â· [image verification](releases/r6-image-verification.json)
+[Download manifest](releases/r6.json) · [Image verification](releases/r6-image-verification.json)
 
 </details>
 
-## What has been checked?
+## Before installing
 
-| Area | Platform result | Scope |
-| --- | --- | --- |
-| HEVC Main10 / HDR10 | Hardware decoding, 10-bit output and TV HDR mode confirmed | 4K at about 24 fps; short playback tests |
-| HDMI audio | Audible output before and after standby | Primary HDMI output; passthrough formats not certified |
-| Homatics B21 | Ordinary keys after a full reboot | Physical power-button cycle still needs a separate retest |
-| Display standby | Picture, sound and Bluetooth return | Android stays running; not deep suspend |
-| Subtitles | Disabled state and language/audio switches checked | External SRT regression cases |
-| Boot / first setup | Physical NUC reboot and fresh-data UEFI live boot checked | Destructive disk installer not exercised on the live NUC |
+- **Hardware scope:** Dolby Vision, HLG, AV1, 4K60, HDMI-CEC, other GPU families and subscription-service DRM certification are unverified. See the [compatibility matrix](docs/hardware.md).
+- **Development security settings:** this is a userdebug image with permissive SELinux and authenticated ADB on TCP 5555. Use a trusted network. The shared image contains no personal ADB keys, accounts or Bluetooth bonds. [Security details](SECURITY.md).
+- **Updates:** packaged fixes survive reboot. The tested same-version Stremio reinstall retained the integration; future app versions need compatibility review. There is no automatic OS update channel.
 
-See the [test report](docs/testing.md) for durations, frame counters and remaining work. Dolby Vision, HLG, AV1, VLC/ExoPlayer, 4K60 and other GPU families are **not verified**.
+## Source, reports and development
 
-## Under the hood
-
-```text
-Stremio + its existing mpv interface
-             â†“
-Compatibility-checked player bridge + subtitle / HDR helpers
-             â†“
-Android MediaCodec â†’ Intel VAAPI â†’ P010 â†’ DRM composer â†’ HDMI HDR10
-```
-
-r6 carries English Home 1.1. Its verified Home-only delta preserves the r5 system and compiled r4 native platform, including the existing playback/Bluetooth fixes. It is **not a new full platform compilation**. This repository carries the 17 source ports, product overlay, launcher source and pinned source export. See [architecture](docs/architecture.md) and the [build guide](docs/building.md) for the exact scope and reproducibility limits.
-
-## Explore the project
-
-| Looking for | Start here |
+| I want to… | Go to |
 | --- | --- |
-| Downloads and setup | [Installation](docs/installation.md) |
-| Supported hardware | [Compatibility matrix](docs/hardware.md) |
-| How the fixes work | [Architecture](docs/architecture.md) Â· [17 platform ports](platform/README.md) |
-| Source builds | [Build guide](docs/building.md) Â· [Home launcher](launcher/README.md) |
-| Logo, boot art and wallpaper | [Brand kit](docs/branding.md) |
-| What's next | [Roadmap](docs/roadmap.md) Â· [Changelog](CHANGELOG.md) |
-| Help and contributions | [Discussions](https://github.com/zubSero/StremioBox/discussions) Â· [Contributing](CONTRIBUTING.md) |
+| See exactly what changed | [Detailed changelog](CHANGELOG.md) |
+| Diagnose picture, audio or remote problems | [Troubleshooting](docs/troubleshooting.md) |
+| Report a bug or another hardware configuration | [Issues](https://github.com/zubSero/StremioBox/issues/new/choose) |
+| Ask a setup question | [Discussions](https://github.com/zubSero/StremioBox/discussions) |
+| Understand playback and boot changes | [Architecture](docs/architecture.md) · [17 platform patches](platform/README.md) |
+| Build or customize the project | [Build guide](docs/building.md) · [Home source](launcher/README.md) · [Brand assets](docs/branding.md) |
+| Help with the next release | [Roadmap](docs/roadmap.md) · [Contributing](CONTRIBUTING.md) |
 
-## Security and updates
-
-This preview is a **userdebug build with permissive SELinux**. Authenticated ADB starts on TCP port 5555 for maintenance. A fresh installation uses your own authorization; release images contain no personal ADB keys, accounts or Bluetooth bonds. Use it on a trusted network and read [SECURITY.md](SECURITY.md).
-
-Reboots retain the packaged fixes. The tested Stremio reinstall retained the adapter and user data, but a future incompatible app layout is rejected by the guard. Replacing the OS with another image also replaces its patches. There is no managed OTA channel yet.
+The repository contains platform patches, a pinned source manifest, the product overlay, Home source and image tools. The English release was produced by replacing Home in the verified initial image. A clean full Android build from this public repository is still pending; the [build guide](docs/building.md) distinguishes the tested repack from the full build procedure.
 
 ## Credits and licensing
 
-Built on work from [LineageOS](https://lineageos.org/), [los-tv-x86](https://github.com/los-tv-x86/lineage_bass_android), [Android-x86](https://www.android-x86.org/), [Mesa](https://www.mesa3d.org/), [drm_hwcomposer](https://gitlab.freedesktop.org/drm-hwcomposer/drm-hwcomposer), Intel's media stack and the Android Generic / AAROPA ecosystem. Stremio and mpv keep their original licenses.
+Built on [LineageOS](https://lineageos.org/), [los-tv-x86](https://github.com/los-tv-x86/lineage_bass_android), [Android-x86](https://www.android-x86.org/), [Mesa](https://www.mesa3d.org/), [drm_hwcomposer](https://gitlab.freedesktop.org/drm-hwcomposer/drm-hwcomposer), Intel's media stack and the Android Generic / AAROPA ecosystem. Stremio and mpv retain their original licenses.
 
-Original repository tools, documentation, branding and the Home launcher use MIT; platform changes retain their upstream licenses and explicit SPDX notices. See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md).
+Original tools, documentation, artwork and Home launcher use MIT. Platform changes retain their upstream licenses. [License](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md).
 
-**An independent community project.** Not an official Stremio or LineageOS release, and not affiliated with those projects. Content services, accounts and add-ons are chosen by the user; none are configured in the image.
+StremioBox is an independent community project, unaffiliated with Stremio or LineageOS.

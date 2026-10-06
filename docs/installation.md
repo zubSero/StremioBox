@@ -1,12 +1,12 @@
-# Install StremioBox r6
+# Install StremioBox on an Intel NUC
 
 [Back to the project](../README.md) · [Hardware](hardware.md) · [Troubleshooting](troubleshooting.md)
 
-r6 targets the Intel NUC10i5FNH. Have a USB keyboard available for firmware menus and initial setup. The Homatics remote can be paired after Android starts.
+This guide covers **Intel NUC Preview — English Home**, tested on the Intel NUC10i5FNH. Its technical download identifier is `r6`. Have a USB keyboard available for firmware menus and initial setup; the Homatics remote can be paired after Android starts.
 
 ## 1. Download and verify
 
-Clone this repository, then use Python 3.10 or newer:
+Download and extract the [download helper ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-download-helper.zip). Open a terminal in the extracted folder containing `tools` and `releases`, then use Python 3.10 or newer:
 
 ```sh
 python3 tools/download.py --output downloads
@@ -16,11 +16,13 @@ Windows:
 
 ```powershell
 py tools/download.py --output downloads
-# Or, from the same checkout:
+# Or, from the same folder:
 powershell -File tools/download.ps1 -OutputDirectory downloads
 ```
 
 The ISO is distributed as `.iso.001` and `.iso.002`. These are sequential raw pieces, not two bootable images and not a ZIP archive. The helper validates each piece and the reconstructed ISO against the [r6 manifest](../releases/r6.json). It keeps verified parts so rerunning can reuse them; an interrupted part restarts its own transfer. Existing unrelated output is never overwritten.
+
+Contributors can also clone [the repository](https://github.com/zubSero/StremioBox) and run the same commands from its root folder.
 
 If you downloaded the two pieces yourself, put them together in a folder and run:
 
@@ -70,12 +72,14 @@ adb connect <your-box-address>:5555
 
 Authorize your own computer on the device when prompted. No developer key is shipped in the ISO. See [security and updates](../SECURITY.md) before exposing maintenance access to other networks.
 
-## English Home update for an existing r5 box
+<a id="update-an-existing-installation"></a>
 
-The r6 image includes English Home 1.1. If you already installed r5, the signed `StremioBoxHome-1.1-en.apk` release asset updates only Home, without replacing the native platform. With your authorized ADB connection:
+## Update an existing installation
+
+If your StremioBox uses the initial public image with Dutch Home, download the signed [English Home 1.1 APK](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBoxHome-1.1-en.apk). Open a terminal in the folder containing it. With your authorized ADB connection:
 
 ```sh
 adb install -r StremioBoxHome-1.1-en.apk
 ```
 
-The update uses the same release certificate and survives reboot. Installing Home alone does not add the Android/HDR fixes to a different OS. The historical r5 ISO retains its original Dutch Home 1.0; choose r6 for a fresh English installation.
+The update uses the same release certificate and survives reboot. It updates Home on the existing installation; it does not add the Android/HDR fixes to a different OS. New installations should use **Intel NUC Preview — English Home**, which already includes it. The historical Initial Release (`r5`) keeps Dutch Home 1.0. [Detailed changes](../CHANGELOG.md#english-home).
