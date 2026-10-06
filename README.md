@@ -47,6 +47,10 @@ The helper joins two download parts into one ISO and verifies their SHA-256 hash
 
 **Already using the initial image with Dutch Home?** Install the [English Home update](docs/installation.md#update-an-existing-installation) to change the launcher language. It uses the same signing certificate and survives reboot.
 
+[ADB update instructions without Python](docs/adb-installation.md) are available for existing installations. Full-system ADB migration requires supported root access and a compatible boot/disk layout; a portable system installer is still pending.
+
+**No USB stick?** Read the [USB-free installation options](docs/without-usb.md), which distinguish the tested app update from system migration and network-boot work still needed.
+
 <details>
 <summary>Image filename and checksum</summary>
 

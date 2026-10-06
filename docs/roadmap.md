@@ -11,12 +11,20 @@ The current Intel NUC preview includes English Home and the playback, audio, Blu
 - [ ] Exercise the disk installer on a spare drive with recoverable partitions.
 - [ ] Gather reproducible hardware reports for other Intel NUCs.
 
+## Simplify installation
+
+- [ ] Offer one direct ISO download from a project-controlled release mirror so ordinary installation does not require Python or manual part assembly.
+- [ ] Validate the USB installation path on a spare disk and document the first-start flow.
+- [ ] Build and test a portable root-ADB installation/update package for supported existing Android layouts.
+- [ ] Validate an internal-disk installation path from Linux and a network-boot package for users without removable media. See [USB-free options](without-usb.md).
+
 ## Make the build repeatable
 
 - [x] Verify that upstream's proprietary-project filter maps the 1,216-project source lock to the embedded 1,215-project manifest, with an exact SHA-256 match.
 - [ ] Complete and document a clean full public source build with pinned host/vendor inputs.
 - [ ] Extend machine-readable third-party binary/license inventory and source-offer documentation.
 - [ ] Define a release signing policy, rollback path and managed update channel.
+- [ ] Publish and test a portable root-ADB system updater with disk/boot-layout checks, verified staging and recovery. The [ADB guide](adb-installation.md) distinguishes the tested Home update from the private development deployment.
 - [ ] Move appropriate native fixes upstream to reduce local patch maintenance.
 
 ## Broaden playback and hardware checks

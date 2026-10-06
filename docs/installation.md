@@ -4,6 +4,16 @@
 
 This guide covers **Intel NUC Preview — English Home**, tested on the Intel NUC10i5FNH. Its technical download identifier is `r6`. Have a USB keyboard available for firmware menus and initial setup; the Homatics remote can be paired after Android starts.
 
+Already running StremioBox? The [ADB update guide](adb-installation.md) covers the tested English Home update without Python and explains the requirements for a full-system migration over ADB.
+
+## Choose an installation route
+
+| Situation | Start here |
+| --- | --- |
+| First installation, USB media available | Download the image below, then try live USB boot |
+| Existing StremioBox with Dutch Home | [Update Home through ADB](adb-installation.md#update-home-without-python); no USB or Python needed |
+| No USB stick | [USB-free options and their current status](without-usb.md) |
+
 ## 1. Download and verify
 
 Download and extract the [download helper ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-download-helper.zip). Open a terminal in the extracted folder containing `tools` and `releases`, then use Python 3.10 or newer:
@@ -83,3 +93,5 @@ adb install -r StremioBoxHome-1.1-en.apk
 ```
 
 The update uses the same release certificate and survives reboot. It updates Home on the existing installation; it does not add the Android/HDR fixes to a different OS. New installations should use **Intel NUC Preview — English Home**, which already includes it. The historical Initial Release (`r5`) keeps Dutch Home 1.0. [Detailed changes](../CHANGELOG.md#english-home).
+
+For Platform-Tools setup, APK verification and selection of the correct device, follow the [step-by-step ADB guide](adb-installation.md#update-home-without-python).
