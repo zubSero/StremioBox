@@ -70,6 +70,8 @@ SHA-256: f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
 
 ## Source, reports and development
 
+**Pull requests are welcome.** Anyone can fork the project and submit fixes, hardware improvements, translations or documentation updates. You can open a PR directly; changes are reviewed before merging. [How to contribute](CONTRIBUTING.md).
+
 | I want to… | Go to |
 | --- | --- |
 | See exactly what changed | [Detailed changelog](CHANGELOG.md) |

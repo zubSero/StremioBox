@@ -1,6 +1,18 @@
 # Contributing
 
-Hardware reports, focused fixes and documentation improvements are welcome. Start with [Discussions](https://github.com/zubSero/StremioBox/discussions) for general questions and use the issue forms for a reproducible bug or another hardware configuration.
+Anyone is welcome to submit updates through a pull request: bug fixes, hardware support, translations, documentation and other improvements. You can open a PR directly without asking for permission first. Changes are reviewed before merging.
+
+Start with [Discussions](https://github.com/zubSero/StremioBox/discussions) for general questions and use the issue forms for a reproducible bug or another hardware configuration.
+
+## Submit an update
+
+1. [Fork StremioBox](https://github.com/zubSero/StremioBox/fork) to your GitHub account.
+2. Create a branch in your fork, make your changes and run the relevant checks below.
+3. Commit and push that branch to your fork.
+4. [Open a pull request](https://github.com/zubSero/StremioBox/compare) from your fork's branch into `zubSero/StremioBox:main`. On the comparison page, choose **compare across forks** if needed.
+5. Explain what changed and how you tested it using the PR template. Draft PRs are welcome if you want feedback while working.
+
+You do not need write access to the upstream repository to contribute this way. Source and documentation updates are welcome; release images are published separately after validation.
 
 ## Before a change
 

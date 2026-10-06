@@ -40,6 +40,8 @@ Dolby Vision, HLG, AV1, VLC/ExoPlayer, 4K60, HDMI-CEC, echte S3-slaap en andere 
 
 De verpakte fixes blijven na reboot actief. Nieuwe Stremio-versies moeten opnieuw op compatibiliteit worden gecontroleerd. Er is geen automatisch OS-updatekanaal. Het Engelse image is gemaakt door Home in het geverifieerde basisimage te vervangen; een volledige Android-build vanuit deze publieke repository staat nog open.
 
+**Pull requests zijn welkom.** Iedereen kan het project forken en fixes, hardwareverbeteringen, vertalingen of documentatie insturen. Je kunt meteen een PR openen; wijzigingen worden bekeken voordat ze worden samengevoegd. [Zo draag je bij](CONTRIBUTING.md).
+
 [Problemen oplossen](docs/troubleshooting.md) · [Broncode bouwen](docs/building.md) · [Roadmap](docs/roadmap.md) · [Probleem melden](https://github.com/zubSero/StremioBox/issues/new/choose)
 
 StremioBox is een onafhankelijk communityproject, zonder officiële band met Stremio of LineageOS. [Licenties en credits](THIRD_PARTY_NOTICES.md).
