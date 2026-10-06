@@ -16,7 +16,7 @@ Already running StremioBox? The [ADB update guide](adb-installation.md) covers t
 
 ## 1. Download and verify without Python
 
-Download and extract the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-native-download.zip). It is a small set of readable scripts, not an Android build toolchain. No Python installation is needed.
+Download and extract the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-native-download-1.1.zip). It is a small set of readable scripts, not an Android build toolchain. No Python installation is needed.
 
 ### Windows: double-click
 

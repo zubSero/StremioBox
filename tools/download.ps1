@@ -36,11 +36,22 @@ function Assert-Manifest($Data) {
     if ($total -ne $Data.image.bytes) { throw 'Part sizes do not match the image.' }
 }
 
+function Get-Sha256([string]$Path) {
+    $stream = [IO.File]::OpenRead($Path)
+    $algorithm = [Security.Cryptography.SHA256]::Create()
+    try {
+        return [BitConverter]::ToString($algorithm.ComputeHash($stream)).Replace('-', '').ToLowerInvariant()
+    } finally {
+        $algorithm.Dispose()
+        $stream.Dispose()
+    }
+}
+
 function Assert-File([string]$Path, $Spec) {
     $item = Get-Item -LiteralPath $Path -Force
     if ($item.PSIsContainer -or ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or
         $item.Length -ne $Spec.bytes -or
-        (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $Spec.sha256) {
+        (Get-Sha256 $Path) -cne $Spec.sha256) {
         throw "Existing file is invalid; move it aside first: $Path"
     }
 }
