@@ -25,3 +25,7 @@ The public source bundle is an overlay plus pinned source references, not a full
 ## Attribution
 
 Thanks to LineageOS, los-tv-x86, AOSP, Android-x86, Android Generic, AAROPA, Mesa, drm_hwcomposer, Intel media/firmware contributors, Stremio and mpv. The project is independent and carries no official endorsement from them. Names and trademarks remain with their respective holders.
+
+## Next-release app-store inputs
+
+Aurora Store (AuroraOSS) and Flicky (mlm-games) retain **GPL-3.0-or-later** terms. Their APKs are unchanged signed distributions from F-Droid, used as external candidate build inputs. [Candidate inputs](platform/next/inputs.json) pin versions, ABI, APK hashes, source repositories and the exact corresponding source archives and hashes. Preserve those source archives and upstream license/notice files when distributing binaries. These apps are not part of the existing r5/r6 ISO.

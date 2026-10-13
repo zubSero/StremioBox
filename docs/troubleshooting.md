@@ -4,7 +4,7 @@
 
 | Symptom | Useful first checks |
 | --- | --- |
-| No signal during standby | Expected while HDMI is off. Check that wake restores picture, sound and ordinary remote keys. Record whether Android stayed running. |
+| No signal during standby | HDMI being off is expected while asleep, but failure to wake is a known long-standby issue on the test NUC. Try the remote or USB keyboard and record whether ADB responds. See [the diagnosis and candidate fix](standby-and-apps.md). |
 | Black playback | Confirm the app version, codec, HDR format and whether Home still renders. The validated path is Stremio mpv with HEVC Main10 HDR10 on the tested Intel GPU. |
 | No audio | Confirm HDMI is the active output and check TV volume/input. Record app audio track and whether the same issue happens with an SDR sample. |
 | Remote requires pairing again | Separate initial pairing from reconnect failure; state whether it followed reboot, display standby or deep suspend. Record remote and Bluetooth adapter model. |

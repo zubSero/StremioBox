@@ -103,3 +103,18 @@ sudo python3 tools/repack_home.py \
 ```
 
 The helper inventories every system entry, replaces only Home APK content while retaining its metadata, verifies the compressed result and replays the hybrid boot structures. It rejects an existing output image. Filesystem/container timestamps and tool versions can change the final ISO bytes, so this validates the controlled delta rather than promising an identical binary hash.
+
+## Next-release candidate
+
+The [candidate inputs](../platform/next/inputs.json) add console restoration patch 0018 after 0001 and apply store-seeding patch 0019 to a staged copy of the product. Published r5/r6 locks and the default preparation path remain unchanged. Use a **fresh locked checkout**; do not run this over a previously prepared product.
+
+Download the two exact APK URLs in the candidate inputs and save them as `Flicky.apk` and `AuroraStore.apk` in a separate store-input directory. Keep the corresponding source archives and their notices for redistribution. The helper verifies APK sizes/hashes before changes and again after staging; it does not download apps or accept store terms.
+
+```sh
+python3 "$STREMIOBOX_REPO/tools/prepare_platform.py" \
+  --source "$PWD" --stremio-apk /absolute/path/to/stremio.apk \
+  --next-release --store-apks /absolute/path/to/store-apks
+# Add --apply to prepare the verified candidate checkout.
+```
+
+Use the same build entry point and host/vendor prerequisites above. Native source compilation, fresh-data seeding and an overnight physical standby test are still required before publishing a new installation image. The existing-device boot overlay is specific to the verified development binary and is not distributed as a portable updater.

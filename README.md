@@ -28,11 +28,17 @@ StremioBox is a bootable Android TV system image based on Android 16 / LineageOS
 | Stremio controls | The existing mpv interface and seek bar remain available | VLC and ExoPlayer have not been validated |
 | HDMI audio | Sound works before and after display standby | Receiver bitstream passthrough is unverified |
 | Bluetooth remote | Ordinary Homatics keys work after reboot without repeating the pairing combination | The physical power-button cycle needs a separate retest |
-| Display standby | Film picture, sound and remote control recover after Android sleep/wake commands | Android stays running; true S3 suspend is unverified |
+| Display standby | Film picture, sound and remote control recover after Android sleep/wake commands | Long-standby hang reproduced; candidate fix under test; true S3 suspend unverified |
 | Subtitles | External SRT subtitles follow Disabled, language selection and audio-track changes | Eight development regression cases; not every subtitle format |
 | Home screen | English labels, D-pad navigation, Stremio, settings and installed apps | Home 1.1 was also checked after a physical reboot |
 
 [Hardware details](docs/hardware.md) · [Test methods and results](docs/testing.md)
+
+## Next-release work — 2026-10-13
+
+A repeatable **long-standby hang** was found on the test NUC after hours or overnight: the TV reports No signal and waking fails. An exact-build SurfaceFlinger hotfix passed short standby and HDMI reconnect tests on the development device; the overnight physical test and a new source-built ISO remain pending.
+
+The next-release source candidate also seeds **Aurora Store and Flicky**, an F-Droid client for TV, in Home's secondary **Apps & settings** row. Stremio stays the main action. Both stores survived reboot and their UI opened; complete in-store app installation is still pending. These changes are **not in the r6 download**. [Findings and app support](docs/standby-and-apps.md) · [Candidate source/build inputs](platform/next/README.md).
 
 ## Download and try it
 

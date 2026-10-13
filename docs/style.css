@@ -112,7 +112,7 @@ details a { color:#d0c1ff; text-decoration:underline; }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition:none!important; animation:none!important; } .button:hover { transform:none; } }
 
 /* Release history uses the same cards as the feature overview. */
-.release-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.release-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .feature-card .release-label { font-size:10px; color:var(--violet); letter-spacing:.8px; font-weight:650; margin-bottom:13px; }
 .changes-section { padding-top:0; }
 @media(max-width:720px) { .release-grid { grid-template-columns:1fr; } .release-pill { font-size:11px; gap:8px; padding-inline:10px; } }

@@ -7,6 +7,14 @@ This history describes the downloadable images and their verified behavior. Date
 | [Intel NUC Preview — English Home](#english-home) | 2026-10-05 | English Home 1.1, an update APK for existing installations and a fresh installation image | [`r6`](https://github.com/zubSero/StremioBox/releases/tag/r6) |
 | [Intel NUC Preview — Initial Release](#initial-release) | 2026-10-05 | First public image with StremioBox Home and the Intel playback, audio, Bluetooth and subtitle fixes | [`r5`](https://github.com/zubSero/StremioBox/releases/tag/r5) |
 
+## Unreleased source candidate — 2026-10-13
+
+- Prepared patch 0018 for SurfaceFlinger console restoration: VT_AUTO before activation and bounded VT_GETSTATE polling instead of VT_WAITACTIVE. An equivalent exact-build native hotfix is active on the development NUC.
+- Prepared product patch 0019 to seed Aurora Store 4.8.4 and Flicky 4.5.4 once, with pinned signed APK/source inputs. Existing installs, updates and later removals are preserved; Stremio remains the main Home action.
+- Added opt-in next-release source preparation with input verification and transactional rollback. The published r5/r6 platform lock, image hashes, assets and default 17-port preparation path are preserved.
+- Verified two reboots, three short Android sleep/wake cycles, two HDMI connector reconnect cycles and no new ANRs. Confirmed both stores in Home, Aurora onboarding, Flicky catalogue and idempotent first-boot seeding.
+- Overnight physical Homatics standby, complete app installation through each store, full native source compilation and a new public ISO remain pending. [Details and test boundaries](docs/standby-and-apps.md).
+
 ## Download tooling update — 2026-10-06
 
 - Added a Python-free Windows download ZIP with a double-click launcher and native PowerShell 5.1 helper.

@@ -1,0 +1,54 @@
+--- a/firstboot.sh
++++ b/firstboot.sh
+@@ -7,13 +7,32 @@
+ [ "$(getprop ro.product.system.name)" = lineage_nuc10_tv ]
+ state=/data/local/stremiobox
+ [ ! -L "$state" ] && [ -d "$state" ]
+-[ ! -e "$state/seed-completed" ] || exit 0
+-if [ -z "$(pm path com.stremio.one)" ]; then
+-    app=/system/etc/stremiobox/stremio.apk
+-    expected=3a9f86646ba18f4f11073dfbb01e10b1d4019e78d89ba58ec3de79f36f6cfc8c
+-    [ "$(sha256sum "$app" | cut -d ' ' -f 1)" = "$expected" ]
+-    pm install "$app"
++if [ ! -e "$state/seed-completed" ]; then
++    if [ -z "$(pm path com.stremio.one)" ]; then
++        app=/system/etc/stremiobox/stremio.apk
++        expected=3a9f86646ba18f4f11073dfbb01e10b1d4019e78d89ba58ec3de79f36f6cfc8c
++        [ "$(sha256sum "$app" | cut -d ' ' -f 1)" = "$expected" ]
++        pm install "$app"
++    fi
++    [ -n "$(pm path com.stremio.one)" ]
++    echo stremiobox-firstboot-v1 > "$state/seed-completed"
++    chmod 0600 "$state/seed-completed"
+ fi
+-[ -n "$(pm path com.stremio.one)" ]
+-echo stremiobox-firstboot-v1 > "$state/seed-completed"
+-chmod 0600 "$state/seed-completed"
++
++# Seed optional stores once. Existing packages, user updates and removals remain choices.
++seed_store() {
++    package=$1
++    apk=$2
++    expected=$3
++    [ -z "$(pm path "$package")" ] || return 0
++    [ "$(sha256sum "$apk" | cut -d ' ' -f 1)" = "$expected" ]
++    pm install "$apk"
++    appops set "$package" REQUEST_INSTALL_PACKAGES allow
++    [ -n "$(pm path "$package")" ]
++}
++if [ ! -e "$state/app-store-seed-completed" ]; then
++    seed_store app.flicky /system/etc/stremiobox/flicky.apk 5f8bcc05480951383fa48649d908bd5d64a8b3ef71c67871734777e702ff2204
++    seed_store com.aurora.store /system/etc/stremiobox/aurora-store.apk fd9c75d90d0f4a7c132b9b4a5a2cf1992a45e03b8d8ff988b7dcfbc0db2c4d11
++    echo stremiobox-app-stores-v1 > "$state/app-store-seed-completed"
++    chmod 0600 "$state/app-store-seed-completed"
++fi
+--- a/branding.mk
++++ b/branding.mk
+@@ -4,4 +4,6 @@
+ PRODUCT_PACKAGES += StremioBoxHome stremiobox-firstboot
+ PRODUCT_COPY_FILES += \
+     device/local/nuc10_tv/stremiobox/bootanimation.zip:$(TARGET_COPY_OUT_PRODUCT)/media/bootanimation.zip \
+-    device/local/nuc10_tv/stremiobox/stremio.apk:$(TARGET_COPY_OUT_SYSTEM)/etc/stremiobox/stremio.apk
++    device/local/nuc10_tv/stremiobox/stremio.apk:$(TARGET_COPY_OUT_SYSTEM)/etc/stremiobox/stremio.apk \
++    device/local/nuc10_tv/stremiobox/store-assets/Flicky.apk:$(TARGET_COPY_OUT_SYSTEM)/etc/stremiobox/flicky.apk \
++    device/local/nuc10_tv/stremiobox/store-assets/AuroraStore.apk:$(TARGET_COPY_OUT_SYSTEM)/etc/stremiobox/aurora-store.apk

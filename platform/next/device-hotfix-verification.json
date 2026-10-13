@@ -1,0 +1,23 @@
+{
+  "original_surfaceflinger": "c2a922e32f3f7565e8abbdbba20c9f29cf8f7eaace0ee101f5a0c7a297b83d79",
+  "surfaceflinger": "9018b3091ac52bc8ecaa603e0202092fe5af90f3351f39e9e07cfc883646c780",
+  "surfaceflinger_size": 9872540,
+  "source_patch": "0018-console-restore-auto-vt.patch",
+  "source_patch_sha256": "1cbf6c961db93192afcdb8d0730381a996a635d092e873eb03794302ea433f8b",
+  "implementation": "exact-build native hotfix equivalent to prepared source0018; full source rebuild pending",
+  "vt_process_mode_preserved": true,
+  "restore_vt_auto_in_destructor": true,
+  "maximum_vt_poll_ms": 200,
+  "original_hook_va": "0x49cb67",
+  "helper_va": "0x96a400",
+  "helper_bytes": 156,
+  "state": "verified after two full boots; 3 standby and 2 real HDMI hotplug cycles passed; no new ANRs",
+  "initrd": "7705e0df41ab11430c2029af178f9ab6a1875bc588252183e835dad6eefe1525",
+  "original_initrd": "0727d709c6056f4e9bac9471672f6c2e8cec7d5f063d9596a789c1a71f4b0958",
+  "boot_guard": "exact byte comparison plus exact native delta using tested boot BusyBox hexdump/sed",
+  "boot_guard_positive_and_corrupt_payload_negative_test": true,
+  "initrd_before_app_stores": "79f35387d023a2e14e182b9c2e88ec86e455118e0efac9dd1387cbc2647981c2",
+  "app_store_seed_sha256": "c3f0f93516e32285bc1739d421c866d70d9f595d9ef19e8c18afaf54aab92ca7",
+  "long_standby": "overnight physical test pending",
+  "source_compilation_completed": false
+}

@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "status": "source candidate; no published installation image",
+  "base_input_lock_sha256": "dd54013838b76c6625a5f91e8a190fa6a87ba411d848c7b242e713cc5cd09513",
+  "after_patch": "platform/patches/0001-console-thread-exit-lineage23.patch",
+  "source_port": {
+    "repository": "frameworks/native",
+    "patch": "platform/next/0018-console-restore-auto-vt.patch",
+    "sha256": "1cbf6c961db93192afcdb8d0730381a996a635d092e873eb03794302ea433f8b"
+  },
+  "product_patch": {
+    "directory": "stremiobox",
+    "patch": "platform/next/0019-app-store-seed.patch",
+    "sha256": "310310807759870cdd073b67e78f747831a3700317df33b3f68c7f970a79f4c1"
+  },
+  "stores": [
+    {
+      "package": "app.flicky",
+      "versionCode": 988,
+      "versionName": "4.5.4",
+      "file": "Flicky.apk",
+      "sha256": "5f8bcc05480951383fa48649d908bd5d64a8b3ef71c67871734777e702ff2204",
+      "bytes": 4249681,
+      "native_abis": [
+        "x86_64"
+      ],
+      "source": "https://f-droid.org/repo/app.flicky_988.apk",
+      "verified_against_official_repository_metadata": true,
+      "license": "GPL-3.0-or-later",
+      "sourceCode": "https://github.com/mlm-games/flicky",
+      "source_archive": {
+        "name": "app.flicky_988_src.tar.gz",
+        "sha256": "6de77ccdef38b4d666c84c4df61e9ce567ce958d129a21cf13bd3d58c8890339",
+        "size": 2030923,
+        "url": "https://f-droid.org/repo/app.flicky_988_src.tar.gz"
+      }
+    },
+    {
+      "package": "com.aurora.store",
+      "versionCode": 76,
+      "versionName": "4.8.4",
+      "file": "AuroraStore.apk",
+      "sha256": "fd9c75d90d0f4a7c132b9b4a5a2cf1992a45e03b8d8ff988b7dcfbc0db2c4d11",
+      "bytes": 9360088,
+      "native_abis": [
+        "arm64-v8a",
+        "armeabi-v7a",
+        "x86",
+        "x86_64"
+      ],
+      "source": "https://f-droid.org/repo/com.aurora.store_76.apk",
+      "verified_against_official_repository_metadata": true,
+      "license": "GPL-3.0-or-later",
+      "sourceCode": "https://gitlab.com/AuroraOSS/AuroraStore",
+      "source_archive": {
+        "name": "com.aurora.store_76_src.tar.gz",
+        "sha256": "1d65ce2dbdf6bee790b066ff6fb10bc19794cab584f565b63ce037058130e655",
+        "size": 3878835,
+        "url": "https://f-droid.org/repo/com.aurora.store_76_src.tar.gz"
+      }
+    }
+  ]
+}

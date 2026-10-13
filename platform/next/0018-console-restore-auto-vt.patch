@@ -1,0 +1,34 @@
+--- a/services/surfaceflinger/DisplayDevice.cpp
++++ b/services/surfaceflinger/DisplayDevice.cpp
+@@ -41,6 +41,7 @@
+ #include <termios.h>
+ #include <linux/kd.h>
+ #include <linux/vt.h>
++#include <unistd.h>
+ 
+ #include "DisplayDevice.h"
+ #include "FrontEnd/DisplayInfo.h"
+@@ -192,12 +193,20 @@
+         int fd = consoleFd;
+         int res;
+         ioctl(fd, KDSETMODE, (void*)KD_TEXT);
++        // The signal catcher has already exited, so nobody would acknowledge a
++        // VT_PROCESS release with VT_RELDISP and VT_WAITACTIVE would block the
++        // main thread forever. Switch back in VT_AUTO mode and bound the wait.
++        struct vt_mode autoMode = {};
++        autoMode.mode = VT_AUTO;
++        ioctl(fd, VT_SETMODE, &autoMode);
+         do {
+             res = ioctl(fd, VT_ACTIVATE, prev_vt_num);
+         } while(res < 0 && errno == EINTR);
+-        do {
+-            res = ioctl(fd, VT_WAITACTIVE, prev_vt_num);
+-        } while(res < 0 && errno == EINTR);
++        for (int attempt = 0; attempt < 20; attempt++) {
++            struct vt_stat vs;
++            if (ioctl(fd, VT_GETSTATE, &vs) == 0 && vs.v_active == prev_vt_num) break;
++            usleep(10000);
++        }
+         close(fd);
+         char const * const ttydev = "/dev/tty0";
+         fd = open(ttydev, O_RDWR | O_SYNC);

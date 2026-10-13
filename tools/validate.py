@@ -100,6 +100,31 @@ def main() -> int:
             raise ValueError(f'Patch hash mismatch: {patch.name}')
         subprocess.run(['git', 'apply', '--numstat', str(patch)], check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    candidate = json.loads((ROOT / 'platform/next/inputs.json').read_text(encoding='utf-8'))
+    if hashlib.sha256((ROOT / 'platform/input-lock.json').read_bytes()).hexdigest() != candidate['base_input_lock_sha256']:
+        raise ValueError('Next-release candidate base lock mismatch')
+    if candidate['after_patch'] not in {p['patch'] for p in lock['source_ports']}:
+        raise ValueError('Next-release candidate insertion point is absent')
+    project_paths = {p.get('path') or p.get('name') for p in projects}
+    if candidate['source_port']['repository'] not in project_paths:
+        raise ValueError('Next-release source port project is absent')
+    for entry in (candidate['source_port'], candidate['product_patch']):
+        patch = ROOT / entry['patch']
+        if hashlib.sha256(patch.read_bytes()).hexdigest() != entry['sha256']:
+            raise ValueError(f'Next-release patch hash mismatch: {patch.name}')
+        subprocess.run(['git', 'apply', '--numstat', str(patch)], check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    product_dir = ROOT / 'platform/product' / candidate['product_patch']['directory']
+    subprocess.run(['git', '-C', str(product_dir), 'apply', '--check',
+                    str(ROOT / candidate['product_patch']['patch'])], check=True,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    for spec in candidate['stores']:
+        if ('x86_64' not in spec['native_abis'] or spec['license'] != 'GPL-3.0-or-later'
+                or not re.fullmatch('[0-9a-f]{64}', spec['sha256'])
+                or not re.fullmatch('[0-9a-f]{64}', spec['source_archive']['sha256'])
+                or urllib.parse.urlsplit(spec['source']).netloc != 'f-droid.org'
+                or urllib.parse.urlsplit(spec['source_archive']['url']).netloc != 'f-droid.org'):
+            raise ValueError('Next-release store provenance is incomplete')
     assets = json.loads((ROOT / 'releases/source-lock.json').read_text(encoding='utf-8'))
     for name, spec in assets['files'].items():
         path = ROOT / name
@@ -144,7 +169,8 @@ def main() -> int:
             page.feed(content)
             for link in page.links:
                 relative_link(path, link, page.ids)
-    print(f'Validated {len(files)} public files, 17 patches, {len(projects)} pinned projects, release and local links.')
+    print(f'Validated {len(files)} public files, 17 published ports plus the next-release candidate, '
+          f'{len(projects)} pinned projects, release and local links.')
     return 0
 
 

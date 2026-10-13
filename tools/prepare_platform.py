@@ -38,11 +38,33 @@ def within(root: Path, relative: str) -> Path:
 
 
 def prepare(source: Path, apk: Path, apply: bool = False, public_root: Path = ROOT,
-            expected_app_hash: str = APP_SHA256) -> None:
+            expected_app_hash: str = APP_SHA256, *, next_release: bool = False,
+            store_apks: Path | None = None) -> None:
     source = source.resolve()
     if not (source / 'build/envsetup.sh').is_file():
         raise ValueError('Source is not an Android checkout with build/envsetup.sh')
     lock = json.loads((public_root / 'platform/input-lock.json').read_text(encoding='utf-8'))
+    ports = list(lock['source_ports'])
+    candidate = None
+    store_inputs = []
+    if next_release:
+        candidate = json.loads((public_root / 'platform/next/inputs.json').read_text(encoding='utf-8'))
+        if sha256(public_root / 'platform/input-lock.json') != candidate['base_input_lock_sha256']:
+            raise ValueError('Next-release candidate does not match the published base lock')
+        after = next(i for i, port in enumerate(ports) if port['patch'] == candidate['after_patch'])
+        ports.insert(after + 1, candidate['source_port'])
+        product_patch = within(public_root, candidate['product_patch']['patch'])
+        if sha256(product_patch) != candidate['product_patch']['sha256']:
+            raise ValueError('Next-release product patch checksum mismatch')
+        if store_apks is None:
+            raise ValueError('--next-release requires --store-apks with the pinned store APKs')
+        for spec in candidate['stores']:
+            path = within(store_apks, spec['file'])
+            if not path.is_file() or path.stat().st_size != spec['bytes'] or sha256(path) != spec['sha256']:
+                raise ValueError(f'Store APK input mismatch: {spec["file"]}')
+            store_inputs.append((path, spec))
+    elif store_apks is not None:
+        raise ValueError('--store-apks requires --next-release')
     manifest_path = public_root / 'platform/manifest.xml'
     if sha256(manifest_path) != lock['manifest_sha256']:
         raise ValueError('Pinned manifest hash mismatch')
@@ -65,7 +87,7 @@ def prepare(source: Path, apk: Path, apply: bool = False, public_root: Path = RO
         raise FileExistsError('Product destination already exists; use a fresh locked checkout')
     steps = []
     checked = set()
-    for port in lock['source_ports']:
+    for port in ports:
         if port['repository'] not in revisions:
             raise ValueError('Patch project is absent from the locked manifest')
         directory = within(source, port['repository'])
@@ -90,6 +112,19 @@ def prepare(source: Path, apk: Path, apply: bool = False, public_root: Path = RO
             shutil.copyfile(apk, product / 'stremiobox/stremio.apk')
             if sha256(product / 'stremiobox/stremio.apk') != expected_app_hash:
                 raise ValueError('App input changed during preparation')
+            if candidate:
+                overlay_dir = within(product, candidate['product_patch']['directory'])
+                subprocess.run(['git', '-c', 'core.autocrlf=false', '-C', str(overlay_dir),
+                                'apply', '--check', str(product_patch)], check=True)
+                subprocess.run(['git', '-c', 'core.autocrlf=false', '-C', str(overlay_dir),
+                                'apply', str(product_patch)], check=True)
+                assets = overlay_dir / 'store-assets'
+                assets.mkdir()
+                for path, spec in store_inputs:
+                    target = within(assets, spec['file'])
+                    shutil.copyfile(path, target)
+                    if target.stat().st_size != spec['bytes'] or sha256(target) != spec['sha256']:
+                        raise ValueError('Store APK input changed during preparation')
             for directory, patch in steps:
                 subprocess.run(['git', '-C', str(directory), 'apply', '--check', str(patch)], check=True)
                 subprocess.run(['git', '-C', str(directory), 'apply', str(patch)], check=True)
@@ -109,10 +144,13 @@ def main() -> int:
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--stremio-apk', required=True, type=Path)
     parser.add_argument('--apply', action='store_true')
+    parser.add_argument('--next-release', action='store_true', help='Include the unpublished standby/store candidate')
+    parser.add_argument('--store-apks', type=Path, help='Directory containing pinned Flicky.apk and AuroraStore.apk')
     args = parser.parse_args()
     try:
-        prepare(args.source, args.stremio_apk, args.apply)
-    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        prepare(args.source, args.stremio_apk, args.apply,
+                next_release=args.next_release, store_apks=args.store_apks)
+    except (OSError, ValueError, KeyError, StopIteration, subprocess.CalledProcessError) as error:
         print(f'Preparation failed: {error}', file=sys.stderr)
         return 1
     return 0

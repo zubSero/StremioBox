@@ -120,6 +120,65 @@ class PreparationTests(unittest.TestCase):
             self.prepare(apply=True)
         self.assertFalse(self.destination.exists())
 
+    def candidate_fixture(self):
+        candidate_dir = self.public / 'platform/next'
+        candidate_dir.mkdir()
+        followup = candidate_dir / 'console.patch'
+        followup.write_bytes(b'diff --git a/value.txt b/value.txt\n--- a/value.txt\n+++ b/value.txt\n@@ -1 +1 @@\n-after\n+candidate\n')
+        product = self.public / 'platform/product/stremiobox'
+        (product / 'firstboot.sh').write_bytes(b'original seed\n')
+        product_patch = candidate_dir / 'stores.patch'
+        product_patch.write_bytes(b'diff --git a/firstboot.sh b/firstboot.sh\n--- a/firstboot.sh\n+++ b/firstboot.sh\n@@ -1 +1 @@\n-original seed\n+store seed\n')
+        self.store_dir = self.public.parent / 'store-apks'
+        self.store_dir.mkdir()
+        self.store = self.store_dir / 'Store.apk'
+        self.store.write_bytes(b'signed fixture store')
+        self.candidate = {
+            'base_input_lock_sha256': prepare_platform.sha256(self.public / 'platform/input-lock.json'),
+            'after_patch': 'platform/patches/0001.patch',
+            'source_port': {'repository': 'frameworks/example', 'patch': 'platform/next/console.patch',
+                            'sha256': prepare_platform.sha256(followup)},
+            'product_patch': {'directory': 'stremiobox', 'patch': 'platform/next/stores.patch',
+                              'sha256': prepare_platform.sha256(product_patch)},
+            'stores': [{'file': self.store.name, 'bytes': self.store.stat().st_size,
+                        'sha256': prepare_platform.sha256(self.store)}],
+        }
+        (candidate_dir / 'inputs.json').write_text(json.dumps(self.candidate), encoding='utf-8')
+
+    def prepare_candidate(self):
+        prepare_platform.prepare(self.source, self.apk, True, self.public, self.app_hash,
+                                 next_release=True, store_apks=self.store_dir)
+
+    def test_candidate_applies_after_base_and_preserves_published_inputs(self):
+        self.candidate_fixture()
+        base_lock = (self.public / 'platform/input-lock.json').read_bytes()
+        self.prepare_candidate()
+        self.assertEqual(self.file.read_bytes(), b'candidate\n')
+        self.assertEqual((self.destination / 'stremiobox/firstboot.sh').read_bytes(), b'store seed\n')
+        self.assertEqual((self.destination / 'stremiobox/store-assets/Store.apk').read_bytes(), b'signed fixture store')
+        self.assertEqual((self.public / 'platform/product/stremiobox/firstboot.sh').read_bytes(), b'original seed\n')
+        self.assertEqual((self.public / 'platform/input-lock.json').read_bytes(), base_lock)
+
+    def test_candidate_rejects_corrupt_store_before_source_changes(self):
+        self.candidate_fixture()
+        self.store.write_bytes(b'corrupt input')
+        with self.assertRaises(ValueError):
+            self.prepare_candidate()
+        self.assertEqual(self.file.read_bytes(), b'before\n')
+        self.assertFalse(self.destination.exists())
+
+    def test_candidate_conflict_rolls_back_base_patch(self):
+        self.candidate_fixture()
+        patch = self.public / self.candidate['source_port']['patch']
+        patch.write_bytes(patch.read_bytes().replace(b'-after', b'-conflict'))
+        self.candidate['source_port']['sha256'] = prepare_platform.sha256(patch)
+        (self.public / 'platform/next/inputs.json').write_text(json.dumps(self.candidate), encoding='utf-8')
+        with self.assertRaises(subprocess.CalledProcessError):
+            self.prepare_candidate()
+        self.assertEqual(self.file.read_bytes(), b'before\n')
+        self.assertEqual(run(self.project, 'status', '--porcelain'), '')
+        self.assertFalse(self.destination.exists())
+
 
 if __name__ == '__main__':
     unittest.main()

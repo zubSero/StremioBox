@@ -23,6 +23,12 @@ StremioBox is een opstartbaar Android TV-image op basis van Android 16 / Lineage
 
 [Hardwarematrix](docs/hardware.md) · [Testresultaten](docs/testing.md)
 
+## Volgende patch — 2026-10-13
+
+Na uren of een nacht standby is op de test-NUC een terugkerende vastloper vastgesteld: de tv meldt Geen signaal en wakker maken lukt niet. De SurfaceFlinger-hotfix is actief op het ontwikkeltoestel en doorstaat korte standby- en HDMI-hersteltests. De fysieke nachttest en een nieuwe ISO vanuit broncode staan nog open.
+
+De broncode voor de volgende patch voegt **Aurora Store en Flicky** (F-Droid voor TV) toe aan **Apps & settings**. Stremio blijft de hoofdknop. Beide winkels werken na reboot en hun interface opent; een volledige appinstallatie via iedere winkel moet nog worden getest. Dit zit **nog niet in de r6-download**. [Diagnose en andere apps](docs/standby-and-apps.md) · [Broncode en build-invoer](platform/next/README.md).
+
 ## Downloaden
 
 De huidige uitgave heet **Intel NUC Preview — English Home**. Deze bevat de fixes van de eerste publieke image en het Engelse startscherm. De [uitgebreide changelog](CHANGELOG.md) beschrijft elke wijziging en de bijbehorende tests.

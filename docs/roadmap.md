@@ -4,6 +4,17 @@
 
 The current Intel NUC preview includes English Home and the playback, audio, Bluetooth and subtitle fixes described in the [changelog](../CHANGELOG.md). The next priorities are repeatable installation, longer hardware testing and a full source build. Items below are not promised compatibility or delivery dates.
 
+## Standby recovery and optional app stores
+
+- [x] Identify the SurfaceFlinger VT restore deadlock and prepare source patch 0018.
+- [x] Validate an equivalent exact-build hotfix across reboots, short standby and HDMI reconnect on the development NUC.
+- [x] Prepare one-time Aurora Store/Flicky seeding with pinned signed APKs and corresponding sources; verify Home visibility, store UI and reboot persistence.
+- [ ] Complete hours/overnight standby using the physical Homatics power button.
+- [ ] Complete app installation through both stores with the remote.
+- [ ] Build the candidate platform from source, validate a fresh-data installation and publish the next ISO.
+
+See [standby and app support](standby-and-apps.md). The candidate is separate from the published r5/r6 image inputs.
+
 ## Validate the existing release
 
 - [ ] Retest the physical Homatics power button through repeated cycles on the public platform.
