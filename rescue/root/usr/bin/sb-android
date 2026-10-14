@@ -1,0 +1,5 @@
+#!/bin/sh
+# Reboot into the default GRUB entry (StremioBox).
+sync
+umount /mnt/android 2>/dev/null
+reboot

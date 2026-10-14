@@ -1,0 +1,4 @@
+#!/bin/busybox sh
+# SPDX-License-Identifier: MIT
+# StremioBox rescue: Alpine userland on the StremioBox kernel, loaded entirely into RAM.
+exec /bin/busybox init

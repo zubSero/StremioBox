@@ -7,6 +7,8 @@ ADB can update apps without a USB installer. A full operating-system installatio
 | Starting point | Available route | Status |
 | --- | --- | --- |
 | Initial StremioBox image with Dutch Home | Install the signed English Home APK over ADB | Tested on the physical NUC, including persistence after reboot |
+| r5/r6 installation without the app stores | Install the unchanged Aurora Store and Flicky APKs over ADB | Same APKs as the r7 first-boot seed; see [below](#add-the-app-stores-to-r5-or-r6) |
+| Any StremioBox installation | Add the optional rescue system to the EFI partition | [Rescue kit](rescue.md); tested in virtual machines |
 | Existing StremioBox needing a native platform update | Root-ADB system updater with compatible disk/boot layout | Technically possible; used during development, but a portable public updater is not released |
 | Another Android TV distribution | Inspect root access, partitions, bootloader and data compatibility before migration | No general migration installer is available |
 | New PC or an installation without root-ADB access | Boot the StremioBox USB image | Use the [installation guide](installation.md); disk-installer validation remains pending |
@@ -99,3 +101,21 @@ Migrating another Android distribution also needs a decision about keeping or is
 **The release ISO is not an Android recovery OTA package.** `adb install` installs APKs; `adb sideload` requires an update package supported by the target's recovery. Neither command installs this ISO as a complete operating system. A recovery update ZIP or the dedicated root-ADB installer needs its own build and validation. See [Android's OTA documentation](https://source.android.com/docs/core/ota/nonab) and [ADB documentation](https://developer.android.com/tools/adb).
 
 Until that installer is published, use the tested Home update above for existing StremioBox devices and the USB path for a fresh system. The [roadmap](roadmap.md) tracks the portable full-system updater.
+
+<a id="add-the-app-stores-to-r5-or-r6"></a>
+
+## Add the app stores to r5 or r6
+
+r7 installs Aurora Store and Flicky on first boot. On an older installation you can add the same signed APKs yourself. Download them from the [r7 release](https://github.com/zubSero/StremioBox/releases/tag/r7) into the `platform-tools` folder and check their hashes as shown above:
+
+```text
+fd9c75d90d0f4a7c132b9b4a5a2cf1992a45e03b8d8ff988b7dcfbc0db2c4d11  AuroraStore-4.8.4.apk
+5f8bcc05480951383fa48649d908bd5d64a8b3ef71c67871734777e702ff2204  Flicky-4.5.4.apk
+```
+
+```sh
+adb install AuroraStore-4.8.4.apk
+adb install Flicky-4.5.4.apk
+```
+
+Both appear in Home under **Apps & settings**. The first time a store installs an app, Android asks you to allow installs from that store. The standby compositor fix and the fingerprint change are system files: they need the r7 image.

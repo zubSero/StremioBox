@@ -1,0 +1,15 @@
+# Alpine 3.24 packages installed on top of the pinned minirootfs.
+busybox
+dosfstools
+dropbear
+dropbear-scp
+e2fsprogs
+efibootmgr
+iproute2
+kmod
+nano
+openssh-sftp-server
+util-linux-misc
+blkid
+wpa_supplicant
+zstd

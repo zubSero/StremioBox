@@ -57,6 +57,20 @@ The final r6 ISO also passed a diskless UEFI live boot in QEMU/KVM with fresh An
 
 ## Standby and app-store candidate — 2026-10-13
 
+*Superseded by the [r7 results](#standby-and-app-stores-release) for the public image; kept as the development-device record.*
+
 The [candidate report](standby-and-apps.md) records the later long-standby failure and device hotfix checks separately from r5/r6 acceptance. Two full boots, three short sleep/wake cycles, two DRM connector reconnect cycles and four completed console-manager destructor calls passed without new ANRs. These are short development-device tests, not a completed overnight physical test or a new ISO boot test.
 
 Aurora Store and Flicky APK hashes, x86_64 support and TV launch activities were checked against official F-Droid inputs. Both appeared in Home and survived reboot. Flicky fetched its catalogue; Aurora reached first-use onboarding. Rerunning seeding preserved package install/update timestamps. No store account or terms were accepted and end-to-end user app installation is pending.
+
+<a id="standby-and-app-stores-release"></a>
+
+## Standby & App Stores release (r7) — 2026-10-14
+
+The r7 ISO has SHA-256 `65b07feafd70670954231afc6a69a6b850445d67197c4d53f3c1cf1aff010bb8`. It was derived from the verified r6 ISO with [`repack_image.py`](../tools/repack_image.py) and a [declared change list](../releases/r7-changes.json). Exactly five system entries changed (three replaced, two added); 19,579 other entries keep their contents, modes, ownership, SELinux labels and symlinks. Kernel, initrd, recovery and the UEFI/BIOS/GPT boot structures are unchanged. See [the delta](../releases/r7-image-delta.json) and [image record](../releases/r7-image-verification.json).
+
+A diskless fresh-data UEFI live boot in QEMU/KVM completed. The guest reported the fixed SurfaceFlinger hash, no fingerprint feature, Stremio, Flicky and Aurora Store installed with their expected hashes, install permission for both stores and both first-boot markers. Home resumed with the stores in **Apps & settings**. Three virtual sleep/wake cycles kept the same SurfaceFlinger process, produced no ANR files and no IVirtualHal errors. [Boot record](../releases/r7-boot-validation.json).
+
+The rescue kit was tested in QEMU/KVM: direct boot with SSH, activation from a live r7 guest, boot through the added GRUB entry and removal. [Rescue record](../releases/r7-rescue-validation.json).
+
+**Test boundary:** the physical NUC runs the same SurfaceFlinger, first-boot script, store APKs and fingerprint file through its development installation (two reboots, short standby and HDMI reconnect cycles passed). It was not reflashed with the r7 ISO. The overnight standby test with the physical power button, a full disk installation and complete in-store app installation are still pending. The Home screenshot with both stores is a capture from the physical NUC.

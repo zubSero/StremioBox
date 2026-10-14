@@ -28,4 +28,8 @@ Thanks to LineageOS, los-tv-x86, AOSP, Android-x86, Android Generic, AAROPA, Mes
 
 ## Next-release app-store inputs
 
-Aurora Store (AuroraOSS) and Flicky (mlm-games) retain **GPL-3.0-or-later** terms. Their APKs are unchanged signed distributions from F-Droid, used as external candidate build inputs. [Candidate inputs](platform/next/inputs.json) pin versions, ABI, APK hashes, source repositories and the exact corresponding source archives and hashes. Preserve those source archives and upstream license/notice files when distributing binaries. These apps are not part of the existing r5/r6 ISO.
+Aurora Store (AuroraOSS) and Flicky (mlm-games) retain **GPL-3.0-or-later** terms. Their APKs are unchanged signed distributions from F-Droid, used as external candidate build inputs. [Candidate inputs](platform/next/inputs.json) pin versions, ABI, APK hashes, source repositories and the exact corresponding source archives and hashes. Preserve those source archives and upstream license/notice files when distributing binaries. They are included in the r7 ISO; the corresponding source archives are attached to the [r7 release](https://github.com/zubSero/StremioBox/releases/tag/r7). They are not part of the r5/r6 ISOs.
+
+## Rescue kit
+
+The optional rescue kit contains Alpine Linux 3.24 packages (BusyBox, dropbear, e2fsprogs, dosfstools, util-linux, wpa_supplicant, iproute2, kmod, nano and dependencies) under their own licenses, mostly GPL-2.0, MIT and BSD. `package-versions.txt` in each kit lists the exact package versions; sources are available from [Alpine Linux](https://pkgs.alpinelinux.org/) and the [aports repository](https://gitlab.alpinelinux.org/alpine/aports). The kernel, its modules and Intel Wi-Fi firmware are copied unchanged from the StremioBox image. The kit's own scripts use MIT.

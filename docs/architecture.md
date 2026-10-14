@@ -35,3 +35,9 @@ The preserved source-preparation manifest contains 1,216 pinned projects. The up
 ## English Home update
 
 **Intel NUC Preview — English Home** (`r6`) replaces Home 1.0 with English Home 1.1 (version code 2), signed by the same release key. Its [full delta](../releases/r6-home-delta.json) identifies exactly one changed file and 19,581 preserved system entries. Kernel, initrd, recovery, native code, boot art and first-boot Stremio seeding remain the verified initial image's inputs. The physical NUC can install Home 1.1 as a regular signed app update; a fresh English Home installation gets it directly from the system image.
+
+## Standby & App Stores update
+
+**Intel NUC Preview — Standby & App Stores** (`r7`) changes five system entries against r6: SurfaceFlinger with the console-restore fix (patch 0018 behavior), the first-boot script and two store APKs (patch 0019), and an empty vendor fingerprint feature file. Everything else, including kernel, initrd and Home, keeps its r6 bytes. [Full delta](../releases/r7-image-delta.json). The first-boot service still installs Stremio first; the stores follow once, with a separate marker, so removing a store is permanent.
+
+The optional [rescue system](rescue.md) is not part of the image. It runs the same kernel from the EFI partition with an Alpine userland in RAM and is added to GRUB as a separate entry.

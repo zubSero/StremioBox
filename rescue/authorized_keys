@@ -1,0 +1,2 @@
+# Paste your SSH public key(s) here, one per line (for example the contents of ~/.ssh/id_ed25519.pub).
+# Leave empty to keep SSH off; the local console (Alt+F2) still works.

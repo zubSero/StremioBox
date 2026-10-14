@@ -1,0 +1,46 @@
+{
+  "revision": 7,
+  "base_revision": 6,
+  "derivation": "Verified r6 platform; five declared system entries changed (standby compositor fix, optional app stores, fingerprint feature hidden); no platform compile",
+  "changes": [
+    {
+      "path": "system/bin/surfaceflinger",
+      "reason": "Patch 0018 equivalent: restore VT_AUTO and bound the console wait when a display is destroyed (standby/HDMI hang)",
+      "before": "c2a922e32f3f7565e8abbdbba20c9f29cf8f7eaace0ee101f5a0c7a297b83d79",
+      "input": "surfaceflinger",
+      "sha256": "9018b3091ac52bc8ecaa603e0202092fe5af90f3351f39e9e07cfc883646c780"
+    },
+    {
+      "path": "system/bin/stremiobox-firstboot",
+      "reason": "Patch 0019: seed Aurora Store and Flicky once after first boot",
+      "before": "b6747fde29d2fc49a51211167ed7d0b687854c0009db9d62ccbd68f85701d5a0",
+      "input": "firstboot.sh",
+      "sha256": "c3f0f93516e32285bc1739d421c866d70d9f595d9ef19e8c18afaf54aab92ca7"
+    },
+    {
+      "path": "system/etc/stremiobox/aurora-store.apk",
+      "reason": "Patch 0019: Aurora Store 4.8.4 (76), unchanged F-Droid signed APK",
+      "before": "absent",
+      "label_from": "system/etc/stremiobox/stremio.apk",
+      "mode": "644",
+      "input": "AuroraStore.apk",
+      "sha256": "fd9c75d90d0f4a7c132b9b4a5a2cf1992a45e03b8d8ff988b7dcfbc0db2c4d11"
+    },
+    {
+      "path": "system/etc/stremiobox/flicky.apk",
+      "reason": "Patch 0019: Flicky 4.5.4 (988), unchanged F-Droid signed APK",
+      "before": "absent",
+      "label_from": "system/etc/stremiobox/stremio.apk",
+      "mode": "644",
+      "input": "Flicky.apk",
+      "sha256": "5f8bcc05480951383fa48649d908bd5d64a8b3ef71c67871734777e702ff2204"
+    },
+    {
+      "path": "system/vendor/etc/permissions/android.hardware.fingerprint.xml",
+      "reason": "The NUC has no fingerprint sensor; the vendor feature made BiometricService log an error every second onto the console",
+      "before": "2a71ae806bdc70e7f0f72c1ac010cae49fcb520efc4b10de52aaed57fe365662",
+      "input": "no-fingerprint.xml",
+      "sha256": "cabba3bd04af3b084ccbb6c4c4a14c046f86ec663ef90172ff2dd9ad117f8de2"
+    }
+  ]
+}

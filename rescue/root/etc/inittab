@@ -1,0 +1,5 @@
+::sysinit:/etc/rescue/start.sh
+tty1::respawn:/etc/rescue/banner.sh
+tty2::askfirst:-/bin/sh
+::ctrlaltdel:/sbin/reboot
+::shutdown:/etc/rescue/stop.sh

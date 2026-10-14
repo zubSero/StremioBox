@@ -85,7 +85,7 @@ The lunch form above is the one used by the original pinned builder. This public
 
 ## Signing and reproducibility
 
-Home's current prebuilt APK is English Home 1.1, included in r6. The private Home release key is deliberately excluded. Rebuilding Home with your own key is suitable for a fork, but does not produce an in-place signature-compatible update to the official prebuilt. Android itself remains an unofficial userdebug image; there is no production verified-boot or OTA signing service here.
+Home's current prebuilt APK is English Home 1.1, included in r6 and r7. The private Home release key is deliberately excluded. Rebuilding Home with your own key is suitable for a fork, but does not produce an in-place signature-compatible update to the official prebuilt. Android itself remains an unofficial userdebug image; there is no production verified-boot or OTA signing service here.
 
 A release source bundle contains this selected public tree and notices. It is not the old workstation backup and cannot reproduce private migration steps. The [roadmap](roadmap.md) tracks a complete clean source build, additional license inventory and installer validation. The exported/embedded manifest relationship has already been [verified](../releases/manifest-verification.json).
 
@@ -118,3 +118,22 @@ python3 "$STREMIOBOX_REPO/tools/prepare_platform.py" \
 ```
 
 Use the same build entry point and host/vendor prerequisites above. Native source compilation, fresh-data seeding and an overnight physical standby test are still required before publishing a new installation image. The existing-device boot overlay is specific to the verified development binary and is not distributed as a portable updater.
+
+## Reproduce r7 from r6
+
+r7 was produced with the generic [`repack_image.py`](../tools/repack_image.py), which applies a [declared change list](../releases/r7-changes.json) and fails if anything else in the system image differs. Each change states the path, the expected hash before (or `absent`) and the expected hash of the new file. Put the five inputs in one directory: `surfaceflinger` (attached to the r7 release; see the [device hotfix record](../platform/next/device-hotfix-verification.json)), `firstboot.sh` (the product first-boot script after patch 0019), `AuroraStore.apk`, `Flicky.apk` and `no-fingerprint.xml` (both attached to the release).
+
+```sh
+sudo python3 tools/repack_image.py \
+  --base-iso /absolute/path/StremioBox-Android16-r6-nuc10_tv.iso \
+  --base-record releases/r6-image-verification.json \
+  --changes releases/r7-changes.json \
+  --inputs /absolute/path/r7-inputs \
+  --output /absolute/path/StremioBox-Android16-r7-nuc10_tv.iso
+```
+
+New files take their owner and SELinux label from the file named in `label_from`; replaced files keep their original metadata. As with the Home repack, compression and container timestamps can change the final ISO bytes; the recorded delta is the verifiable claim.
+
+## Rescue kit
+
+See [rescue system](rescue.md#build-it-yourself) for `tools/build_rescue.sh`.

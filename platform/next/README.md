@@ -2,7 +2,7 @@
 
 [Project](../../README.md) · [Build guide](../../docs/building.md#next-release-candidate) · [Standby findings](../../docs/standby-and-apps.md)
 
-This directory contains source changes for a future image, dated 2026-10-13. It is not a new ISO or a general-purpose device updater. Published r5/r6 inputs and downloads keep their original bytes.
+This directory contains source changes dated 2026-10-13. Their result ships in the **r7** image as a verified repack (see [r7 changes](../../releases/r7-changes.json)); a full source build with these patches is still pending. Published r5/r6 inputs and downloads keep their original bytes.
 
 `inputs.json` pins the base lock, new patches, signed app-store APKs and corresponding source archives. `tools/prepare_platform.py --next-release --store-apks ...` inserts 0018 immediately after 0001, applies 0019 to the staged product, and copies the verified APKs. The default preparation path still uses the published 17 ports.
 

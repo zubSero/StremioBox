@@ -1,0 +1,14 @@
+{
+  "revision": 7,
+  "kit": "StremioBox-rescue-kit-r7",
+  "kernel_sha256": "ef8272b23a55d12d72ce7707f242453dd63f0a731540be98bcf201ad33ecef14",
+  "kernel_identical_to_iso": true,
+  "alpine_minirootfs": {"version": "3.24.2", "sha256": "c5ca053cfe1d85c5b96dff8b9bc57045f7f184a30ffb6b65776409ca90388677"},
+  "keys_or_passwords_included": false,
+  "tests": [
+    {"mode": "QEMU/KVM direct boot, NVMe disk with ESP and ext4 partition, Intel e1000e network", "results": ["modules e1000e/iwlwifi loaded", "DHCP address", "SSH with key from the ESP", "password login refused", "sb-disk found, checked and mounted the Android partition", "host key reused on second start"]},
+    {"mode": "enable-rescue.sh inside a fresh-data r7 live Android guest (QEMU/KVM, UEFI)", "results": ["EFI partition detected", "checksums and free space verified", "GRUB entry added once with backup", "second run idempotent", "--remove restored the original grub.cfg and removed efi/rescue"]},
+    {"mode": "UEFI boot of the prepared disk through the added GRUB entry", "results": ["rescue kernel and image loaded from the ESP", "SSH accepted the key installed by enable-rescue.sh"]}
+  ],
+  "scope": "Virtual hardware only; the public kit has not yet been installed on a physical NUC set up with the r7 disk installer"
+}

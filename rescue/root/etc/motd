@@ -1,0 +1,7 @@
+
+StremioBox rescue system (runs from RAM; Android is not mounted)
+  sb-disk        check the Android partition, then mount it on /mnt/android
+  sb-android     reboot into StremioBox
+  /mnt/esp       EFI system partition (rescue files: /mnt/esp/efi/rescue)
+  Wi-Fi:         put a wpa_supplicant config in efi/rescue/wifi.conf on the ESP
+

@@ -1,0 +1,120 @@
+{
+  "base_revision": 6,
+  "revision": 7,
+  "changes": [
+    {
+      "path": "system/bin/surfaceflinger",
+      "reason": "Patch 0018 equivalent: restore VT_AUTO and bound the console wait when a display is destroyed (standby/HDMI hang)",
+      "before": {
+        "mode": 493,
+        "uid": 0,
+        "gid": 2000,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73757266616365666c696e6765725f657865633a733000"
+        },
+        "kind": "file",
+        "bytes": 9871048,
+        "sha256": "c2a922e32f3f7565e8abbdbba20c9f29cf8f7eaace0ee101f5a0c7a297b83d79"
+      },
+      "after": {
+        "mode": 493,
+        "uid": 0,
+        "gid": 2000,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73757266616365666c696e6765725f657865633a733000"
+        },
+        "kind": "file",
+        "bytes": 9872540,
+        "sha256": "9018b3091ac52bc8ecaa603e0202092fe5af90f3351f39e9e07cfc883646c780"
+      }
+    },
+    {
+      "path": "system/bin/stremiobox-firstboot",
+      "reason": "Patch 0019: seed Aurora Store and Flicky once after first boot",
+      "before": {
+        "mode": 493,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 799,
+        "sha256": "b6747fde29d2fc49a51211167ed7d0b687854c0009db9d62ccbd68f85701d5a0"
+      },
+      "after": {
+        "mode": 493,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 1646,
+        "sha256": "c3f0f93516e32285bc1739d421c866d70d9f595d9ef19e8c18afaf54aab92ca7"
+      }
+    },
+    {
+      "path": "system/etc/stremiobox/aurora-store.apk",
+      "reason": "Patch 0019: Aurora Store 4.8.4 (76), unchanged F-Droid signed APK",
+      "before": "absent",
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 9360088,
+        "sha256": "fd9c75d90d0f4a7c132b9b4a5a2cf1992a45e03b8d8ff988b7dcfbc0db2c4d11"
+      }
+    },
+    {
+      "path": "system/etc/stremiobox/flicky.apk",
+      "reason": "Patch 0019: Flicky 4.5.4 (988), unchanged F-Droid signed APK",
+      "before": "absent",
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 4249681,
+        "sha256": "5f8bcc05480951383fa48649d908bd5d64a8b3ef71c67871734777e702ff2204"
+      }
+    },
+    {
+      "path": "system/vendor/etc/permissions/android.hardware.fingerprint.xml",
+      "reason": "The NUC has no fingerprint sensor; the vendor feature made BiometricService log an error every second onto the console",
+      "before": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a76656e646f725f636f6e666967735f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 834,
+        "sha256": "2a71ae806bdc70e7f0f72c1ac010cae49fcb520efc4b10de52aaed57fe365662"
+      },
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a76656e646f725f636f6e666967735f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 127,
+        "sha256": "cabba3bd04af3b084ccbb6c4c4a14c046f86ec663ef90172ff2dd9ad117f8de2"
+      }
+    }
+  ],
+  "unchanged_entries": 19579,
+  "all_other_file_contents_modes_ownership_xattrs_symlinks_preserved": true,
+  "kernel_initrd_recovery_preserved": true,
+  "uefi_bios_gpt_preserved": true
+}

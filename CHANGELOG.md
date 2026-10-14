@@ -1,13 +1,52 @@
 # Changelog
 
-This history describes the downloadable images and their verified behavior. Dates use UTC. Release names describe the change; identifiers such as `r6` remain in filenames, tags and verification records so existing downloads stay traceable.
+This history describes the downloadable images and their verified behavior. Dates use UTC. Release names describe the change; identifiers such as `r7` remain in filenames, tags and verification records so existing downloads stay traceable.
 
 | Release | Published | What changed | Technical tag |
 | --- | --- | --- | --- |
+| [Intel NUC Preview — Standby & App Stores](#standby-and-app-stores) | 2026-10-14 | Standby/HDMI hang fix, Aurora Store and Flicky, no console log spam, optional rescue kit | [`r7`](https://github.com/zubSero/StremioBox/releases/tag/r7) |
 | [Intel NUC Preview — English Home](#english-home) | 2026-10-05 | English Home 1.1, an update APK for existing installations and a fresh installation image | [`r6`](https://github.com/zubSero/StremioBox/releases/tag/r6) |
 | [Intel NUC Preview — Initial Release](#initial-release) | 2026-10-05 | First public image with StremioBox Home and the Intel playback, audio, Bluetooth and subtitle fixes | [`r5`](https://github.com/zubSero/StremioBox/releases/tag/r5) |
 
-## Unreleased source candidate — 2026-10-13
+<a id="standby-and-app-stores"></a>
+
+## Intel NUC Preview — Standby & App Stores
+
+**Published 2026-10-14 · Home 1.1 · Android 16 / LineageOS 23.2**
+
+[Download](https://github.com/zubSero/StremioBox/releases/tag/r7) · [Installation](docs/installation.md) · [Standby and apps](docs/standby-and-apps.md) · [Rescue system](docs/rescue.md) · [Validation](docs/testing.md#standby-and-app-stores-release)
+
+![Home with Aurora Store and Flicky on the physical NUC](docs/assets/home-r7-app-stores.png)
+
+### Fixed: the box no longer hangs after long standby
+
+- SurfaceFlinger could wait forever while restoring the text console when a display was removed during standby or an HDMI change. The TV then showed No signal, the remote did nothing and only a power cycle helped.
+- r7 ships the corrected SurfaceFlinger: it switches the console back to automatic mode first and waits at most 200 ms. This is the exact binary validated on the development NUC, equivalent to source patch 0018.
+
+### Fixed: no scrolling text on the TV during standby
+
+- The vendor files declared a fingerprint sensor the NUC does not have, so Android logged an error every second onto the console. During standby this looked like a boot loop.
+- r7 replaces that feature file with an empty one. No functionality is lost.
+
+### New: Aurora Store and Flicky
+
+- Both stores are installed once on first boot and appear in Home under **Apps & settings**. Stremio stays the main action.
+- Aurora Store 4.8.4 gives access to apps distributed through Google Play; Flicky 4.5.4 is a TV client for F-Droid. Both are unchanged signed APKs from F-Droid; their GPL source archives are attached to the release.
+- Removing a store is permanent: first boot never installs it again. Existing r5/r6 users can install both APKs over ADB ([how](docs/adb-installation.md#add-the-app-stores-to-r5-or-r6)).
+
+### New: optional rescue system
+
+- A separate kit adds a small Alpine Linux system to the EFI partition with one boot menu entry. It runs from RAM, checks and mounts the Android partition and accepts SSH only with your own key. No keys or passwords are included. [Rescue guide](docs/rescue.md).
+
+### Image changes and verification
+
+- Derived from the verified r6 image with the new [`repack_image.py`](tools/repack_image.py) and a [declared change list](releases/r7-changes.json): three replaced and two added system entries. 19,579 other entries keep their contents and metadata; kernel, initrd, recovery and boot structures are unchanged. [Delta](releases/r7-image-delta.json).
+- Fresh-data UEFI boot in QEMU/KVM: fixed SurfaceFlinger active, all three apps seeded with the expected hashes, no fingerprint feature, Home with both stores. Three virtual sleep/wake cycles kept the same SurfaceFlinger process without ANRs. [Boot record](releases/r7-boot-validation.json).
+- The download helpers now fetch r7 by default.
+
+**Test boundary:** the physical NUC runs the same five files from its development installation but was not reflashed with r7. The overnight standby test with the physical power button, a disk installation and complete app installation through each store are still pending. The rescue kit was tested in virtual machines only.
+
+## Source candidate — 2026-10-13 (shipped in r7)
 
 - Prepared patch 0018 for SurfaceFlinger console restoration: VT_AUTO before activation and bounded VT_GETSTATE polling instead of VT_WAITACTIVE. An equivalent exact-build native hotfix is active on the development NUC.
 - Prepared product patch 0019 to seed Aurora Store 4.8.4 and Flicky 4.5.4 once, with pinned signed APK/source inputs. Existing installs, updates and later removals are preserved; Stremio remains the main Home action.

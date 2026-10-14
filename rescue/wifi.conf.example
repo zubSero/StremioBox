@@ -1,0 +1,5 @@
+# Optional Wi-Fi for the rescue system. Copy to efi/rescue/wifi.conf on the EFI partition.
+network={
+    ssid="YourNetwork"
+    psk="YourPassword"
+}

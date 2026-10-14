@@ -22,8 +22,11 @@ jobs:
           python-version: '3.12'
       - name: Verify manifests, sources, branding and documentation
         run: python tools/validate.py
-      - name: Test download and source-preparation helpers
+      - name: Test download, repack and source-preparation helpers
         run: python -m unittest discover -s tests -v
+      - name: Check rescue kit shell scripts
+        # Word splitting of find/blkid output is intentional; paths contain no spaces.
+        run: shellcheck -s sh -S warning -e SC2046,SC2034,SC2174 rescue/enable-rescue.sh rescue/root/init rescue/root/etc/rescue/*.sh rescue/root/usr/bin/* tools/build_rescue.sh
   native-windows:
     name: Native Windows ISO assembly
     runs-on: windows-latest

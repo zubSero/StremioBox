@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "project": "StremioBox",
+  "release": "r7",
+  "status": "prerelease",
+  "image": {
+    "name": "StremioBox-Android16-r7-nuc10_tv.iso",
+    "bytes": 2886336512,
+    "sha256": "65b07feafd70670954231afc6a69a6b850445d67197c4d53f3c1cf1aff010bb8"
+  },
+  "parts": [
+    {
+      "name": "StremioBox-Android16-r7-nuc10_tv.iso.001",
+      "bytes": 1610612736,
+      "sha256": "c891585be1fca80ecb25ea32b78c6d78b0b7b5f80b2d32e235aea3ce66a48a03",
+      "url": "https://github.com/zubSero/StremioBox/releases/download/r7/StremioBox-Android16-r7-nuc10_tv.iso.001"
+    },
+    {
+      "name": "StremioBox-Android16-r7-nuc10_tv.iso.002",
+      "bytes": 1275723776,
+      "sha256": "94aa2e8287c89351d24480cc7819e51116ce8c354e4336cac26215c86639f383",
+      "url": "https://github.com/zubSero/StremioBox/releases/download/r7/StremioBox-Android16-r7-nuc10_tv.iso.002"
+    }
+  ],
+  "home": {
+    "version": "1.1",
+    "version_code": 2,
+    "language": "en",
+    "sha256": "088d354170bb5029dfcde96047115f8881893c47831379d7a398e9efb599d6ec"
+  }
+}

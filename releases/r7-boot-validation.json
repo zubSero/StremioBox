@@ -1,0 +1,21 @@
+{
+  "revision": 7,
+  "iso_sha256": "65b07feafd70670954231afc6a69a6b850445d67197c4d53f3c1cf1aff010bb8",
+  "mode": "Actual fresh-data UEFI live ISO boot in QEMU/KVM, no SSD attached",
+  "boot_completed": true,
+  "home_version": "1.1",
+  "home_activity_resumed": true,
+  "surfaceflinger_sha256": "9018b3091ac52bc8ecaa603e0202092fe5af90f3351f39e9e07cfc883646c780",
+  "fingerprint_feature_reported": false,
+  "original_signed_stremio_seed_sha256": "3a9f86646ba18f4f11073dfbb01e10b1d4019e78d89ba58ec3de79f36f6cfc8c",
+  "flicky_seed_sha256": "5f8bcc05480951383fa48649d908bd5d64a8b3ef71c67871734777e702ff2204",
+  "aurora_store_seed_sha256": "fd9c75d90d0f4a7c132b9b4a5a2cf1992a45e03b8d8ff988b7dcfbc0db2c4d11",
+  "store_install_permission_granted": true,
+  "firstboot_markers_verified": true,
+  "virtual_sleep_wake_cycles": 3,
+  "test_guest_setup": "Provisioned only ephemeral guest settings to reach Home",
+  "scope": "UEFI startup, package scan, app and store seed, Home, three virtual sleep/wake cycles; not disk installer or physical GPU/HDMI/Bluetooth/HDR testing",
+  "surfaceflinger_pid_unchanged_across_cycles": true,
+  "new_anr_files": 0,
+  "ivirtualhal_log_lines": 0
+}

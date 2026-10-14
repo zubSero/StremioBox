@@ -3,7 +3,7 @@
 # Linux/macOS: Bash, curl and the system SHA-256 utility. No Python.
 set -euo pipefail
 root=$(cd -- "$(dirname -- "$0")/.." && pwd)
-manifest="$root/releases/r6-download.txt"
+manifest="$root/releases/r7-download.txt"
 output=downloads
 offline=false
 temporary=

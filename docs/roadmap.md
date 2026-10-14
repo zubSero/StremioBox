@@ -2,7 +2,7 @@
 
 [Back to the project](../README.md)
 
-The current Intel NUC preview includes English Home and the playback, audio, Bluetooth and subtitle fixes described in the [changelog](../CHANGELOG.md). The next priorities are repeatable installation, longer hardware testing and a full source build. Items below are not promised compatibility or delivery dates.
+The current Intel NUC preview (r7) includes the standby fix, optional app stores, English Home and the playback, audio, Bluetooth and subtitle fixes described in the [changelog](../CHANGELOG.md). The next priorities are repeatable installation, longer hardware testing and a full source build. Items below are not promised compatibility or delivery dates.
 
 ## Standby recovery and optional app stores
 
@@ -11,9 +11,13 @@ The current Intel NUC preview includes English Home and the playback, audio, Blu
 - [x] Prepare one-time Aurora Store/Flicky seeding with pinned signed APKs and corresponding sources; verify Home visibility, store UI and reboot persistence.
 - [ ] Complete hours/overnight standby using the physical Homatics power button.
 - [ ] Complete app installation through both stores with the remote.
-- [ ] Build the candidate platform from source, validate a fresh-data installation and publish the next ISO.
+- [x] Publish r7: a verified repack of r6 with the validated compositor binary, store seeding and the hidden fingerprint feature; fresh-data UEFI boot and virtual sleep/wake checked.
+- [x] Publish an optional, keyless rescue kit on the EFI partition, tested in QEMU/KVM including GRUB activation and removal.
+- [ ] Flash r7 on the physical NUC and repeat the hardware acceptance matrix.
+- [ ] Build the candidate platform from source and confirm the compiled SurfaceFlinger matches the validated behavior.
+- [ ] Automatic fallback to the rescue system after failed starts in the public image (works on the development NUC).
 
-See [standby and app support](standby-and-apps.md). The candidate is separate from the published r5/r6 image inputs.
+See [standby and app support](standby-and-apps.md) and the [rescue system](rescue.md).
 
 ## Validate the existing release
 

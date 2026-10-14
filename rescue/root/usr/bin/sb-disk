@@ -1,0 +1,20 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+# Check the Android partition, then mount it read-write on /mnt/android.
+# Usage: sb-disk [device]. Without a device, the ext4 partition holding a StremioBox system is used.
+set -e
+dev=$1
+if [ -z "$dev" ]; then
+    mkdir -p /tmp/probe
+    for candidate in $(blkid -t TYPE=ext4 -o device); do
+        mount -o ro "$candidate" /tmp/probe 2>/dev/null || continue
+        found=$(ls -d /tmp/probe/*/system.efs /tmp/probe/*/system.img 2>/dev/null | head -n 1)
+        umount /tmp/probe
+        [ -n "$found" ] && { dev=$candidate; break; }
+    done
+fi
+[ -n "$dev" ] || { echo 'No StremioBox partition found; pass the device, e.g. sb-disk /dev/nvme0n1p2' >&2; exit 1; }
+e2fsck -p "$dev" || [ $? -le 1 ]
+mount -t ext4 "$dev" /mnt/android
+echo "$dev mounted on /mnt/android:"
+ls /mnt/android

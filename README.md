@@ -6,11 +6,11 @@
 
 **Android 16 for an Intel NUC running Stremio on your TV.**
 
-[![Intel NUC preview](https://img.shields.io/badge/download-Intel%20NUC%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r6)
+[![Intel NUC preview](https://img.shields.io/badge/download-Intel%20NUC%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r7)
 [![Android 16](https://img.shields.io/badge/Android-16-65dfc1?style=flat-square&logo=android&logoColor=white)](docs/architecture.md)
 [![Repository checks](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml/badge.svg)](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml)
 
-[**Download**](https://github.com/zubSero/StremioBox/releases/tag/r6) · [**Installation**](docs/installation.md) · [**Changelog**](CHANGELOG.md) · [**Website**](https://zubsero.github.io/StremioBox/) · [**Nederlands**](README.nl.md)
+[**Download**](https://github.com/zubSero/StremioBox/releases/tag/r7) · [**Installation**](docs/installation.md) · [**Changelog**](CHANGELOG.md) · [**Website**](https://zubsero.github.io/StremioBox/) · [**Nederlands**](README.nl.md)
 
 </div>
 
@@ -18,7 +18,7 @@ StremioBox is a bootable Android TV system image based on Android 16 / LineageOS
 
 **This preview has been tested on one configuration: Intel NUC10i5FNH, Intel UHD graphics, Intel AX201 Bluetooth, a Homatics B21 remote and an LG HDR TV.** Other PCs and remotes need their own testing. The disk installer and long-duration playback tests are still pending; start with a live USB boot.
 
-![English Home 1.1 running on the physical Intel NUC](docs/assets/home-english-1.1.png)
+![StremioBox Home on the physical Intel NUC, with Aurora Store and Flicky under Apps & settings](docs/assets/home-r7-app-stores.png)
 
 ## What works on the tested NUC
 
@@ -28,28 +28,34 @@ StremioBox is a bootable Android TV system image based on Android 16 / LineageOS
 | Stremio controls | The existing mpv interface and seek bar remain available | VLC and ExoPlayer have not been validated |
 | HDMI audio | Sound works before and after display standby | Receiver bitstream passthrough is unverified |
 | Bluetooth remote | Ordinary Homatics keys work after reboot without repeating the pairing combination | The physical power-button cycle needs a separate retest |
-| Display standby | Film picture, sound and remote control recover after Android sleep/wake commands | Long-standby hang reproduced; candidate fix under test; true S3 suspend unverified |
+| Display standby | Film picture, sound and remote control recover after Android sleep/wake commands | Long-standby hang fixed in r7; overnight physical retest pending; true S3 suspend unverified |
 | Subtitles | External SRT subtitles follow Disabled, language selection and audio-track changes | Eight development regression cases; not every subtitle format |
 | Home screen | English labels, D-pad navigation, Stremio, settings and installed apps | Home 1.1 was also checked after a physical reboot |
+| App stores | Aurora Store and Flicky open from Home and survive reboot | Complete app installation through each store still to be tested; no Google Play services |
 
 [Hardware details](docs/hardware.md) · [Test methods and results](docs/testing.md)
 
-## Next-release work — 2026-10-13
+## New in this release — Standby & App Stores
 
-A repeatable **long-standby hang** was found on the test NUC after hours or overnight: the TV reports No signal and waking fails. An exact-build SurfaceFlinger hotfix passed short standby and HDMI reconnect tests on the development device; the overnight physical test and a new source-built ISO remain pending.
+- **No more hang after long standby.** The box could stay dark with No signal after hours of standby or an HDMI change. The fixed compositor is now in the image.
+- **Aurora Store and Flicky** appear under **Apps & settings**, so you can install other apps. Stremio stays the main action. [App support](docs/standby-and-apps.md)
+- **No scrolling console text** on the TV during standby.
+- **Optional rescue system:** a boot-menu entry that starts a small Linux system from the EFI partition when Android no longer starts. SSH works only with your own key. [Rescue guide](docs/rescue.md)
 
-The next-release source candidate also seeds **Aurora Store and Flicky**, an F-Droid client for TV, in Home's secondary **Apps & settings** row. Stremio stays the main action. Both stores survived reboot and their UI opened; complete in-store app installation is still pending. These changes are **not in the r6 download**. [Findings and app support](docs/standby-and-apps.md) · [Candidate source/build inputs](platform/next/README.md).
+The physical NUC runs the same changed files, but the overnight standby test and a reflash with the new ISO are still pending. [Test boundary](docs/testing.md#standby-and-app-stores-release)
 
 ## Download and try it
 
-The current download is **Intel NUC Preview — English Home**. It includes all fixes from the initial public image and adds the English Home 1.1 update. [Read the changes](CHANGELOG.md#english-home).
+The current download is **Intel NUC Preview — Standby & App Stores**. It includes all earlier fixes, English Home 1.1, the standby fix and both app stores. [Read the changes](CHANGELOG.md#standby-and-app-stores).
 
-1. Download the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r6/StremioBox-r6-native-download-1.1.zip) and extract it.
+1. Download the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r7/StremioBox-r7-native-download.zip) and extract it.
 2. **Windows:** double-click `Download-StremioBox.cmd`. **Linux/macOS:** open a terminal in the extracted folder and run `bash tools/download.sh --output downloads`. No Python is required.
 3. Follow the [USB boot and installation guide](docs/installation.md). Allow about **6 GB free** for the download and assembled image.
 4. After Android starts, pair your remote and sign in to Stremio with your own account. No accounts or add-ons are configured in the image.
 
-The helper joins two download parts into one ISO and verifies their SHA-256 hashes. The resulting ISO is about **2.87 GB**. For manual downloads, source archives and checksums, open the [release page](https://github.com/zubSero/StremioBox/releases/tag/r6).
+The helper joins two download parts into one ISO and verifies their SHA-256 hashes. The resulting ISO is about **2.89 GB**. For manual downloads, source archives, the rescue kit and checksums, open the [release page](https://github.com/zubSero/StremioBox/releases/tag/r7).
+
+**Already running r5 or r6?** Add the stores over ADB; the standby fix needs a reinstall with r7. [Update options](docs/installation.md#update-an-existing-installation).
 
 **Already using the initial image with Dutch Home?** Install the [English Home update](docs/installation.md#update-an-existing-installation) to change the launcher language. It uses the same signing certificate and survives reboot.
 
@@ -60,15 +66,15 @@ The helper joins two download parts into one ISO and verifies their SHA-256 hash
 <details>
 <summary>Image filename and checksum</summary>
 
-The release's technical identifier is `r6`; existing filenames and download URLs retain it.
+The release's technical identifier is `r7`; filenames and download URLs use it.
 
 ```text
-StremioBox-Android16-r6-nuc10_tv.iso
-2,874,343,424 bytes
-SHA-256: f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
+StremioBox-Android16-r7-nuc10_tv.iso
+2,886,336,512 bytes
+SHA-256: 65b07feafd70670954231afc6a69a6b850445d67197c4d53f3c1cf1aff010bb8
 ```
 
-[Download manifest](releases/r6.json) · [Image verification](releases/r6-image-verification.json)
+[Download manifest](releases/r7.json) · [Image verification](releases/r7-image-verification.json) · [Image delta](releases/r7-image-delta.json)
 
 </details>
 
@@ -86,13 +92,14 @@ SHA-256: f5e8642165e732c0a44dac4a87a36e56b297ed3e1c928f39d2f4dec8e1783550
 | --- | --- |
 | See exactly what changed | [Detailed changelog](CHANGELOG.md) |
 | Diagnose picture, audio or remote problems | [Troubleshooting](docs/troubleshooting.md) |
+| Repair a box that no longer starts | [Rescue system](docs/rescue.md) |
 | Report a bug or another hardware configuration | [Issues](https://github.com/zubSero/StremioBox/issues/new/choose) |
 | Ask a setup question | [Discussions](https://github.com/zubSero/StremioBox/discussions) |
 | Understand playback and boot changes | [Architecture](docs/architecture.md) · [17 platform patches](platform/README.md) |
 | Build or customize the project | [Build guide](docs/building.md) · [Home source](launcher/README.md) · [Brand assets](docs/branding.md) |
 | Help with the next release | [Roadmap](docs/roadmap.md) · [Contributing](CONTRIBUTING.md) |
 
-The repository contains platform patches, a pinned source manifest, the product overlay, Home source and image tools. The English release was produced by replacing Home in the verified initial image. A clean full Android build from this public repository is still pending; the [build guide](docs/building.md) distinguishes the tested repack from the full build procedure.
+The repository contains platform patches, a pinned source manifest, the product overlay, Home source and image tools. Each release after the first was produced by a declared, verified change to the previous image ([r7 changes](releases/r7-changes.json)). A clean full Android build from this public repository is still pending; the [build guide](docs/building.md) distinguishes the tested repack from the full build procedure.
 
 ## Credits and licensing
 
