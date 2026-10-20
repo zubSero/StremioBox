@@ -1,0 +1,88 @@
+{
+  "base_revision": 7,
+  "revision": 8,
+  "changes": [
+    {
+      "path": "system/vendor/lib/hw/audio.primary.x86.so",
+      "reason": "Patch 0020: 5.1 primary output encoded as AC-3 640 kbit/s in IEC 61937 on HDMI (32-bit HAL; built by platform/next/audio-ac3/build.sh)",
+      "before": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a76656e646f725f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 34880,
+        "sha256": "37b491e25b4109c1088348b05b7f56c4a2f9624b239e511c117d376948ee9d9b"
+      },
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a76656e646f725f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 905624,
+        "sha256": "a5fe5a0260d0fe5724eaabdbf97d895e9d706c715ddc27f73b7c54fb7ad62d6a"
+      }
+    },
+    {
+      "path": "system/vendor/etc/audio_policy_configuration.xml",
+      "reason": "Patch 0020: the primary output mixes 5.1; the HDMI/speaker device accepts stereo and 5.1",
+      "before": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a76656e646f725f636f6e666967735f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 6441,
+        "sha256": "84716130eff1c96df26cf429b0854c0b3942c9fbdcc4a644e91fcb83daaf5df8"
+      },
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a76656e646f725f636f6e666967735f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 6468,
+        "sha256": "dc535d0417d1102ec87f99a63d92910ec4e9f0be90407f12b08ad9405a47f586"
+      }
+    },
+    {
+      "path": "system/lib64/nuc-stremio/libplayer.so",
+      "reason": "Patch 0021: convert Stremio's millisecond audio/subtitle delay to mpv seconds; no forced stereo downmix",
+      "before": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f6c69625f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 51432,
+        "sha256": "392e36094a4e64ada30c3b994c8cc2d8e57dcb581be627744a4a4ed29269428e"
+      },
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f6c69625f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 29376,
+        "sha256": "149d60fc0833c8a7a29ca72730d58eeff7248037d092a5642965de7923e6a8cf"
+      }
+    }
+  ],
+  "unchanged_entries": 19581,
+  "all_other_file_contents_modes_ownership_xattrs_symlinks_preserved": true,
+  "kernel_initrd_recovery_preserved": true,
+  "uefi_bios_gpt_preserved": true
+}

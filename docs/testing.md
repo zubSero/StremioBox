@@ -63,6 +63,24 @@ The [candidate report](standby-and-apps.md) records the later long-standby failu
 
 Aurora Store and Flicky APK hashes, x86_64 support and TV launch activities were checked against official F-Droid inputs. Both appeared in Home and survived reboot. Flicky fetched its catalogue; Aurora reached first-use onboarding. Rerunning seeding preserved package install/update timestamps. No store account or terms were accepted and end-to-end user app installation is pending.
 
+<a id="surround-sound-release"></a>
+
+## 5.1 Surround Sound release (r8) — 2026-10-21
+
+The r8 ISO has SHA-256 `04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932`. It was derived from the verified r7 ISO with [`repack_image.py`](../tools/repack_image.py) and a [declared change list](../releases/r8-changes.json). Exactly three system entries were replaced: the 32-bit primary audio HAL, the audio policy and the Stremio bridge library. 19,581 other entries keep their contents, modes, ownership, SELinux labels and symlinks; kernel, initrd, recovery and boot structures are unchanged. See [the delta](../releases/r8-image-delta.json) and [image record](../releases/r8-image-verification.json).
+
+The HAL comes from [`build.sh`](../platform/next/audio-ac3/build.sh) with pinned sources and patch 0020; two clean builds in different directories produced identical bytes.
+
+A diskless fresh-data UEFI live boot in QEMU/KVM repeated every r7 check (app and store seed, compositor hash, no fingerprint feature, Home, three sleep/wake cycles without ANRs) and added an audio check: with an emulated Intel HDA device, a 6-channel AAudio stream ran through a 6-channel mixer, the HAL reported its AC-3 encoder and bitstream output, and both audio services kept running without tombstones. [Boot record](../releases/r8-boot-validation.json).
+
+On the development NUC the same three files ran through a guarded boot overlay for two full reboots, connected to an LG TV with a Logitech 5.1 system on the TV's optical output:
+
+- A direct AC-3 channel-identification burst played on all six speakers, including centre.
+- Stremio's mpv decoded an E-AC-3 film to 5.1; the HAL sent AC-3 with the IEC958 non-audio bit set. The receiver showed Dolby Digital, dialogue came from the centre speaker and lip sync was correct at 0 ms.
+- Stremio's audio delay steps of 100 ms changed sync without freezing the picture.
+
+**Test boundary:** the physical NUC was not reflashed with the r8 ISO. Receivers that accept multichannel PCM over HDMI, other TVs and long playback sessions were not tested.
+
 <a id="standby-and-app-stores-release"></a>
 
 ## Standby & App Stores release (r7) — 2026-10-14

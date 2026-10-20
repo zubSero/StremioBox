@@ -28,7 +28,11 @@ Thanks to LineageOS, los-tv-x86, AOSP, Android-x86, Android Generic, AAROPA, Mes
 
 ## Next-release app-store inputs
 
-Aurora Store (AuroraOSS) and Flicky (mlm-games) retain **GPL-3.0-or-later** terms. Their APKs are unchanged signed distributions from F-Droid, used as external candidate build inputs. [Candidate inputs](platform/next/inputs.json) pin versions, ABI, APK hashes, source repositories and the exact corresponding source archives and hashes. Preserve those source archives and upstream license/notice files when distributing binaries. They are included in the r7 ISO; the corresponding source archives are attached to the [r7 release](https://github.com/zubSero/StremioBox/releases/tag/r7). They are not part of the r5/r6 ISOs.
+Aurora Store (AuroraOSS) and Flicky (mlm-games) retain **GPL-3.0-or-later** terms. Their APKs are unchanged signed distributions from F-Droid, used as external candidate build inputs. [Candidate inputs](platform/next/inputs.json) pin versions, ABI, APK hashes, source repositories and the exact corresponding source archives and hashes. Preserve those source archives and upstream license/notice files when distributing binaries. They are included in the r7 and r8 ISOs; the corresponding source archives are attached to the [r7](https://github.com/zubSero/StremioBox/releases/tag/r7) and [r8](https://github.com/zubSero/StremioBox/releases/tag/r8) releases. They are not part of the r5/r6 ISOs.
+
+## AC-3 audio HAL (r8)
+
+The r8 primary audio HAL (`/vendor/lib/hw/audio.primary.x86.so`) combines the android-generic `hardware/libaudio` HAL (Apache-2.0) with patch 0020 and a static, AC-3-encoder-only build of **FFmpeg n8.1** (libavcodec/libavutil), configured without `--enable-gpl` and therefore under **LGPL-2.1-or-later**. [`build.sh`](platform/next/audio-ac3/build.sh) pins every source and rebuilds the library from them, so the FFmpeg part can be modified and relinked. The exact FFmpeg source archive (`ffmpeg-n8.1-9047fa1b.tar.gz`) is attached to the [r8 release](https://github.com/zubSero/StremioBox/releases/tag/r8). Dolby and Dolby Digital are trademarks of Dolby Laboratories; StremioBox is not affiliated with or certified by Dolby.
 
 ## Rescue kit
 

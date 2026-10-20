@@ -13,7 +13,7 @@ This directory contains source changes dated 2026-10-13. Their result ships in t
 | 0020, hardware/libaudio | 5.1 primary output encoded as an AC-3 bitstream on HDMI, for TVs that only accept stereo LPCM but pass Dolby to an optical soundbar. See [audio-ac3](audio-ac3/README.md) |
 | 0021, product/stremio | Convert Stremio's millisecond audio/subtitle delay to mpv seconds; a 100 ms tweak no longer freezes the picture |
 
-0020 and 0021 (dated 2026-10-20) are not yet part of `inputs.json` or any image. The development NUC runs them as a guarded boot overlay; [audio-ac3](audio-ac3/README.md) has the build script, the overlay block and the verification record.
+0020 and 0021 (dated 2026-10-20) ship in the **r8** image as a verified repack (see [r8 changes](../../releases/r8-changes.json)); they are not yet part of `inputs.json` or a full source build. [audio-ac3](audio-ac3/README.md) has the reproducible HAL build, the boot overlay used on the development NUC and the verification record.
 
 Home 1.1 already lists installed TV and regular launcher apps under **Apps & settings**. Stremio remains the main action. No launcher binary change is needed.
 

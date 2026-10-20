@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "date": "2026-10-20",
-  "status": "verified on the development NUC as a guarded boot overlay; not in a published image",
+  "date": "2026-10-21",
+  "status": "shipped in the r8 image (verified repack of r7); the development NUC runs the same files through a guarded boot overlay",
   "problem": "Only stereo PCM reached HDMI. TVs whose EDID lists 2-channel LPCM but Dolby bitstreams pass an optical soundbar stereo only, so dialogue from the 5.1 centre channel drowned in the downmix.",
   "source_patches": {
     "0020-libaudio-ac3-bitstream.patch": {
@@ -19,17 +19,16 @@
     "audio.primary.x86.so": {
       "replaces": "/vendor/lib/hw/audio.primary.x86.so",
       "original_bytes": 34880,
-      "sha256": "dc8e491680ccd75b6c881c717747068e6b51fbeb95622dfb42740906fe42c1b5",
+      "sha256": "a5fe5a0260d0fe5724eaabdbf97d895e9d706c715ddc27f73b7c54fb7ad62d6a",
       "abi": "x86 (the audio HAL service is 32-bit)",
-      "built_by": "same sources and flags as build.sh before -ffile-prefix-map was added; embedded paths differ",
-      "build_sh_sha256": "a5fe5a0260d0fe5724eaabdbf97d895e9d706c715ddc27f73b7c54fb7ad62d6a",
-      "build_sh_reproduced": "two clean runs in different work directories gave identical bytes",
+      "built_by": "build.sh; two clean runs in different work directories gave identical bytes",
       "device_libs_sha256": {
         "libaudioutils.so": "8157f68bf3ba167cf452d306b985dde6572f30200270c2d1d3b57284f7b50431",
         "libcutils.so": "a3d86905e801001d005534197fd5db52f6951bc8518671c4051c07f8136a57f3",
         "libexpat.so": "0a32c954aefe9072f65080404c6ef07840675faa25e7db93ebd086daaa41213e",
         "libtinyalsa.so": "7173097660bc6c4600fca7875cbf9c467d71672dd61c0046758d15e9339f907e"
-      }
+      },
+      "earlier_device_build_sha256": "dc8e491680ccd75b6c881c717747068e6b51fbeb95622dfb42740906fe42c1b5 (same sources without -ffile-prefix-map; used for the listening tests)"
     },
     "audio_policy_configuration.xml": {
       "replaces": "/vendor/etc/audio_policy_configuration.xml",
@@ -51,7 +50,8 @@
     "Stremio mpv decodes E-AC-3 to 5.1 without downmix; playback clock 5 s per 5 s, no repeated underruns",
     "User confirmed Dolby 5.1 with dialogue on the centre speaker and correct lip sync at 0 ms",
     "Stremio audio delay steps of 100 ms no longer freeze the picture",
-    "Full reboot: both overlay messages in kmsg, mounts active, Stremio adapter compatibility check COMPATIBLE, no new tombstones"
+    "Full reboot: both overlay messages in kmsg, mounts active, Stremio adapter compatibility check COMPATIBLE, no new tombstones",
+    "The build.sh output replaced the earlier build on the NUC: after a reboot a 6-channel AAudio stream was sent as AC-3 with the non-audio bit set"
   ],
   "known_limits": [
     "All HDMI output is AC-3 while enabled; stereo sources play on the front speakers unless the receiver upmixes",
@@ -59,5 +59,10 @@
     "TrueHD/DTS-HD/Atmos are decoded and re-encoded as 5.1 AC-3",
     "Stremio's bundled FFmpeg has no encoders or S/PDIF muxer, so mpv itself cannot pass bitstreams through"
   ],
-  "source_compilation_completed": false
+  "source_compilation_completed": false,
+  "r8": {
+    "changes": "releases/r8-changes.json",
+    "iso_sha256": "04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932",
+    "boot_record": "releases/r8-boot-validation.json"
+  }
 }

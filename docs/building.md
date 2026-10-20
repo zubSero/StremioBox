@@ -119,6 +119,19 @@ python3 "$STREMIOBOX_REPO/tools/prepare_platform.py" \
 
 Use the same build entry point and host/vendor prerequisites above. Native source compilation, fresh-data seeding and an overnight physical standby test are still required before publishing a new installation image. The existing-device boot overlay is specific to the verified development binary and is not distributed as a portable updater.
 
+## Reproduce r8 from r7
+
+r8 uses the same tool with [r8-changes.json](../releases/r8-changes.json). Its three inputs are `audio.primary.x86.so` from [`platform/next/audio-ac3/build.sh`](../platform/next/audio-ac3/README.md#build), `audio_policy_configuration.xml` from the same build and `libplayer.so`, the Stremio bridge with patch 0021. All three are attached to the r8 release as `StremioBox-r8-image-inputs.zip`.
+
+```sh
+sudo python3 tools/repack_image.py \
+  --base-iso /absolute/path/StremioBox-Android16-r7-nuc10_tv.iso \
+  --base-record releases/r7-image-verification.json \
+  --changes releases/r8-changes.json \
+  --inputs /absolute/path/r8-inputs \
+  --output /absolute/path/StremioBox-Android16-r8-nuc10_tv.iso
+```
+
 ## Reproduce r7 from r6
 
 r7 was produced with the generic [`repack_image.py`](../tools/repack_image.py), which applies a [declared change list](../releases/r7-changes.json) and fails if anything else in the system image differs. Each change states the path, the expected hash before (or `absent`) and the expected hash of the new file. Put the five inputs in one directory: `surfaceflinger` (attached to the r7 release; see the [device hotfix record](../platform/next/device-hotfix-verification.json)), `firstboot.sh` (the product first-boot script after patch 0019), `AuroraStore.apk`, `Flicky.apk` and `no-fingerprint.xml` (both attached to the release).

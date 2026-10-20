@@ -103,7 +103,7 @@ function Save-Part($Part, [string]$Folder) {
     }
 }
 
-if (-not $Manifest) { $Manifest = Join-Path (Split-Path $PSScriptRoot -Parent) 'releases/r7.json' }
+if (-not $Manifest) { $Manifest = Join-Path (Split-Path $PSScriptRoot -Parent) 'releases/r8.json' }
 $data = Get-Content -LiteralPath $Manifest -Raw -Encoding UTF8 | ConvertFrom-Json
 Assert-Manifest $data
 $folder = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)

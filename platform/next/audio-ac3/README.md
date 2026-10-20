@@ -29,7 +29,7 @@ sh platform/next/audio-ac3/build.sh libs work
 
 The audio HAL service on the NUC is 32-bit and loads `/vendor/lib/hw/audio.primary.x86.so`; the 64-bit copy is unused.
 
-## Install on a running box
+## Install on a running box (development layout)
 
 1. Copy `audio.primary.x86.so`, `audio_policy_configuration.xml` and the rebuilt bridge `libplayer.so` to `/NUCTV-A16/audio-ac3/` on the Android partition. Label them `vendor_file`, `vendor_configs_file` and `system_lib_file`.
 2. Add `init-audio-ac3.sh` to the initrd `/init` before the final `switch_root`, append it as an extra gzip cpio and keep a copy of the old initrd.
@@ -42,4 +42,4 @@ Undo: create `/NUCTV-A16/audio-ac3/disabled` (also from the [rescue system](../.
 - While enabled, all HDMI audio is AC-3. Stereo sources play on the front speakers unless the receiver upmixes.
 - About 37 ms of encoder delay is added and reported to Android.
 - TrueHD, DTS-HD and Atmos are decoded and re-encoded as 5.1 AC-3, which is also the maximum of an optical link.
-- Not yet compiled into a published image. See [verification.json](verification.json).
+- Shipped in r8 as a verified repack; not yet built in-tree in a full source build. See [verification.json](verification.json).

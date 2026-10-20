@@ -4,9 +4,38 @@ This history describes the downloadable images and their verified behavior. Date
 
 | Release | Published | What changed | Technical tag |
 | --- | --- | --- | --- |
+| [Intel NUC Preview — 5.1 Surround Sound](#surround-sound) | 2026-10-21 | Real 5.1 (Dolby Digital) through TVs with an optical soundbar, clear dialogue, audio/subtitle sync option no longer freezes the picture | [`r8`](https://github.com/zubSero/StremioBox/releases/tag/r8) |
 | [Intel NUC Preview — Standby & App Stores](#standby-and-app-stores) | 2026-10-14 | Standby/HDMI hang fix, Aurora Store and Flicky, no console log spam, optional rescue kit | [`r7`](https://github.com/zubSero/StremioBox/releases/tag/r7) |
 | [Intel NUC Preview — English Home](#english-home) | 2026-10-05 | English Home 1.1, an update APK for existing installations and a fresh installation image | [`r6`](https://github.com/zubSero/StremioBox/releases/tag/r6) |
 | [Intel NUC Preview — Initial Release](#initial-release) | 2026-10-05 | First public image with StremioBox Home and the Intel playback, audio, Bluetooth and subtitle fixes | [`r5`](https://github.com/zubSero/StremioBox/releases/tag/r5) |
+
+<a id="surround-sound"></a>
+
+## Intel NUC Preview — 5.1 Surround Sound
+
+**Published 2026-10-21 · Home 1.1 · Android 16 / LineageOS 23.2**
+
+[Download](https://github.com/zubSero/StremioBox/releases/tag/r8) · [Installation](docs/installation.md) · [How the 5.1 output works](platform/next/audio-ac3/README.md) · [Validation](docs/testing.md#surround-sound-release)
+
+### Fixed: dialogue no longer drowns, real 5.1 through the TV
+
+- Up to r7 the NUC sent only stereo PCM over HDMI. Many TVs report just stereo LPCM, so a soundbar or 5.1 system on the TV's optical output received stereo: the centre channel was folded into left and right, and dialogue got lost under music and effects. A Chromecast on the same TV sounded better because it sends Dolby Digital.
+- r8 mixes Android audio in 5.1 and encodes it on HDMI as a Dolby Digital (AC-3, 640 kbit/s) bitstream, the format an optical link carries. The TV passes it on and the receiver decodes real 5.1 with dialogue on the centre speaker. This works for every app and every source format: E-AC-3, TrueHD, DTS, AAC 5.1 and stereo.
+- Set the TV's digital audio output to **Auto** or **Passthrough**. Stereo material plays on the front speakers unless your receiver upmixes it.
+
+### Fixed: the audio and subtitle sync option froze the picture
+
+- Stremio passes its sync setting in milliseconds while the mpv player expects seconds, so a 100 ms tweak became 100 seconds: the picture froze while sound continued. r8 converts the unit; sync steps now work as intended.
+
+### Image changes and verification
+
+- Derived from the verified r7 image with [`repack_image.py`](tools/repack_image.py) and a [declared change list](releases/r8-changes.json): the 32-bit primary audio HAL, its audio policy and the Stremio bridge library. 19,581 other entries keep their contents and metadata; kernel, initrd, recovery and boot structures are unchanged. [Delta](releases/r8-image-delta.json).
+- The HAL is built reproducibly from pinned sources by [`build.sh`](platform/next/audio-ac3/build.sh) (patch 0020); two clean builds gave identical bytes.
+- Fresh-data UEFI boot in QEMU/KVM: all r7 checks still pass, and a 5.1 stream ran through a 6-channel mixer and the AC-3 encoder without audio-service crashes. [Boot record](releases/r8-boot-validation.json).
+- The development NUC ran the same three files for two reboots with an LG TV and an optical Logitech 5.1 system: Dolby Digital, all six channels in a channel test, clear centre dialogue and correct lip sync.
+- The download helpers now fetch r8 by default. The r7 rescue kit works unchanged with r8 (same kernel).
+
+**Test boundary:** the physical NUC runs the r8 audio files through a boot overlay on its development installation and was not reflashed with r8. HDMI receivers that take multichannel PCM directly were not tested; they now receive AC-3 as well.
 
 <a id="standby-and-app-stores"></a>
 

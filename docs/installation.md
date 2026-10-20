@@ -2,7 +2,7 @@
 
 [Back to the project](../README.md) · [Hardware](hardware.md) · [Troubleshooting](troubleshooting.md)
 
-This guide covers **Intel NUC Preview — Standby & App Stores**, tested on the Intel NUC10i5FNH. Its technical download identifier is `r7`. Have a USB keyboard available for firmware menus and initial setup; the Homatics remote can be paired after Android starts.
+This guide covers **Intel NUC Preview — 5.1 Surround Sound**, tested on the Intel NUC10i5FNH. Its technical download identifier is `r8`. Have a USB keyboard available for firmware menus and initial setup; the Homatics remote can be paired after Android starts.
 
 Already running StremioBox? The [ADB update guide](adb-installation.md) covers the tested app updates without Python and explains the requirements for a full-system migration over ADB.
 
@@ -12,13 +12,13 @@ Already running StremioBox? The [ADB update guide](adb-installation.md) covers t
 | --- | --- |
 | First installation, USB media available | Download the image below, then try live USB boot |
 | Existing StremioBox with Dutch Home | [Update Home through ADB](adb-installation.md#update-home-without-python); no USB or Python needed |
-| Existing r5/r6 installation | [What r7 changes for you](#update-an-existing-installation): the stores can be added over ADB, the standby fix needs a reinstall |
+| Existing r5–r7 installation | [What r8 changes for you](#update-an-existing-installation): 5.1 output and the sync fix need a reinstall; on r5/r6 the stores can be added over ADB |
 | Android no longer starts | [Rescue system](rescue.md) or a live USB boot |
 | No USB stick | [USB-free options and their current status](without-usb.md) |
 
 ## 1. Download and verify without Python
 
-Download and extract the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r7/StremioBox-r7-native-download.zip). It is a small set of readable scripts, not an Android build toolchain. No Python installation is needed.
+Download and extract the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r8/StremioBox-r8-native-download.zip). It is a small set of readable scripts, not an Android build toolchain. No Python installation is needed.
 
 ### Windows: double-click
 
@@ -58,11 +58,11 @@ The pieces are sequential raw bytes, not separate bootable images. Both helpers 
 
 ### Alternative: combine with 7-Zip
 
-Download [part 1](https://github.com/zubSero/StremioBox/releases/download/r7/StremioBox-Android16-r7-nuc10_tv.iso.001) and [part 2](https://github.com/zubSero/StremioBox/releases/download/r7/StremioBox-Android16-r7-nuc10_tv.iso.002) into the same folder. With [7-Zip](https://7-zip.org/) installed, open PowerShell there and run:
+Download [part 1](https://github.com/zubSero/StremioBox/releases/download/r8/StremioBox-Android16-r8-nuc10_tv.iso.001) and [part 2](https://github.com/zubSero/StremioBox/releases/download/r8/StremioBox-Android16-r8-nuc10_tv.iso.002) into the same folder. With [7-Zip](https://7-zip.org/) installed, open PowerShell there and run:
 
 ```powershell
-& "$env:ProgramFiles\7-Zip\7z.exe" x -tsplit -aos -oassembled StremioBox-Android16-r7-nuc10_tv.iso.001
-Get-FileHash assembled\StremioBox-Android16-r7-nuc10_tv.iso -Algorithm SHA256
+& "$env:ProgramFiles\7-Zip\7z.exe" x -tsplit -aos -oassembled StremioBox-Android16-r8-nuc10_tv.iso.001
+Get-FileHash assembled\StremioBox-Android16-r8-nuc10_tv.iso -Algorithm SHA256
 ```
 
 **Keep `-tsplit`:** it combines the pieces into an ISO. Automatic archive detection can instead open the ISO and extract its internal files. `-aos` skips an existing destination; use an empty `assembled` folder and compare the resulting hash below before using it. This command was tested with the actual release pieces and produced the original ISO hash. Unlike the native helper, this manual route requires you to compare the hash yourself.
@@ -74,12 +74,12 @@ Expect about 6 GB free while parts and the final image coexist. After successful
 GitHub limits each release asset to under 2 GiB, so this 2.89 GB ISO is published in two pieces. A tested 7-Zip compression attempt produced a 2,195,182,200-byte archive, still above that limit. The native helpers assemble the pieces automatically; a single-file mirror remains on the [roadmap](roadmap.md). See [GitHub's release limits](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
 
 ```text
-StremioBox-Android16-r7-nuc10_tv.iso
-2,886,336,512 bytes
-SHA-256: 65b07feafd70670954231afc6a69a6b850445d67197c4d53f3c1cf1aff010bb8
+StremioBox-Android16-r8-nuc10_tv.iso
+2,886,402,048 bytes
+SHA-256: 04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932
 ```
 
-The [JSON manifest](../releases/r7.json) and [shell manifest](../releases/r7-download.txt) record the same filenames, sizes and hashes; repository checks enforce that they agree. Checksums detect corruption and bind pieces to this release; they are not a separate publisher signature. Obtain scripts and manifests from this project.
+The [JSON manifest](../releases/r8.json) and [shell manifest](../releases/r8-download.txt) record the same filenames, sizes and hashes; repository checks enforce that they agree. Checksums detect corruption and bind pieces to this release; they are not a separate publisher signature. Obtain scripts and manifests from this project.
 
 The original Python helper remains an optional alternative for people who already have Python 3.10+: `python3 tools/download.py --output downloads` (Windows: `py tools/download.py --output downloads`). Downloading and assembling this release does not compile Android. A full [source build](building.md) still needs Android's Linux build dependencies, including Python.
 
@@ -120,14 +120,21 @@ Authorize your own computer on the device when prompted. No developer key is shi
 
 ## Update an existing installation
 
-There is no portable system updater yet. What r7 changes for an existing r5/r6 installation:
+There is no portable system updater yet. What r8 changes for an existing r5–r7 installation:
+
+| r8 change | How to get it on r5–r7 |
+| --- | --- |
+| 5.1 Dolby Digital output on HDMI | Reinstall with the r8 image; it replaces the vendor audio HAL and policy |
+| Audio/subtitle sync without picture freeze | Reinstall with the r8 image; it replaces the Stremio bridge library |
+
+Earlier changes for r5/r6:
 
 | r7 change | How to get it on r5/r6 |
 | --- | --- |
 | Aurora Store and Flicky | Download `AuroraStore-4.8.4.apk` and `Flicky-4.5.4.apk` from the [r7 release](https://github.com/zubSero/StremioBox/releases/tag/r7) and run `adb install <file>` for each |
-| Standby/HDMI compositor fix | Reinstall with the r7 image; it replaces a system binary |
-| No fingerprint log spam on the console | Reinstall with the r7 image; it replaces a vendor file |
-| Rescue system | Install the [rescue kit](rescue.md); it works on r5, r6 and r7 |
+| Standby/HDMI compositor fix | Reinstall with the r7 or r8 image; it replaces a system binary |
+| No fingerprint log spam on the console | Reinstall with the r7 or r8 image; it replaces a vendor file |
+| Rescue system | Install the [rescue kit](rescue.md); it works on r5 to r8 |
 
 ### English Home on the initial image
 
@@ -137,6 +144,6 @@ If your StremioBox uses the initial public image with Dutch Home, download the s
 adb install -r StremioBoxHome-1.1-en.apk
 ```
 
-The update uses the same release certificate and survives reboot. It updates Home on the existing installation; it does not add the Android/HDR fixes to a different OS. New installations should use the current image (r7), which already includes it. The historical Initial Release (`r5`) keeps Dutch Home 1.0. [Detailed changes](../CHANGELOG.md#english-home).
+The update uses the same release certificate and survives reboot. It updates Home on the existing installation; it does not add the Android/HDR fixes to a different OS. New installations should use the current image (r8), which already includes it. The historical Initial Release (`r5`) keeps Dutch Home 1.0. [Detailed changes](../CHANGELOG.md#english-home).
 
 For Platform-Tools setup, APK verification and selection of the correct device, follow the [step-by-step ADB guide](adb-installation.md#update-home-without-python).

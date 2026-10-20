@@ -47,15 +47,21 @@ class DeltaTests(unittest.TestCase):
 
 
 class SpecTests(unittest.TestCase):
-    def test_r7_spec_is_consistent(self):
-        spec = json.loads((ROOT / 'releases/r7-changes.json').read_text(encoding='utf-8'))
-        delta = json.loads((ROOT / 'releases/r7-image-delta.json').read_text(encoding='utf-8'))
-        self.assertEqual(spec['revision'], delta['revision'])
-        self.assertEqual([c['path'] for c in spec['changes']], [c['path'] for c in delta['changes']])
-        for declared, recorded in zip(spec['changes'], delta['changes']):
-            self.assertEqual(declared['sha256'], recorded['after']['sha256'])
-            if declared['before'] != 'absent':
-                self.assertEqual(declared['before'], recorded['before']['sha256'])
+    def test_repack_specs_are_consistent(self):
+        specs = sorted((ROOT / 'releases').glob('r*-changes.json'))
+        self.assertGreaterEqual(len(specs), 2)
+        for path in specs:
+            with self.subTest(path.name):
+                spec = json.loads(path.read_text(encoding='utf-8'))
+                delta = json.loads(path.with_name(path.name.replace('-changes', '-image-delta'))
+                                   .read_text(encoding='utf-8'))
+                self.assertEqual(spec['revision'], delta['revision'])
+                self.assertEqual(spec['base_revision'], delta['base_revision'])
+                self.assertEqual([c['path'] for c in spec['changes']], [c['path'] for c in delta['changes']])
+                for declared, recorded in zip(spec['changes'], delta['changes']):
+                    self.assertEqual(declared['sha256'], recorded['after']['sha256'])
+                    if declared['before'] != 'absent':
+                        self.assertEqual(declared['before'], recorded['before']['sha256'])
 
     def test_input_hash_mismatch_is_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:

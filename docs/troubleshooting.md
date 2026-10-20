@@ -20,9 +20,9 @@
 
 ## Dialogue is quiet or the soundbar shows stereo
 
-Up to r7 the NUC sends only stereo PCM over HDMI. If your TV reports only stereo LPCM and a soundbar or 5.1 system hangs on the TV's optical output, the system receives stereo instead of Dolby 5.1 and dialogue gets lost in the mix. Set the TV's digital audio output to Auto or Passthrough; the fix itself is a candidate for the next release, with a guarded install for running boxes: [5.1 through optical soundbars](../platform/next/audio-ac3/README.md).
+Up to r7 the NUC sends only stereo PCM over HDMI. If your TV reports only stereo LPCM and a soundbar or 5.1 system hangs on the TV's optical output, the system receives stereo instead of Dolby 5.1 and dialogue gets lost in the mix. r8 sends Dolby Digital 5.1 instead: install r8 and set the TV's digital audio output to **Auto** or **Passthrough** (not PCM). The soundbar should then show Dolby Digital. [How it works](../platform/next/audio-ac3/README.md).
 
-The audio/subtitle sync option in the Stremio player froze the picture in r5–r7 (a unit error); the same candidate fixes it.
+The audio/subtitle sync option in the Stremio player froze the picture in r5–r7 (a unit error); r8 fixes it.
 
 ## Box stays dark after standby
 
