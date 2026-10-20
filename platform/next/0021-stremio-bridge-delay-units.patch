@@ -1,0 +1,59 @@
+--- a/stremio/player-bridge.c
++++ b/stremio/player-bridge.c
+@@ -331,13 +331,54 @@
+     LOG("SURFACE_DETACH complete");
+ }
+ 
+-PASS_RESULT(jint,nativeSetOptionString,COMMA jstring name COMMA jstring value,COMMA name COMMA value)
++// mpv hands 5.1 to Android unchanged; the HAL encodes it as AC-3 for HDMI.
++// Lines "key=value" in this optional file add mpv audio options for tuning,
++// e.g. "audio-channels=stereo" plus "audio-swresample-o=center_mix_level=1.0".
++#define AUDIO_OVERRIDE "/data/data/com.stremio.one/files/nuc-hdr/audio.conf"
++static void audio_options(JNIEnv *env,jobject obj,jlong instance) {
++    FILE *file=fopen(AUDIO_OVERRIDE,"r");
++    if(!file) return;
++    char line[256];
++    while(fgets(line,sizeof(line),file)) {
++        line[strcspn(line,"\r\n")]=0;
++        char *split=strchr(line,'=');
++        if(line[0]=='#' || !split) continue;
++        *split=0;
++        option(env,obj,instance,line,split+1);
++        LOG("AUDIO_DOWNMIX override %s=%s",line,split+1);
++    }
++    fclose(file);
++}
++
++EXPORT jint NAME(nativeSetOptionString)(JNIEnv *env,jobject self,jlong instance,jstring name,jstring value) {
++    typedef jint (*function)(JNIEnv *,jobject,jlong,jstring,jstring);
++    function fn=symbol("Java_dev_jdtech_mpv_MPVLib_nativeSetOptionString");
++    jint status=fn?fn(env,self,instance,name,value):0;
++    const char *key=(*env)->GetStringUTFChars(env,name,NULL);
++    int output=key && !strcmp(key,"ao");
++    if(key) (*env)->ReleaseStringUTFChars(env,name,key);
++    if(output) audio_options(env,self,instance);
++    return status;
++}
+ PASS_RESULT(jobject,nativeGetPropertyInt,COMMA jstring name,COMMA name)
+ PASS_RESULT(jobject,nativeGetPropertyDouble,COMMA jstring name,COMMA name)
+ PASS_RESULT(jobject,nativeGetPropertyBoolean,COMMA jstring name,COMMA name)
+ PASS_RESULT(jstring,nativeGetPropertyString,COMMA jstring name,COMMA name)
+ PASS_VOID(nativeSetPropertyInt,COMMA jstring name COMMA jint value,COMMA name COMMA value)
+-PASS_VOID(nativeSetPropertyDouble,COMMA jstring name COMMA jdouble value,COMMA name COMMA value)
++// Stremio's MpvPlayer passes its audio/subtitle delay setting in milliseconds
++// (a long), but mpv's audio-delay and sub-delay are seconds: a -100 ms tweak
++// became -100 s, freezing the picture while audio kept playing.
++EXPORT void NAME(nativeSetPropertyDouble)(JNIEnv *env,jobject self,jlong instance,jstring name,jdouble value) {
++    const char *key=(*env)->GetStringUTFChars(env,name,NULL);
++    if(key && (!strcmp(key,"audio-delay") || !strcmp(key,"sub-delay"))) {
++        LOG("DELAY %s %.0f ms",key,value);
++        value/=1000;
++    }
++    if(key) (*env)->ReleaseStringUTFChars(env,name,key);
++    typedef void (*function)(JNIEnv *,jobject,jlong,jstring,jdouble);
++    function fn=symbol("Java_dev_jdtech_mpv_MPVLib_nativeSetPropertyDouble");
++    if(fn) fn(env,self,instance,name,value);
++}
+ PASS_VOID(nativeSetPropertyBoolean,COMMA jstring name COMMA jboolean value,COMMA name COMMA value)
+ EXPORT void NAME(nativeSetPropertyString)(JNIEnv *env,jobject self,jlong instance,jstring name,jstring value) {
+     const char *key=(*env)->GetStringUTFChars(env,name,NULL);

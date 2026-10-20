@@ -10,6 +10,10 @@ This directory contains source changes dated 2026-10-13. Their result ships in t
 | --- | --- |
 | 0018, frameworks/native | Restore VT_AUTO before VT_ACTIVATE in ConsoleManagerThread destruction; replace VT_WAITACTIVE with at most 20 polls separated by 10 ms |
 | 0019, product/stremiobox | Seed Flicky and Aurora Store once alongside Stremio; preserve installed apps, user updates and later removals |
+| 0020, hardware/libaudio | 5.1 primary output encoded as an AC-3 bitstream on HDMI, for TVs that only accept stereo LPCM but pass Dolby to an optical soundbar. See [audio-ac3](audio-ac3/README.md) |
+| 0021, product/stremio | Convert Stremio's millisecond audio/subtitle delay to mpv seconds; a 100 ms tweak no longer freezes the picture |
+
+0020 and 0021 (dated 2026-10-20) are not yet part of `inputs.json` or any image. The development NUC runs them as a guarded boot overlay; [audio-ac3](audio-ac3/README.md) has the build script, the overlay block and the verification record.
 
 Home 1.1 already lists installed TV and regular launcher apps under **Apps & settings**. Stremio remains the main action. No launcher binary change is needed.
 

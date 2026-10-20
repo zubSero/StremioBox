@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "status": "verified on the development NUC as a guarded boot overlay; not in a published image",
+  "problem": "Only stereo PCM reached HDMI. TVs whose EDID lists 2-channel LPCM but Dolby bitstreams pass an optical soundbar stereo only, so dialogue from the 5.1 centre channel drowned in the downmix.",
+  "source_patches": {
+    "0020-libaudio-ac3-bitstream.patch": {
+      "sha256": "620f9ed25254e52d3eb2c64ab27ebc516b2fac870322efdd495e41d3726d6989",
+      "repository": "hardware/libaudio",
+      "upstream": "https://github.com/android-generic/platform_hardware_libaudio",
+      "base_commit": "889952b9fb3330d54739f9a974b14dfec0f0893b"
+    },
+    "0021-stremio-bridge-delay-units.patch": {
+      "sha256": "73778242c93077729a14314cf9ee576900233202d6ccdd899e5132c612ffbd2f",
+      "directory": "platform/product"
+    }
+  },
+  "device_files": {
+    "audio.primary.x86.so": {
+      "replaces": "/vendor/lib/hw/audio.primary.x86.so",
+      "original_bytes": 34880,
+      "sha256": "dc8e491680ccd75b6c881c717747068e6b51fbeb95622dfb42740906fe42c1b5",
+      "abi": "x86 (the audio HAL service is 32-bit)",
+      "built_by": "same sources and flags as build.sh before -ffile-prefix-map was added; embedded paths differ",
+      "build_sh_sha256": "a5fe5a0260d0fe5724eaabdbf97d895e9d706c715ddc27f73b7c54fb7ad62d6a",
+      "build_sh_reproduced": "two clean runs in different work directories gave identical bytes",
+      "device_libs_sha256": {
+        "libaudioutils.so": "8157f68bf3ba167cf452d306b985dde6572f30200270c2d1d3b57284f7b50431",
+        "libcutils.so": "a3d86905e801001d005534197fd5db52f6951bc8518671c4051c07f8136a57f3",
+        "libexpat.so": "0a32c954aefe9072f65080404c6ef07840675faa25e7db93ebd086daaa41213e",
+        "libtinyalsa.so": "7173097660bc6c4600fca7875cbf9c467d71672dd61c0046758d15e9339f907e"
+      }
+    },
+    "audio_policy_configuration.xml": {
+      "replaces": "/vendor/etc/audio_policy_configuration.xml",
+      "original_bytes": 6441,
+      "sha256": "dc535d0417d1102ec87f99a63d92910ec4e9f0be90407f12b08ad9405a47f586"
+    },
+    "libplayer.so": {
+      "replaces": "/system/lib64/nuc-stremio/libplayer.so",
+      "original_bytes": 51432,
+      "sha256": "149d60fc0833c8a7a29ca72730d58eeff7248037d092a5642965de7923e6a8cf",
+      "built_by": "host gcc -nostdlib against Android link stubs, like earlier bridge hotfixes; source = product/stremio + 0021"
+    }
+  },
+  "initrd": "413d95f5025f8700d43e3d96b8104705e21a0b7f4d56ab0ae16faf6b5103a6ea",
+  "initrd_before": "b361f4384250f74950ee86f39edda5a468de256f203d3bf95c7f9a14e3677179",
+  "checks": [
+    "Direct ALSA test: an AC-3 5.1 channel-identification burst played on all six speakers, including centre, through HDMI, TV and optical",
+    "Android mixer runs 6 channels; HAL logs 'output AC-3 bitstream' with the IEC958 non-audio bit set",
+    "Stremio mpv decodes E-AC-3 to 5.1 without downmix; playback clock 5 s per 5 s, no repeated underruns",
+    "User confirmed Dolby 5.1 with dialogue on the centre speaker and correct lip sync at 0 ms",
+    "Stremio audio delay steps of 100 ms no longer freeze the picture",
+    "Full reboot: both overlay messages in kmsg, mounts active, Stremio adapter compatibility check COMPATIBLE, no new tombstones"
+  ],
+  "known_limits": [
+    "All HDMI output is AC-3 while enabled; stereo sources play on the front speakers unless the receiver upmixes",
+    "About 37 ms of added encoder latency is reported to Android",
+    "TrueHD/DTS-HD/Atmos are decoded and re-encoded as 5.1 AC-3",
+    "Stremio's bundled FFmpeg has no encoders or S/PDIF muxer, so mpv itself cannot pass bitstreams through"
+  ],
+  "source_compilation_completed": false
+}

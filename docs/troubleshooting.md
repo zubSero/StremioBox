@@ -18,6 +18,12 @@
 | Download checksum failure | Rerun the helper; a corrupt part is rejected and a complete existing valid image is reused. Check free storage and use this release's matching manifest. |
 | ADB unavailable | Use a trusted network, confirm the box address and authorize your own host key. First setup must have finished. Never publish your private ADB key. |
 
+## Dialogue is quiet or the soundbar shows stereo
+
+Up to r7 the NUC sends only stereo PCM over HDMI. If your TV reports only stereo LPCM and a soundbar or 5.1 system hangs on the TV's optical output, the system receives stereo instead of Dolby 5.1 and dialogue gets lost in the mix. Set the TV's digital audio output to Auto or Passthrough; the fix itself is a candidate for the next release, with a guarded install for running boxes: [5.1 through optical soundbars](../platform/next/audio-ac3/README.md).
+
+The audio/subtitle sync option in the Stremio player froze the picture in r5–r7 (a unit error); the same candidate fixes it.
+
 ## Box stays dark after standby
 
 1. Check the TV input and the HDMI cable; switch the TV input away and back.

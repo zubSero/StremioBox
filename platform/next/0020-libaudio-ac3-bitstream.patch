@@ -1,0 +1,405 @@
+diff --git a/hal/ac3_spdif.c b/hal/ac3_spdif.c
+new file mode 100644
+index 0000000..f4eabc3
+--- /dev/null
++++ b/hal/ac3_spdif.c
+@@ -0,0 +1,191 @@
++/*
++ * 5.1 PCM -> AC-3 -> IEC61937 for the x86 primary HAL.
++ *
++ * Every 1536 input frames are encoded into one AC-3 frame, which is wrapped
++ * into one IEC61937 burst of exactly 1536 stereo S16 frames. Output is delayed
++ * by one burst so input and output frame counts stay identical; the first
++ * burst after a reset is silence.
++ */
++#define LOG_TAG "audio_hw_ac3"
++
++#include <errno.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++
++#include <log/log.h>
++#include <sound/asound.h>
++
++#include <libavcodec/avcodec.h>
++#include <libavutil/channel_layout.h>
++
++#include "ac3_spdif.h"
++
++#define BURST_FRAMES 1536
++#define BURST_BYTES (BURST_FRAMES * 2 * 2)
++#define IN_CHANNELS 6
++#define IEC61937_AC3 0x01
++#define IEC958_AES0_NONAUDIO (1 << 1)
++
++struct ac3_spdif {
++    AVCodecContext *ctx;
++    AVFrame *frame;
++    AVPacket *packet;
++    int16_t pending[BURST_FRAMES * IN_CHANNELS]; /* input not yet encoded */
++    size_t pending_frames;
++    int16_t burst[BURST_FRAMES * 2];             /* output being drained */
++    size_t burst_pos;
++    int16_t next[BURST_FRAMES * 2];              /* most recently encoded burst */
++    int next_ready;
++};
++
++struct ac3_spdif *ac3_spdif_create(unsigned int bit_rate)
++{
++    const AVCodec *codec = avcodec_find_encoder(AV_CODEC_ID_AC3);
++    struct ac3_spdif *s = calloc(1, sizeof(*s));
++    if (!codec || !s)
++        goto fail;
++    s->ctx = avcodec_alloc_context3(codec);
++    s->frame = av_frame_alloc();
++    s->packet = av_packet_alloc();
++    if (!s->ctx || !s->frame || !s->packet)
++        goto fail;
++    s->ctx->sample_rate = 48000;
++    s->ctx->sample_fmt = AV_SAMPLE_FMT_FLTP;
++    s->ctx->bit_rate = bit_rate;
++    av_channel_layout_from_mask(&s->ctx->ch_layout, AV_CH_LAYOUT_5POINT1_BACK);
++    if (avcodec_open2(s->ctx, codec, NULL) < 0 || s->ctx->frame_size != BURST_FRAMES)
++        goto fail;
++    s->frame->nb_samples = BURST_FRAMES;
++    s->frame->format = AV_SAMPLE_FMT_FLTP;
++    s->frame->sample_rate = 48000;
++    av_channel_layout_copy(&s->frame->ch_layout, &s->ctx->ch_layout);
++    if (av_frame_get_buffer(s->frame, 0) < 0)
++        goto fail;
++    ac3_spdif_reset(s);
++    ALOGI("AC-3 encoder ready: %u kbit/s, 5.1 -> IEC61937", bit_rate / 1000);
++    return s;
++fail:
++    ALOGE("AC-3 encoder unavailable");
++    ac3_spdif_destroy(s);
++    return NULL;
++}
++
++void ac3_spdif_destroy(struct ac3_spdif *s)
++{
++    if (!s)
++        return;
++    avcodec_free_context(&s->ctx);
++    av_frame_free(&s->frame);
++    av_packet_free(&s->packet);
++    free(s);
++}
++
++void ac3_spdif_reset(struct ac3_spdif *s)
++{
++    s->pending_frames = 0;
++    memset(s->burst, 0, sizeof(s->burst));
++    s->burst_pos = 0;
++    s->next_ready = 0;
++    /* The encoder keeps only its 256-sample overlap; draining it would end the
++     * stream for good, so it simply continues with the next audio. */
++}
++
++/* Wrap one AC-3 frame as an IEC61937 burst (byte-swapped payload, zero padded). */
++static void make_burst(int16_t *burst, const uint8_t *data, int size)
++{
++    uint8_t *bytes = (uint8_t *)burst;
++    memset(burst, 0, BURST_BYTES);
++    if (size > BURST_BYTES - 8)
++        size = BURST_BYTES - 8;
++    burst[0] = (int16_t)0xF872;
++    burst[1] = 0x4E1F;
++    burst[2] = IEC61937_AC3 | ((size > 5 ? data[5] & 0x7 : 0) << 8);
++    burst[3] = size * 8;
++    for (int i = 0; i + 1 < size; i += 2) {
++        bytes[8 + i] = data[i + 1];
++        bytes[8 + i + 1] = data[i];
++    }
++    if (size & 1)
++        bytes[8 + size] = data[size - 1];
++}
++
++static void encode_pending(struct ac3_spdif *s)
++{
++    for (int c = 0; c < IN_CHANNELS; c++) {
++        float *plane = (float *)s->frame->extended_data[c];
++        for (int i = 0; i < BURST_FRAMES; i++)
++            plane[i] = s->pending[i * IN_CHANNELS + c] * (1.0f / 32768.0f);
++    }
++    if (av_frame_make_writable(s->frame) < 0 || avcodec_send_frame(s->ctx, s->frame) < 0) {
++        ALOGW("AC-3 encode failed; sending silence");
++        return;
++    }
++    while (avcodec_receive_packet(s->ctx, s->packet) == 0) {
++        make_burst(s->next, s->packet->data, s->packet->size);
++        s->next_ready = 1;
++        av_packet_unref(s->packet);
++    }
++}
++
++void ac3_spdif_process(struct ac3_spdif *s, const int16_t *in, size_t frames, int16_t *out)
++{
++    while (frames) {
++        size_t n = BURST_FRAMES - s->pending_frames;
++        if (n > BURST_FRAMES - s->burst_pos)
++            n = BURST_FRAMES - s->burst_pos;
++        if (n > frames)
++            n = frames;
++        memcpy(s->pending + s->pending_frames * IN_CHANNELS, in, n * IN_CHANNELS * sizeof(int16_t));
++        memcpy(out, s->burst + s->burst_pos * 2, n * 2 * sizeof(int16_t));
++        s->pending_frames += n;
++        s->burst_pos += n;
++        in += n * IN_CHANNELS;
++        out += n * 2;
++        frames -= n;
++        if (s->pending_frames == BURST_FRAMES) {
++            encode_pending(s);
++            s->pending_frames = 0;
++        }
++        if (s->burst_pos == BURST_FRAMES) {
++            if (s->next_ready)
++                memcpy(s->burst, s->next, sizeof(s->burst));
++            else
++                memset(s->burst, 0, sizeof(s->burst));
++            s->next_ready = 0;
++            s->burst_pos = 0;
++        }
++    }
++}
++
++int iec958_set_nonaudio(unsigned int card, int nonaudio)
++{
++    char path[32];
++    snprintf(path, sizeof(path), "/dev/snd/controlC%u", card);
++    int fd = open(path, O_RDWR | O_CLOEXEC);
++    if (fd < 0)
++        return -errno;
++    int changed = 0;
++    for (unsigned int index = 0; index < 16; index++) {
++        struct snd_ctl_elem_value value;
++        memset(&value, 0, sizeof(value));
++        value.id.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
++        strcpy((char *)value.id.name, "IEC958 Playback Default");
++        value.id.index = index;
++        if (ioctl(fd, SNDRV_CTL_IOCTL_ELEM_READ, &value) < 0)
++            break;
++        unsigned char *aes0 = &value.value.iec958.status[0];
++        unsigned char wanted = nonaudio ? (*aes0 | IEC958_AES0_NONAUDIO)
++                                        : (*aes0 & ~IEC958_AES0_NONAUDIO);
++        if (wanted == *aes0)
++            continue;
++        *aes0 = wanted;
++        if (ioctl(fd, SNDRV_CTL_IOCTL_ELEM_WRITE, &value) == 0)
++            changed++;
++    }
++    close(fd);
++    return changed;
++}
+diff --git a/hal/ac3_spdif.h b/hal/ac3_spdif.h
+new file mode 100644
+index 0000000..4240a0e
+--- /dev/null
++++ b/hal/ac3_spdif.h
+@@ -0,0 +1,29 @@
++/*
++ * 5.1 PCM -> AC-3 -> IEC61937 (S/PDIF burst) conversion for HDMI outputs
++ * whose sink only accepts stereo LPCM but decodes Dolby Digital bitstreams.
++ */
++#ifndef AC3_SPDIF_H
++#define AC3_SPDIF_H
++
++#include <stddef.h>
++#include <stdint.h>
++
++/* Frames of added delay: one burst of buffering plus the encoder delay. */
++#define AC3_SPDIF_LATENCY_FRAMES (1536 + 256)
++
++struct ac3_spdif;
++
++struct ac3_spdif *ac3_spdif_create(unsigned int bit_rate);
++void ac3_spdif_destroy(struct ac3_spdif *s);
++/* Drop buffered audio, e.g. on standby. */
++void ac3_spdif_reset(struct ac3_spdif *s);
++/*
++ * Consume `frames` interleaved S16 5.1 frames (FL FR FC LFE BL BR) and write
++ * exactly `frames` interleaved S16 stereo IEC61937 frames to `out`.
++ */
++void ac3_spdif_process(struct ac3_spdif *s, const int16_t *in, size_t frames, int16_t *out);
++
++/* Set or clear the IEC958 non-audio bit on all HDMI/S/PDIF outputs of `card`. */
++int iec958_set_nonaudio(unsigned int card, int nonaudio);
++
++#endif
+diff --git a/hal/audio_hw.c b/hal/audio_hw.c
+index 1d46062..32328a4 100644
+--- a/hal/audio_hw.c
++++ b/hal/audio_hw.c
+@@ -42,6 +42,9 @@
+ #include <audio_utils/format.h>
+ 
+ #include "audio_route.h"
++#include "ac3_spdif.h"
++
++#define AC3_BIT_RATE 640000
+ 
+ #define PCM_CARD 0
+ #define PCM_DEVICE 0
+@@ -130,6 +133,13 @@ struct stream_out {
+     int cur_write_threshold;
+     int buffer_type;
+ 
++    /* 5.1 streams are AC-3 encoded for HDMI, otherwise downmixed to stereo */
++    audio_channel_mask_t channel_mask;
++    struct ac3_spdif *ac3;
++    bool ac3_active;
++    int16_t *stereo_buffer;
++    size_t stereo_buffer_frames;
++
+     struct audio_device *dev;
+ };
+ 
+@@ -521,6 +531,29 @@ static int start_output_stream(struct stream_out *out)
+         out->buffer_type = OUT_BUFFER_TYPE_UNKNOWN;
+     }
+ 
++    /*
++     * A 5.1 mix on HDMI is sent as an AC-3 bitstream: sinks such as TVs with
++     * an optical soundbar take only stereo LPCM but decode Dolby Digital.
++     * The non-audio bit must be set before the PCM is prepared.
++     */
++    out->ac3_active = false;
++    if (out->channel_mask == AUDIO_CHANNEL_OUT_5POINT1 && device != PCM_DEVICE_SCO &&
++            property_get_bool("hal.audio.primary.hdmi",
++                              !!(adev->out_device & AUDIO_DEVICE_OUT_AUX_DIGITAL)) &&
++            property_get_bool("vendor.audio.nuc.ac3", true)) {
++        if (!out->ac3)
++            out->ac3 = ac3_spdif_create(AC3_BIT_RATE);
++        if (out->ac3) {
++            ac3_spdif_reset(out->ac3);
++            out->ac3_active = true;
++        }
++    }
++    struct snd_pcm_info *info = select_card(device, PCM_OUT, adev->out_device);
++    if (info)
++        iec958_set_nonaudio(info->card, out->ac3_active);
++    ALOGI("output %s", out->ac3_active ? "AC-3 bitstream" :
++          out->channel_mask == AUDIO_CHANNEL_OUT_5POINT1 ? "5.1 downmixed to stereo" : "stereo");
++
+     /*
+      * All open PCMs can only use a single group of rates at once:
+      * Group 1: 11.025, 22.05, 44.1
+@@ -874,9 +907,9 @@ static size_t out_get_buffer_size(const struct audio_stream *stream)
+                audio_stream_out_frame_size((struct audio_stream_out *)stream);
+ }
+ 
+-static uint32_t out_get_channels(const struct audio_stream *stream __unused)
++static uint32_t out_get_channels(const struct audio_stream *stream)
+ {
+-    return AUDIO_CHANNEL_OUT_STEREO;
++    return ((const struct stream_out *)stream)->channel_mask;
+ }
+ 
+ static audio_format_t out_get_format(const struct audio_stream *stream __unused)
+@@ -971,7 +1004,8 @@ static uint32_t out_get_latency(const struct audio_stream_out *stream)
+ 
+     pthread_mutex_unlock(&adev->lock);
+ 
+-    return (pcm_config_out.period_size * period_count * 1000) / pcm_config_out.rate;
++    return (pcm_config_out.period_size * period_count * 1000) / pcm_config_out.rate +
++           (out->ac3_active ? AC3_SPDIF_LATENCY_FRAMES * 1000 / pcm_config_out.rate : 0);
+ }
+ 
+ static int out_set_volume(struct audio_stream_out *stream __unused, float left __unused,
+@@ -980,6 +1014,21 @@ static int out_set_volume(struct audio_stream_out *stream __unused, float left _
+     return -ENOSYS;
+ }
+ 
++static int16_t clamp16(int32_t sample)
++{
++    return sample > 32767 ? 32767 : sample < -32768 ? -32768 : sample;
++}
++
++/* FL FR FC LFE BL BR -> L R, keeping dialogue (centre) clearly audible. */
++static void downmix_to_stereo(const int16_t *in, size_t frames, int16_t *out)
++{
++    for (size_t i = 0; i < frames; i++, in += 6, out += 2) {
++        int32_t centre = in[2] * 707 / 1000, lfe = in[3] / 2;
++        out[0] = clamp16((in[0] + centre + lfe + in[4] / 2) * 6 / 10);
++        out[1] = clamp16((in[1] + centre + lfe + in[5] / 2) * 6 / 10);
++    }
++}
++
+ static ssize_t out_write(struct audio_stream_out *stream, const void* buffer,
+                          size_t bytes)
+ {
+@@ -1032,9 +1081,28 @@ static ssize_t out_write(struct audio_stream_out *stream, const void* buffer,
+         out->buffer_type = buffer_type;
+     }
+ 
++    int channels = popcount(out->channel_mask);
++    if (channels == 6) {
++        if (out->stereo_buffer_frames < in_frames) {
++            free(out->stereo_buffer);
++            out->stereo_buffer = malloc(in_frames * 2 * sizeof(int16_t));
++            out->stereo_buffer_frames = out->stereo_buffer ? in_frames : 0;
++        }
++        if (!out->stereo_buffer) {
++            ret = -ENOMEM;
++            goto exit;
++        }
++        if (out->ac3_active)
++            ac3_spdif_process(out->ac3, in_buffer, in_frames, out->stereo_buffer);
++        else
++            downmix_to_stereo(in_buffer, in_frames, out->stereo_buffer);
++        in_buffer = out->stereo_buffer;
++        frame_size = 2 * sizeof(int16_t);
++        channels = 2;
++    }
++
+     /* Reduce number of channels, if necessary */
+-    if (popcount(out_get_channels(&stream->common)) >
+-                 (int)out->pcm_config.channels) {
++    if (channels > (int)out->pcm_config.channels) {
+         unsigned int i;
+ 
+         /* Discard right channel */
+@@ -1441,6 +1509,8 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
+     out->stream.get_next_write_timestamp = out_get_next_write_timestamp;
+ 
+     out->dev = adev;
++    out->channel_mask = config->channel_mask == AUDIO_CHANNEL_OUT_5POINT1 ?
++            AUDIO_CHANNEL_OUT_5POINT1 : AUDIO_CHANNEL_OUT_STEREO;
+ 
+     config->format = out_get_format(&out->stream.common);
+     config->channel_mask = out_get_channels(&out->stream.common);
+@@ -1468,6 +1538,8 @@ static void adev_close_output_stream(struct audio_hw_device *dev __unused,
+     struct stream_out *out = (struct stream_out *)stream;
+     out_standby(&stream->common);
+ 
++    ac3_spdif_destroy(out->ac3);
++    free(out->stereo_buffer);
+     pthread_mutex_destroy(&(out->lock));
+ 
+     free(stream);
+diff --git a/policy/audio_policy_configuration.xml b/policy/audio_policy_configuration.xml
+index 0966ce0..0f7648f 100644
+--- a/policy/audio_policy_configuration.xml
++++ b/policy/audio_policy_configuration.xml
+@@ -31,7 +31,7 @@
+             <mixPorts>
+                 <mixPort name="primary output" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+-                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
++                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_5POINT1"/>
+                 </mixPort>
+                 <mixPort name="primary input" role="sink"> 
+                      <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+@@ -51,7 +51,7 @@
+                 <!-- Output devices declaration, i.e. Sink DEVICE PORT -->
+                 <devicePort tagName="Speaker" type="AUDIO_DEVICE_OUT_SPEAKER" role="sink">
+                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+-                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
++                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_5POINT1"/>
+                 </devicePort>
+                 <devicePort tagName="Wired Headset" type="AUDIO_DEVICE_OUT_WIRED_HEADSET" role="sink">
+                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
