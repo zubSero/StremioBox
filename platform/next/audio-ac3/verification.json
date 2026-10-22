@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "date": "2026-10-21",
-  "status": "shipped in the r8 image (verified repack of r7); the development NUC runs the same files through a guarded boot overlay",
+  "status": "shipped in r8 and r9 (verified repacks); r9 adds the ELD check so only sinks listing AC-3 get the bitstream",
   "problem": "Only stereo PCM reached HDMI. TVs whose EDID lists 2-channel LPCM but Dolby bitstreams pass an optical soundbar stereo only, so dialogue from the 5.1 centre channel drowned in the downmix.",
   "source_patches": {
     "0020-libaudio-ac3-bitstream.patch": {
-      "sha256": "620f9ed25254e52d3eb2c64ab27ebc516b2fac870322efdd495e41d3726d6989",
+      "sha256": "d73e4a489c0a0f4250355590b33cb67ce8990adc9d09ad4ba805e3b1ad37a63e",
       "repository": "hardware/libaudio",
       "upstream": "https://github.com/android-generic/platform_hardware_libaudio",
       "base_commit": "889952b9fb3330d54739f9a974b14dfec0f0893b"
@@ -19,7 +19,7 @@
     "audio.primary.x86.so": {
       "replaces": "/vendor/lib/hw/audio.primary.x86.so",
       "original_bytes": 34880,
-      "sha256": "a5fe5a0260d0fe5724eaabdbf97d895e9d706c715ddc27f73b7c54fb7ad62d6a",
+      "sha256": "4b4035968775ce36ccfbdda56859ed5c045757ff7bc3f0c256d3564ec0db1f2d",
       "abi": "x86 (the audio HAL service is 32-bit)",
       "built_by": "build.sh; two clean runs in different work directories gave identical bytes",
       "device_libs_sha256": {
@@ -28,7 +28,8 @@
         "libexpat.so": "0a32c954aefe9072f65080404c6ef07840675faa25e7db93ebd086daaa41213e",
         "libtinyalsa.so": "7173097660bc6c4600fca7875cbf9c467d71672dd61c0046758d15e9339f907e"
       },
-      "earlier_device_build_sha256": "dc8e491680ccd75b6c881c717747068e6b51fbeb95622dfb42740906fe42c1b5 (same sources without -ffile-prefix-map; used for the listening tests)"
+      "earlier_device_build_sha256": "dc8e491680ccd75b6c881c717747068e6b51fbeb95622dfb42740906fe42c1b5 (same sources without -ffile-prefix-map; used for the listening tests)",
+      "r8_sha256": "a5fe5a0260d0fe5724eaabdbf97d895e9d706c715ddc27f73b7c54fb7ad62d6a"
     },
     "audio_policy_configuration.xml": {
       "replaces": "/vendor/etc/audio_policy_configuration.xml",
@@ -51,10 +52,11 @@
     "User confirmed Dolby 5.1 with dialogue on the centre speaker and correct lip sync at 0 ms",
     "Stremio audio delay steps of 100 ms no longer freeze the picture",
     "Full reboot: both overlay messages in kmsg, mounts active, Stremio adapter compatibility check COMPATIBLE, no new tombstones",
-    "The build.sh output replaced the earlier build on the NUC: after a reboot a 6-channel AAudio stream was sent as AC-3 with the non-audio bit set"
+    "The build.sh output replaced the earlier build on the NUC: after a reboot a 6-channel AAudio stream was sent as AC-3 with the non-audio bit set",
+    "r9 ELD check: LG TV reports AC-3 (bitstream); PCM-only and AC-3 sample ELDs classified correctly"
   ],
   "known_limits": [
-    "All HDMI output is AC-3 while enabled; stereo sources play on the front speakers unless the receiver upmixes",
+    "All HDMI output to a sink that lists AC-3 is AC-3; stereo sources play on the front speakers unless the receiver upmixes. Sinks without AC-3 get the stereo downmix",
     "About 37 ms of added encoder latency is reported to Android",
     "TrueHD/DTS-HD/Atmos are decoded and re-encoded as 5.1 AC-3",
     "Stremio's bundled FFmpeg has no encoders or S/PDIF muxer, so mpv itself cannot pass bitstreams through"
@@ -64,5 +66,10 @@
     "changes": "releases/r8-changes.json",
     "iso_sha256": "2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec",
     "boot_record": "releases/r8-boot-validation.json"
+  },
+  "r9": {
+    "changes": "releases/r9-changes.json",
+    "iso_sha256": "06267691ec264d0233d6c34c4d32740fc9df393bcb55bd3b717ee103fa0eef1e",
+    "boot_record": "releases/r9-boot-validation.json"
   }
 }

@@ -75,10 +75,10 @@ index 96580f3..61c073e 100644
 +    disabled
 diff --git a/stremio/media-watch.sh b/stremio/media-watch.sh
 new file mode 100644
-index 0000000..eb425ba
+index 0000000..8cb93d7
 --- /dev/null
 +++ b/stremio/media-watch.sh
-@@ -0,0 +1,45 @@
+@@ -0,0 +1,49 @@
 +#!/system/bin/sh
 +# SPDX-License-Identifier: Apache-2.0
 +# Background helper started after boot.
@@ -86,12 +86,14 @@ index 0000000..eb425ba
 +# HDMI audio: when the TV stops reporting its ELD (audio capabilities) while the
 +# display is on and Android is playing, the Intel HDMI codec sends no audio at
 +# all. A display off/on cycle makes the TV report it again. Acting only during
-+# playback means a TV showing another input or its own apps is never woken.
++# playback means a TV showing another input or its own apps is never woken, and
++# acting only after an ELD was seen leaves displays without HDMI audio alone.
 +#
 +# NuvioTV (optional): couple the HDR adapter after boots and app updates.
 +missing=0
 +attempts=0
 +tick=0
++seen=0
 +while true; do
 +    if [ $((tick % 12)) = 0 ]; then
 +        /system/bin/nuc-nuvio-hdr >/dev/null 2>&1
@@ -99,10 +101,12 @@ index 0000000..eb425ba
 +    tick=$((tick + 1))
 +    sleep 5
 +    if grep -qs 'monitor_present.*1' /proc/asound/card*/eld#*; then
++        seen=1
 +        missing=0
 +        attempts=0
 +        continue
 +    fi
++    [ "$seen" = 1 ] || continue
 +    display=0
 +    for c in /sys/class/drm/card*-*; do
 +        [ "$(cat "$c/status" 2>/dev/null)" = connected ] &&

@@ -63,6 +63,18 @@ The [candidate report](standby-and-apps.md) records the later long-standby failu
 
 Aurora Store and Flicky APK hashes, x86_64 support and TV launch activities were checked against official F-Droid inputs. Both appeared in Home and survived reboot. Flicky fetched its catalogue; Aurora reached first-use onboarding. Rerunning seeding preserved package install/update timestamps. No store account or terms were accepted and end-to-end user app installation is pending.
 
+<a id="surround-sound-and-nuviotv-release"></a>
+
+## Surround Sound & NuvioTV release (r9) — 2026-10-22
+
+The r9 ISO has SHA-256 `06267691ec264d0233d6c34c4d32740fc9df393bcb55bd3b717ee103fa0eef1e`. It was derived from the verified r8 ISO with a [declared change list](../releases/r9-changes.json) of two replaced entries: the audio HAL (AC-3 only for sinks whose ELD lists it) and the watchdog (acts only after an ELD was seen). Everything else is unchanged; see [the delta](../releases/r9-image-delta.json).
+
+- The ELD check, built from the same source, returned *AC-3 supported* for the LG TV on the development NUC and *no sink* for an absent card; against sample ELDs it returned *PCM only* for an LPCM-only sink and *AC-3* once AC-3 was listed.
+- A fresh-data UEFI live boot in QEMU/KVM repeated every r8 check with the r9 hashes: app and store seed, compositor, Home, sleep/wake, the 5.1 stream through the AC-3 HAL (the emulated codec reports no ELD, so the HAL keeps the AC-3 path), the watchdog service and the Nuvio command refusal. [Boot record](../releases/r9-boot-validation.json).
+- All hardware results of r8 below apply unchanged; r9 only narrows when AC-3 is used and when the watchdog acts.
+
+**Test boundary:** as for r8. A PC monitor or TV without AC-3 support was not connected; the stereo path for such sinks is the HAL's existing downmix.
+
 <a id="surround-sound-release"></a>
 
 ## 5.1 Surround Sound release (r8) — 2026-10-22

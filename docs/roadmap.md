@@ -2,7 +2,7 @@
 
 [Back to the project](../README.md)
 
-The current Intel NUC preview (r8) includes 5.1 Dolby Digital output, the standby fix, optional app stores, English Home and the playback, audio, Bluetooth and subtitle fixes described in the [changelog](../CHANGELOG.md). The next priorities are repeatable installation, longer hardware testing and a full source build. Items below are not promised compatibility or delivery dates.
+The current Intel NUC release (r9) includes 5.1 Dolby Digital output, the standby fix, optional app stores, English Home and the playback, audio, Bluetooth and subtitle fixes described in the [changelog](../CHANGELOG.md). The next priorities are repeatable installation, longer hardware testing and a full source build. Items below are not promised compatibility or delivery dates.
 
 ## 5.1 audio
 
@@ -10,6 +10,7 @@ The current Intel NUC preview (r8) includes 5.1 Dolby Digital output, the standb
 - [x] Encode the 5.1 mix as AC-3 in the 32-bit primary HAL (patch 0020), with a reproducible out-of-tree build; validate Dolby 5.1, centre dialogue and lip sync on the development NUC.
 - [x] Fix Stremio's millisecond audio/subtitle delay reaching mpv as seconds (patch 0021).
 - [x] Publish r8 as a verified repack of r7 with a QEMU boot and 5.1 stream check.
+- [x] Publish r9, the first recommended release: AC-3 only for sinks that support it, watchdog limited to displays that reported HDMI audio.
 - [ ] Build patch 0020 in-tree against `external/ffmpeg` in a full source build.
 - [ ] Optional automatic switch to PCM stereo for stereo-only content; settings toggle for receivers that accept multichannel PCM.
 - [x] Restore HDMI audio automatically when the TV drops its ELD after an input switch.
@@ -29,7 +30,7 @@ The current Intel NUC preview (r8) includes 5.1 Dolby Digital output, the standb
 - [ ] Complete app installation through both stores with the remote.
 - [x] Publish r7: a verified repack of r6 with the validated compositor binary, store seeding and the hidden fingerprint feature; fresh-data UEFI boot and virtual sleep/wake checked.
 - [x] Publish an optional, keyless rescue kit on the EFI partition, tested in QEMU/KVM including GRUB activation and removal.
-- [ ] Flash r8 on the physical NUC and repeat the hardware acceptance matrix.
+- [ ] Flash r9 on the physical NUC and repeat the hardware acceptance matrix.
 - [ ] Build the candidate platform from source and confirm the compiled SurfaceFlinger matches the validated behavior.
 - [ ] Automatic fallback to the rescue system after failed starts in the public image (works on the development NUC).
 

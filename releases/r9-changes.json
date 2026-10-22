@@ -1,0 +1,21 @@
+{
+  "revision": 9,
+  "base_revision": 8,
+  "derivation": "Verified r8 platform; two declared system entries changed (AC-3 output only for sinks that list AC-3, HDMI audio watchdog only after an ELD was seen); no platform compile",
+  "changes": [
+    {
+      "path": "system/vendor/lib/hw/audio.primary.x86.so",
+      "reason": "Patch 0020: send the AC-3 bitstream only when the HDMI sink's ELD lists AC-3; other sinks (PC monitors, older TVs) get the stereo downmix",
+      "before": "a5fe5a0260d0fe5724eaabdbf97d895e9d706c715ddc27f73b7c54fb7ad62d6a",
+      "input": "audio.primary.x86.so",
+      "sha256": "4b4035968775ce36ccfbdda56859ed5c045757ff7bc3f0c256d3564ec0db1f2d"
+    },
+    {
+      "path": "system/bin/nuc-media-watch",
+      "reason": "Patch 0022: act only after the TV reported an ELD in this session, so displays without HDMI audio are never cycled",
+      "before": "242c7655e719584977a9999d4ee593dbba45be5d11a2d2378859a3ae6329904b",
+      "input": "nuc-media-watch",
+      "sha256": "451db67f903bc1513cef27d27105be9ab1458127016d854ca107d6a51e71c0fa"
+    }
+  ]
+}

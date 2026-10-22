@@ -12,7 +12,7 @@ Stremio's mpv cannot pass bitstreams itself: its bundled FFmpeg is built without
 
 | Part | Purpose |
 | --- | --- |
-| [0020](../0020-libaudio-ac3-bitstream.patch), hardware/libaudio | The primary output becomes 5.1. On HDMI the HAL encodes each 1536 frames to AC-3 at 640 kbit/s (FFmpeg n8.1 encoder, linked statically), wraps them as IEC 61937 bursts and sets the IEC958 non-audio bit. Other routes, or `vendor.audio.nuc.ac3=false`, get a dialogue-friendly stereo downmix. |
+| [0020](../0020-libaudio-ac3-bitstream.patch), hardware/libaudio | The primary output becomes 5.1. On HDMI sinks whose ELD lists AC-3, the HAL encodes each 1536 frames to AC-3 at 640 kbit/s (FFmpeg n8.1 encoder, linked statically), wraps them as IEC 61937 bursts and sets the IEC958 non-audio bit. Sinks without AC-3 (PC monitors, older TVs), other routes, or `vendor.audio.nuc.ac3=false` get a dialogue-friendly stereo downmix. |
 | [0021](../0021-stremio-bridge-delay-units.patch), product/stremio | Stremio passes its audio and subtitle delay in milliseconds, mpv expects seconds. A 100 ms tweak became 100 s and froze the picture. The bridge converts the unit. Its optional `audio.conf` override no longer forces any default. |
 | [init-audio-ac3.sh](init-audio-ac3.sh) | Boot overlay block used on the development NUC until a source image ships. Binds the files only over the exact originals and only HAL and policy together. |
 
@@ -39,7 +39,7 @@ Undo: create `/NUCTV-A16/audio-ac3/disabled` (also from the [rescue system](../.
 
 ## Limits
 
-- While enabled, all HDMI audio is AC-3. Stereo sources play on the front speakers unless the receiver upmixes.
+- While enabled and supported by the sink, all HDMI audio is AC-3. Stereo sources play on the front speakers unless the receiver upmixes.
 - About 37 ms of encoder delay is added and reported to Android.
 - TrueHD, DTS-HD and Atmos are decoded and re-encoded as 5.1 AC-3, which is also the maximum of an optical link.
-- Shipped in r8 as a verified repack; not yet built in-tree in a full source build. See [verification.json](verification.json).
+- Shipped in r8 and r9 as verified repacks (r9 added the ELD check); not yet built in-tree in a full source build. See [verification.json](verification.json).

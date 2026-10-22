@@ -36,6 +36,10 @@ The preserved source-preparation manifest contains 1,216 pinned projects. The up
 
 **Intel NUC Preview — English Home** (`r6`) replaces Home 1.0 with English Home 1.1 (version code 2), signed by the same release key. Its [full delta](../releases/r6-home-delta.json) identifies exactly one changed file and 19,581 preserved system entries. Kernel, initrd, recovery, native code, boot art and first-boot Stremio seeding remain the verified initial image's inputs. The physical NUC can install Home 1.1 as a regular signed app update; a fresh English Home installation gets it directly from the system image.
 
+## Surround Sound & NuvioTV update (r9)
+
+`r9` replaces two entries against r8. The HAL reads `/proc/asound/cardN/eld#*` when an output starts and only uses the AC-3 bitstream if a connected sink lists AC-3 (coding type 0x2); otherwise it uses its stereo downmix (no ELD at all keeps AC-3, since nothing is audible then and the watchdog will restore the ELD). The watchdog only acts after it has seen an ELD since boot. [Delta](../releases/r9-image-delta.json).
+
 ## 5.1 Surround Sound update
 
 **Intel NUC Preview — 5.1 Surround Sound** (`r8`) replaces four system entries against r7 and adds four.

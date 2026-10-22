@@ -119,6 +119,19 @@ python3 "$STREMIOBOX_REPO/tools/prepare_platform.py" \
 
 Use the same build entry point and host/vendor prerequisites above. Native source compilation, fresh-data seeding and an overnight physical standby test are still required before publishing a new installation image. The existing-device boot overlay is specific to the verified development binary and is not distributed as a portable updater.
 
+## Reproduce r9 from r8
+
+Same tool, with [r9-changes.json](../releases/r9-changes.json) and the r8 ISO and record as base. Inputs (in `StremioBox-r9-image-inputs.zip`): `audio.primary.x86.so` from `build.sh` with the current patch 0020, and `nuc-media-watch` from `platform/product/stremio` after patches 0021 and 0022.
+
+```sh
+sudo python3 tools/repack_image.py \
+  --base-iso /absolute/path/StremioBox-Android16-r8-nuc10_tv.iso \
+  --base-record releases/r8-image-verification.json \
+  --changes releases/r9-changes.json \
+  --inputs /absolute/path/r9-inputs \
+  --output /absolute/path/StremioBox-Android16-r9-nuc10_tv.iso
+```
+
 ## Reproduce r8 from r7
 
 r8 uses the same tool with [r8-changes.json](../releases/r8-changes.json). Its eight inputs, all attached to the r8 release as `StremioBox-r8-image-inputs.zip`:

@@ -14,7 +14,7 @@ This directory contains source changes dated 2026-10-13. Their result ships in t
 | 0021, product/stremio | Convert Stremio's millisecond audio/subtitle delay to mpv seconds; a 100 ms tweak no longer freezes the picture |
 | 0022, product (after 0021) | `nuc-media-watch` (HDMI audio ELD watchdog, started after boot) and optional NuvioTV support: HDR adapter `libplayer-nuvio.so`, its coupling script `nuc-nuvio-hdr` and the opt-in `stremiobox-nuvio-setup`. See the [Nuvio guide](../../docs/nuvio.md) |
 
-0020–0022 (dated 2026-10-20/22) ship in the **r8** image as a verified repack (see [r8 changes](../../releases/r8-changes.json)); they are not yet part of `inputs.json` or a full source build. [audio-ac3](audio-ac3/README.md) has the reproducible HAL build, the boot overlay used on the development NUC and the verification record.
+0020–0022 (dated 2026-10-20/22) ship in the **r8** and **r9** images as verified repacks (see [r8 changes](../../releases/r8-changes.json) and [r9 changes](../../releases/r9-changes.json)); they are not yet part of `inputs.json` or a full source build. [audio-ac3](audio-ac3/README.md) has the reproducible HAL build, the boot overlay used on the development NUC and the verification record.
 
 Home 1.1 already lists installed TV and regular launcher apps under **Apps & settings**. Stremio remains the main action. No launcher binary change is needed.
 

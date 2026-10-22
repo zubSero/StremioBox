@@ -2,7 +2,7 @@
 
 ## Release posture
 
-r8 is an unofficial hardware-specific preview, built as **userdebug with permissive SELinux**. It is not a hardened consumer appliance or a certified Android device. Authenticated ADB is started on TCP port 5555 for maintenance; keep the box on a trusted network and do not forward that port to the internet.
+r9 is an unofficial hardware-specific preview, built as **userdebug with permissive SELinux**. It is not a hardened consumer appliance or a certified Android device. Authenticated ADB is started on TCP port 5555 for maintenance; keep the box on a trusted network and do not forward that port to the internet.
 
 The clean release image does not carry developer ADB authorization keys, paired Bluetooth devices, user accounts, tokens or private Home signing keys. Initial setup and host authorization belong to the new owner.
 
@@ -10,7 +10,7 @@ The optional [rescue kit](docs/rescue.md) ships without keys or passwords. SSH s
 
 ## Updates
 
-r8 is the current public preview; r5 to r7 remain available for traceability. There is no automatic security-update or managed OTA channel. Source patches and the bridge are version-dependent: a replacement OS image must carry the fixes, and a new Stremio native layout requires validation. The compatibility guard rejects the tested incompatible fixture; it is not a sandbox or a universal security boundary.
+r9 is the current release; r5 to r8 remain available for traceability. There is no automatic security-update or managed OTA channel. Source patches and the bridge are version-dependent: a replacement OS image must carry the fixes, and a new Stremio native layout requires validation. The compatibility guard rejects the tested incompatible fixture; it is not a sandbox or a universal security boundary.
 
 The optional NuvioTV adapter is only coupled to NuvioTV builds whose native player library matches a reviewed SHA-256; it runs inside the Nuvio app with that app's permissions. `stremiobox-nuvio-setup` runs as root over authenticated ADB only. It reads Stremio's local addon list, which can contain debrid keys, passes the URLs to Nuvio on the same box and prints only host names. With a Nuvio account, Nuvio itself syncs those addon URLs to its cloud.
 

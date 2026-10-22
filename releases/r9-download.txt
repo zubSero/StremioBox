@@ -1,0 +1,4 @@
+release r9
+image StremioBox-Android16-r9-nuc10_tv.iso 2886336512 06267691ec264d0233d6c34c4d32740fc9df393bcb55bd3b717ee103fa0eef1e
+part StremioBox-Android16-r9-nuc10_tv.iso.001 1610612736 9ceb333f4a26aeb065bc33c27261f94af4931b2e688ad1cd5c174ef92937a6ce
+part StremioBox-Android16-r9-nuc10_tv.iso.002 1275723776 acffc9eeab92cd8a0442a5a66c96e3fec0e7e78dc98a2731df7fea3e9019bf79

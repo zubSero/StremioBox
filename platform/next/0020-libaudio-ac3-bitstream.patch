@@ -1,9 +1,9 @@
 diff --git a/hal/ac3_spdif.c b/hal/ac3_spdif.c
 new file mode 100644
-index 0000000..f4eabc3
+index 0000000..e63017c
 --- /dev/null
 +++ b/hal/ac3_spdif.c
-@@ -0,0 +1,191 @@
+@@ -0,0 +1,224 @@
 +/*
 + * 5.1 PCM -> AC-3 -> IEC61937 for the x86 primary HAL.
 + *
@@ -14,6 +14,7 @@ index 0000000..f4eabc3
 + */
 +#define LOG_TAG "audio_hw_ac3"
 +
++#include <dirent.h>
 +#include <errno.h>
 +#include <fcntl.h>
 +#include <stdio.h>
@@ -167,6 +168,38 @@ index 0000000..f4eabc3
 +    }
 +}
 +
++int hdmi_sink_accepts_ac3(unsigned int card)
++{
++    char path[64];
++    snprintf(path, sizeof(path), "/proc/asound/card%u", card);
++    DIR *dir = opendir(path);
++    if (!dir)
++        return -1;
++    int result = -1;
++    struct dirent *entry;
++    while (result != 1 && (entry = readdir(dir))) {
++        if (strncmp(entry->d_name, "eld#", 4))
++            continue;
++        char eld[96], line[128];
++        snprintf(eld, sizeof(eld), "%s/%s", path, entry->d_name);
++        FILE *file = fopen(eld, "re");
++        if (!file)
++            continue;
++        int present = 0, ac3 = 0;
++        while (fgets(line, sizeof(line), file)) {
++            if (!strncmp(line, "monitor_present", 15) && strchr(line, '1'))
++                present = 1;
++            if (strstr(line, "_coding_type") && strstr(line, "[0x2]"))
++                ac3 = 1;
++        }
++        fclose(file);
++        if (present)
++            result = ac3;
++    }
++    closedir(dir);
++    return result;
++}
++
 +int iec958_set_nonaudio(unsigned int card, int nonaudio)
 +{
 +    char path[32];
@@ -197,10 +230,10 @@ index 0000000..f4eabc3
 +}
 diff --git a/hal/ac3_spdif.h b/hal/ac3_spdif.h
 new file mode 100644
-index 0000000..4240a0e
+index 0000000..5bfb17e
 --- /dev/null
 +++ b/hal/ac3_spdif.h
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,35 @@
 +/*
 + * 5.1 PCM -> AC-3 -> IEC61937 (S/PDIF burst) conversion for HDMI outputs
 + * whose sink only accepts stereo LPCM but decodes Dolby Digital bitstreams.
@@ -229,9 +262,15 @@ index 0000000..4240a0e
 +/* Set or clear the IEC958 non-audio bit on all HDMI/S/PDIF outputs of `card`. */
 +int iec958_set_nonaudio(unsigned int card, int nonaudio);
 +
++/*
++ * Whether the connected HDMI sink lists AC-3 in its ELD: 1 yes, 0 no (the sink
++ * only takes PCM), -1 no sink currently reports an ELD.
++ */
++int hdmi_sink_accepts_ac3(unsigned int card);
++
 +#endif
 diff --git a/hal/audio_hw.c b/hal/audio_hw.c
-index 1d46062..32328a4 100644
+index 1d46062..06fd70d 100644
 --- a/hal/audio_hw.c
 +++ b/hal/audio_hw.c
 @@ -42,6 +42,9 @@
@@ -258,20 +297,23 @@ index 1d46062..32328a4 100644
      struct audio_device *dev;
  };
  
-@@ -521,6 +531,29 @@ static int start_output_stream(struct stream_out *out)
+@@ -521,6 +531,31 @@ static int start_output_stream(struct stream_out *out)
          out->buffer_type = OUT_BUFFER_TYPE_UNKNOWN;
      }
  
 +    /*
 +     * A 5.1 mix on HDMI is sent as an AC-3 bitstream: sinks such as TVs with
 +     * an optical soundbar take only stereo LPCM but decode Dolby Digital.
-+     * The non-audio bit must be set before the PCM is prepared.
++     * The non-audio bit must be set before the PCM is prepared. Sinks whose
++     * ELD does not list AC-3 (PC monitors, older TVs) get the stereo downmix.
 +     */
 +    out->ac3_active = false;
++    struct snd_pcm_info *info = select_card(device, PCM_OUT, adev->out_device);
 +    if (out->channel_mask == AUDIO_CHANNEL_OUT_5POINT1 && device != PCM_DEVICE_SCO &&
 +            property_get_bool("hal.audio.primary.hdmi",
 +                              !!(adev->out_device & AUDIO_DEVICE_OUT_AUX_DIGITAL)) &&
-+            property_get_bool("vendor.audio.nuc.ac3", true)) {
++            property_get_bool("vendor.audio.nuc.ac3", true) &&
++            (!info || hdmi_sink_accepts_ac3(info->card) != 0)) {
 +        if (!out->ac3)
 +            out->ac3 = ac3_spdif_create(AC3_BIT_RATE);
 +        if (out->ac3) {
@@ -279,7 +321,6 @@ index 1d46062..32328a4 100644
 +            out->ac3_active = true;
 +        }
 +    }
-+    struct snd_pcm_info *info = select_card(device, PCM_OUT, adev->out_device);
 +    if (info)
 +        iec958_set_nonaudio(info->card, out->ac3_active);
 +    ALOGI("output %s", out->ac3_active ? "AC-3 bitstream" :
@@ -288,7 +329,7 @@ index 1d46062..32328a4 100644
      /*
       * All open PCMs can only use a single group of rates at once:
       * Group 1: 11.025, 22.05, 44.1
-@@ -874,9 +907,9 @@ static size_t out_get_buffer_size(const struct audio_stream *stream)
+@@ -874,9 +909,9 @@ static size_t out_get_buffer_size(const struct audio_stream *stream)
                 audio_stream_out_frame_size((struct audio_stream_out *)stream);
  }
  
@@ -300,7 +341,7 @@ index 1d46062..32328a4 100644
  }
  
  static audio_format_t out_get_format(const struct audio_stream *stream __unused)
-@@ -971,7 +1004,8 @@ static uint32_t out_get_latency(const struct audio_stream_out *stream)
+@@ -971,7 +1006,8 @@ static uint32_t out_get_latency(const struct audio_stream_out *stream)
  
      pthread_mutex_unlock(&adev->lock);
  
@@ -310,7 +351,7 @@ index 1d46062..32328a4 100644
  }
  
  static int out_set_volume(struct audio_stream_out *stream __unused, float left __unused,
-@@ -980,6 +1014,21 @@ static int out_set_volume(struct audio_stream_out *stream __unused, float left _
+@@ -980,6 +1016,21 @@ static int out_set_volume(struct audio_stream_out *stream __unused, float left _
      return -ENOSYS;
  }
  
@@ -332,7 +373,7 @@ index 1d46062..32328a4 100644
  static ssize_t out_write(struct audio_stream_out *stream, const void* buffer,
                           size_t bytes)
  {
-@@ -1032,9 +1081,28 @@ static ssize_t out_write(struct audio_stream_out *stream, const void* buffer,
+@@ -1032,9 +1083,28 @@ static ssize_t out_write(struct audio_stream_out *stream, const void* buffer,
          out->buffer_type = buffer_type;
      }
  
@@ -363,7 +404,7 @@ index 1d46062..32328a4 100644
          unsigned int i;
  
          /* Discard right channel */
-@@ -1441,6 +1509,8 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
+@@ -1441,6 +1511,8 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
      out->stream.get_next_write_timestamp = out_get_next_write_timestamp;
  
      out->dev = adev;
@@ -372,7 +413,7 @@ index 1d46062..32328a4 100644
  
      config->format = out_get_format(&out->stream.common);
      config->channel_mask = out_get_channels(&out->stream.common);
-@@ -1468,6 +1538,8 @@ static void adev_close_output_stream(struct audio_hw_device *dev __unused,
+@@ -1468,6 +1540,8 @@ static void adev_close_output_stream(struct audio_hw_device *dev __unused,
      struct stream_out *out = (struct stream_out *)stream;
      out_standby(&stream->common);
  

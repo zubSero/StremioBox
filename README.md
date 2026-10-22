@@ -6,11 +6,11 @@
 
 **Android 16 for an Intel NUC running Stremio on your TV.**
 
-[![Intel NUC preview](https://img.shields.io/badge/download-Intel%20NUC%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r8)
+[![Intel NUC preview](https://img.shields.io/badge/download-Intel%20NUC%20preview-8b7bff?style=flat-square)](https://github.com/zubSero/StremioBox/releases/tag/r9)
 [![Android 16](https://img.shields.io/badge/Android-16-65dfc1?style=flat-square&logo=android&logoColor=white)](docs/architecture.md)
 [![Repository checks](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml/badge.svg)](https://github.com/zubSero/StremioBox/actions/workflows/validate.yml)
 
-[**Download**](https://github.com/zubSero/StremioBox/releases/tag/r8) · [**Installation**](docs/installation.md) · [**Changelog**](CHANGELOG.md) · [**Website**](https://zubsero.github.io/StremioBox/) · [**Nederlands**](README.nl.md)
+[**Download**](https://github.com/zubSero/StremioBox/releases/tag/r9) · [**Installation**](docs/installation.md) · [**Changelog**](CHANGELOG.md) · [**Website**](https://zubsero.github.io/StremioBox/) · [**Nederlands**](README.nl.md)
 
 </div>
 
@@ -35,27 +35,27 @@ StremioBox is a bootable Android TV system image based on Android 16 / LineageOS
 
 [Hardware details](docs/hardware.md) · [Test methods and results](docs/testing.md)
 
-## New in this release — 5.1 Surround Sound
+## New in this release — Surround Sound & NuvioTV
 
-- **Real 5.1 through the TV, clear dialogue.** Audio now leaves the NUC as Dolby Digital 5.1. A soundbar or surround system on the TV's optical output decodes it with dialogue on the centre speaker, instead of receiving a stereo mix in which voices drowned. Set the TV's digital audio output to Auto or Passthrough. [How it works](platform/next/audio-ac3/README.md)
+- **Real 5.1 through the TV, clear dialogue.** Audio now leaves the NUC as Dolby Digital 5.1 when your TV or soundbar supports it (otherwise a dialogue-friendly stereo mix). A soundbar or surround system on the TV's optical output decodes it with dialogue on the centre speaker, instead of receiving a stereo mix in which voices drowned. Set the TV's digital audio output to Auto or Passthrough. [How it works](platform/next/audio-ac3/README.md)
 - **The sync option works.** Adjusting audio or subtitle sync in the Stremio player no longer freezes the picture.
 - **Sound comes back by itself** after the TV switched to another input or app and back.
 - **Optional NuvioTV:** prefer [NuvioTV](docs/nuvio.md)? Install it yourself and StremioBox gives it HDR10 output; one command applies working settings and copies your Stremio addons. Stremio remains the default.
 
-Earlier releases added the standby fix, Aurora Store and Flicky, quiet standby and an optional [rescue system](docs/rescue.md); all remain included. The physical NUC runs the changed audio files from its development installation, but was not reflashed with the new ISO. [Test boundary](docs/testing.md#surround-sound-release)
+Earlier releases added the standby fix, Aurora Store and Flicky, quiet standby and an optional [rescue system](docs/rescue.md); all remain included. The physical NUC runs the changed audio files from its development installation, but was not reflashed with the new ISO. [Test boundary](docs/testing.md#surround-sound-and-nuviotv-release)
 
 ## Download and try it
 
-The current download is **Intel NUC Preview — 5.1 Surround Sound**. It includes all earlier fixes, English Home 1.1, the standby fix, both app stores and 5.1 output. [Read the changes](CHANGELOG.md#surround-sound).
+The current download is **Intel NUC Preview — Surround Sound & NuvioTV**, the first release marked as recommended. It includes all earlier fixes, English Home 1.1, the standby fix, both app stores, 5.1 output and optional NuvioTV support. [Read the changes](CHANGELOG.md#surround-sound-and-nuviotv).
 
-1. Download the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r8/StremioBox-r8-native-download.zip) and extract it.
+1. Download the [native download ZIP](https://github.com/zubSero/StremioBox/releases/download/r9/StremioBox-r9-native-download.zip) and extract it.
 2. **Windows:** double-click `Download-StremioBox.cmd`. **Linux/macOS:** open a terminal in the extracted folder and run `bash tools/download.sh --output downloads`. No Python is required.
 3. Follow the [USB boot and installation guide](docs/installation.md). Allow about **6 GB free** for the download and assembled image.
 4. After Android starts, pair your remote and sign in to Stremio with your own account. No accounts or add-ons are configured in the image.
 
-The helper joins two download parts into one ISO and verifies their SHA-256 hashes. The resulting ISO is about **2.89 GB**. For manual downloads, source archives, the rescue kit and checksums, open the [release page](https://github.com/zubSero/StremioBox/releases/tag/r8).
+The helper joins two download parts into one ISO and verifies their SHA-256 hashes. The resulting ISO is about **2.89 GB**. For manual downloads, source archives, the rescue kit and checksums, open the [release page](https://github.com/zubSero/StremioBox/releases/tag/r9).
 
-**Already running r5, r6 or r7?** The 5.1 output and the sync fix replace system files and need a reinstall with r8; on r5/r6 the stores can also be added over ADB. [Update options](docs/installation.md#update-an-existing-installation).
+**Already running r5, r6 or r7?** The 5.1 output, the audio watchdog and the sync fix replace system files and need a reinstall with r9; on r5/r6 the stores can also be added over ADB. [Update options](docs/installation.md#update-an-existing-installation).
 
 **Already using the initial image with Dutch Home?** Install the [English Home update](docs/installation.md#update-an-existing-installation) to change the launcher language. It uses the same signing certificate and survives reboot.
 
@@ -66,15 +66,15 @@ The helper joins two download parts into one ISO and verifies their SHA-256 hash
 <details>
 <summary>Image filename and checksum</summary>
 
-The release's technical identifier is `r8`; filenames and download URLs use it.
+The release's technical identifier is `r9`; filenames and download URLs use it.
 
 ```text
-StremioBox-Android16-r8-nuc10_tv.iso
-2,886,467,584 bytes
-SHA-256: 2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec
+StremioBox-Android16-r9-nuc10_tv.iso
+2,886,336,512 bytes
+SHA-256: 06267691ec264d0233d6c34c4d32740fc9df393bcb55bd3b717ee103fa0eef1e
 ```
 
-[Download manifest](releases/r8.json) · [Image verification](releases/r8-image-verification.json) · [Image delta](releases/r8-image-delta.json)
+[Download manifest](releases/r9.json) · [Image verification](releases/r9-image-verification.json) · [Image delta](releases/r9-image-delta.json)
 
 </details>
 
@@ -100,7 +100,7 @@ SHA-256: 2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec
 | Build or customize the project | [Build guide](docs/building.md) · [Home source](launcher/README.md) · [Brand assets](docs/branding.md) |
 | Help with the next release | [Roadmap](docs/roadmap.md) · [Contributing](CONTRIBUTING.md) |
 
-The repository contains platform patches, a pinned source manifest, the product overlay, Home source and image tools. Each release after the first was produced by a declared, verified change to the previous image ([r8 changes](releases/r8-changes.json)). A clean full Android build from this public repository is still pending; the [build guide](docs/building.md) distinguishes the tested repack from the full build procedure.
+The repository contains platform patches, a pinned source manifest, the product overlay, Home source and image tools. Each release after the first was produced by a declared, verified change to the previous image ([r9 changes](releases/r9-changes.json)). A clean full Android build from this public repository is still pending; the [build guide](docs/building.md) distinguishes the tested repack from the full build procedure.
 
 ## Credits and licensing
 

@@ -6,8 +6,8 @@
 
 | Symptom | Useful first checks |
 | --- | --- |
-| No sound at all after switching TV inputs or apps | r8 restores it automatically within about 15 seconds of playback (the screen goes black for ~3 s). On older releases restart the box. See [no sound after an input switch](#no-sound-after-switching-the-tv-input). |
-| Soundbar shows stereo, dialogue quiet | Use r8 and set the TV's digital audio output to Auto/Passthrough. See [below](#dialogue-is-quiet-or-the-soundbar-shows-stereo). |
+| No sound at all after switching TV inputs or apps | From r8 on the box restores it automatically within about 15 seconds of playback (the screen goes black for ~3 s). On older releases restart the box. See [no sound after an input switch](#no-sound-after-switching-the-tv-input). |
+| Soundbar shows stereo, dialogue quiet | Use r9 and set the TV's digital audio output to Auto/Passthrough. See [below](#dialogue-is-quiet-or-the-soundbar-shows-stereo). |
 | NuvioTV stays at *Starting stream…* or looks flat | Run `adb shell stremiobox-nuvio-setup settings`. See the [Nuvio guide](nuvio.md). |
 | No signal during standby | HDMI being off is expected while asleep. Press the remote's power key or a USB keyboard key. On r5/r6, failure to wake after hours is a known issue fixed in r7; see [standby recovery](standby-and-apps.md). |
 | Scrolling text on the TV during standby | On r5/r6 this is fingerprint-service log spam on the console, not a reboot loop. r7 hides the non-existent fingerprint feature. See [console log spam](standby-and-apps.md#console-log-spam-during-standby). |
@@ -23,13 +23,13 @@
 
 ## Dialogue is quiet or the soundbar shows stereo
 
-Up to r7 the NUC sends only stereo PCM over HDMI. If your TV reports only stereo LPCM and a soundbar or 5.1 system hangs on the TV's optical output, the system receives stereo instead of Dolby 5.1 and dialogue gets lost in the mix. r8 sends Dolby Digital 5.1 instead: install r8 and set the TV's digital audio output to **Auto** or **Passthrough** (not PCM). The soundbar should then show Dolby Digital. [How it works](../platform/next/audio-ac3/README.md).
+Up to r7 the NUC sends only stereo PCM over HDMI. If your TV reports only stereo LPCM and a soundbar or 5.1 system hangs on the TV's optical output, the system receives stereo instead of Dolby 5.1 and dialogue gets lost in the mix. From r8 on the NUC sends Dolby Digital 5.1 to sinks that support it: install r9 and set the TV's digital audio output to **Auto** or **Passthrough** (not PCM). The soundbar should then show Dolby Digital. [How it works](../platform/next/audio-ac3/README.md).
 
-The audio/subtitle sync option in the Stremio player froze the picture in r5–r7 (a unit error); r8 fixes it.
+The audio/subtitle sync option in the Stremio player froze the picture in r5–r7 (a unit error); r8 and later fix it.
 
 ## No sound after switching the TV input
 
-Some TVs stop reporting their audio capabilities (the HDMI "ELD") to the NUC after they showed another input or one of their own apps. The picture comes back, but the Intel HDMI audio stays silent. r8 includes a watchdog (`nuc-media-watch`) that notices this while something is playing and turns the display off and on once; sound returns after about 15 seconds. To check by hand:
+Some TVs stop reporting their audio capabilities (the HDMI "ELD") to the NUC after they showed another input or one of their own apps. The picture comes back, but the Intel HDMI audio stays silent. From r8 on a watchdog (`nuc-media-watch`) that notices this while something is playing and turns the display off and on once; sound returns after about 15 seconds. To check by hand:
 
 ```sh
 adb shell 'grep -h monitor_present /proc/asound/card0/eld#*'   # 1 = TV reports audio
