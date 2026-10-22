@@ -1,61 +1,134 @@
+<div align="center">
+
 ![StremioBox](docs/assets/boot-screen.png)
 
 # StremioBox
 
-**Android 16 voor een Intel NUC met Stremio op je tv.**
+### Maak van een kleine Intel-pc een Stremio-box voor je tv.
 
-[Download](https://github.com/zubSero/StremioBox/releases/tag/r9) · [Installatie](docs/installation.md) · [Changelog](CHANGELOG.md) · [Website](https://zubsero.github.io/StremioBox/) · [English](README.md)
+**4K HDR · Dolby Digital 5.1 · één afstandsbediening · geen Google-account**
 
-StremioBox is een opstartbaar Android TV-image op basis van Android 16 / LineageOS 23.2. Het bevat een startscherm voor bediening met een afstandsbediening, Stremio TV 1.10.4 en fixes voor Intel-video, HDMI-audio, Bluetooth en ondertitels. De gewone mpv-interface van Stremio, inclusief de afspeelbalk, blijft beschikbaar.
+[![Download](https://img.shields.io/github/v/release/zubSero/StremioBox?label=download&style=for-the-badge&color=8b7bff)](https://github.com/zubSero/StremioBox/releases/latest)
+[![Website](https://img.shields.io/badge/website-bekijk-65dfc1?style=for-the-badge)](https://zubsero.github.io/StremioBox/)
 
-![StremioBox Home op de fysieke Intel NUC, met Aurora Store en Flicky onder Apps & settings](docs/assets/home-r7-app-stores.png)
+[**Aan de slag**](#-aan-de-slag) · [**Wat je krijgt**](#-wat-je-krijgt) · [**Vragen**](#-vragen) · [**English**](README.md)
 
-**Deze preview is getest op één configuratie:** Intel NUC10i5FNH, Intel UHD-graphics, Intel AX201 Bluetooth, Homatics B21 en een LG HDR-tv. Andere hardware vraagt aparte tests. Langdurige afspeeltests en de schijfinstaller zijn nog niet gevalideerd; probeer eerst live boot vanaf USB.
+</div>
 
-## Wat is getest?
+---
 
-| Onderdeel | Resultaat | Beperking |
-| --- | --- | --- |
-| 4K HEVC Main10 HDR10 | Hardwaredecodering, goede kleuren en HDR-modus op de tv | Korte tests rond 24 fps; geen bevestiging voor 4K60 of andere HDR-formaten |
-| HDMI-audio | Hoorbaar geluid voor en na display-standby; 5.1 gaat als Dolby Digital naar buiten en een optische soundbar achter de tv speelt echte 5.1 | Receivers die meerkanaals-PCM via HDMI aannemen krijgen ook AC-3; stereobronnen blijven op de voorste speakers |
-| Homatics B21 | Gewone toetsen werken na reboot zonder opnieuw koppelen | Fysieke powerknop verdient nog een aparte hertest |
-| Display-standby | Beeld, geluid en bediening keren terug na Android-slaap/wekcommando's | Vastloper na lange standby opgelost in r7; fysieke nachttest volgt; echte S3-slaap niet getest |
-| Ondertitels | Disabled en taal-/audiowissels gecontroleerd met externe SRT | Niet ieder formaat of iedere stream getest |
-| Startscherm | Engelse Home 1.1, ook na reboot | Eigen launcher; Android en Stremio hebben hun eigen taalinstellingen |
-| Appwinkels | Aurora Store en Flicky openen vanuit Home en blijven na reboot | Volledige appinstallatie via elke winkel nog te testen; geen Google Play-diensten |
+StremioBox is een gratis systeem voor een **Intel NUC** (een pc zo groot als je hand). Sluit hem aan op je tv, neem de afstandsbediening en je komt meteen op een eenvoudig startscherm met **Stremio** — geen bureaublad, geen eindeloze accounts, geen reclame.
 
-[Hardwarematrix](docs/hardware.md) · [Testresultaten](docs/testing.md)
+![Het StremioBox-startscherm op een tv](docs/assets/home-r7-app-stores.png)
 
-## Nieuw in deze uitgave — Surround Sound & NuvioTV
+## ✨ Wat je krijgt
 
-- **Echte 5.1 via de tv, verstaanbare dialoog.** Het geluid verlaat de NUC nu als Dolby Digital 5.1 als je tv of soundbar dat ondersteunt (anders een stereomix met verstaanbare dialoog). Een soundbar of surroundsysteem op de optische uitgang van de tv decodeert het met de dialoog op de centerspeaker, in plaats van een stereomix waarin stemmen verdronken. Zet de digitale audio-uitgang van de tv op Auto of Passthrough. [Werking (Engels)](platform/next/audio-ac3/README.md)
-- **De sync-optie werkt.** Audio- of ondertitelsync aanpassen in de Stremio-speler laat het beeld niet meer vastlopen.
-- **Het geluid komt vanzelf terug** nadat de tv naar een andere ingang of app en weer terug schakelde.
-- **Optioneel NuvioTV:** liever [NuvioTV](docs/nuvio.md)? Installeer het zelf en StremioBox geeft het HDR10-beeld; één commando zet werkende instellingen en neemt je Stremio-addons over. Stremio blijft de standaard. (Gids in het Engels.)
+| | |
+| --- | --- |
+| 🎬 **Films in 4K HDR** | Vloeiend 4K met echte HDR op je tv, via de eigen videochip van de pc. |
+| 🔊 **Echt surroundgeluid** | Dolby Digital 5.1 naar je soundbar of receiver, zodat de dialoog verstaanbaar blijft. Stereo-tv's werken ook. |
+| 🎮 **Eén afstandsbediening** | Koppel een Bluetooth-afstandsbediening één keer; ze blijft werken na herstarten en standby. |
+| 💬 **Ondertitels die meewerken** | Uitzetten, van taal of audiospoor wisselen — de ondertitels volgen. |
+| 🌙 **Wordt betrouwbaar wakker** | Standby en wakker worden zoals bij een gewone tv-box; beeld en geluid komen terug. |
+| 🛒 **Meer apps als je wilt** | Aurora Store en Flicky zitten erin om andere apps te installeren. |
+| 🧩 **NuvioTV, als je dat liever hebt** | Optioneel: installeer NuvioTV en StremioBox geeft het HDR en neemt je Stremio-addons over. [Hoe (Engels)](docs/nuvio.md) |
+| 🛟 **Een vangnet** | Een optioneel noodsysteem laat je de box herstellen als Android ooit niet meer opstart. [Hoe (Engels)](docs/rescue.md) |
 
-Eerdere uitgaven brachten de standby-fix, Aurora Store en Flicky, een rustige standby en een optioneel [noodsysteem](docs/rescue.md); die blijven allemaal aanwezig. De fysieke NUC draait de gewijzigde audiobestanden vanuit zijn ontwikkelinstallatie, maar is niet opnieuw geïnstalleerd met de nieuwe ISO. [Testgrenzen](docs/testing.md#surround-sound-and-nuviotv-release)
+## 🤔 Is dit iets voor mij?
 
-## Downloaden
+StremioBox past bij je als:
 
-De huidige uitgave heet **Intel NUC Preview — Surround Sound & NuvioTV**, de eerste aanbevolen uitgave. Deze bevat alle eerdere fixes, het Engelse startscherm, de standby-fix, beide appwinkels, 5.1-uitvoer en optionele NuvioTV-ondersteuning. De [uitgebreide changelog](CHANGELOG.md) beschrijft elke wijziging en de bijbehorende tests.
+- ✅ je een **Intel NUC** hebt (of wilt kopen) — getest op de **NUC10i5FNH**
+- ✅ je al **Stremio** gebruikt of er een aparte box voor wilt
+- ✅ je het niet erg vindt om één keer vanaf een **USB-stick** te installeren
 
-1. Download en pak de [downloadhulp](https://github.com/zubSero/StremioBox/releases/download/r9/StremioBox-r9-native-download.zip) uit.
-2. **Windows:** dubbelklik op `Download-StremioBox.cmd`. **Linux/macOS:** open een terminal in de uitgepakte map en voer `bash tools/download.sh --output downloads` uit. Python is niet nodig.
-3. Reserveer ongeveer 6 GB vrije ruimte. De hulp downloadt twee delen en controleert de hashes van de delen en de samengestelde ISO.
-4. Volg de [installatiegids](docs/installation.md), probeer live boot en koppel daarna je eigen remote en Stremio-account.
+Goed om te weten:
 
-Draai je al r5, r6 of r7? De 5.1-uitvoer en de sync-fix vervangen systeembestanden en vragen een herinstallatie met r9; op r5/r6 kun je de winkels ook via ADB toevoegen. [Updatemogelijkheden](docs/installation.md#update-an-existing-installation).
+- Er is tot nu toe **één** opstelling getest (Intel NUC10i5FNH, LG-tv, Homatics B21-afstandsbediening). Andere pc's kunnen werken, maar niemand heeft het al gecontroleerd — [laat het weten](https://github.com/zubSero/StremioBox/issues/new/choose) als je het probeert!
+- Het is een gemeenschapsproject, geen commercieel product. Probeer het eerst vanaf USB; installeren op de schijf kan, maar is nog niet volledig getest.
+- Diensten die gecertificeerde Android-toestellen eisen (zoals Netflix) zijn hier niet het doel.
 
-Heb je de eerste image met Nederlands Home al geïnstalleerd? De [losse Engelse Home-update](docs/installation.md#update-an-existing-installation) gebruikt dezelfde ondertekening en blijft na reboot actief. De technische downloadcode van deze uitgave is `r9`.
+## 🚀 Aan de slag
 
-## Grenzen van deze preview
+1. **Download** de [downloadhulp](https://github.com/zubSero/StremioBox/releases/download/r9/StremioBox-r9-native-download.zip) en pak hem uit.
+2. **Start hem.** Op Windows dubbelklik je op `Download-StremioBox.cmd`. Op Mac of Linux voer je in die map `bash tools/download.sh --output downloads` uit. Hij haalt het image op (ongeveer 2,9 GB) en controleert dat het volledig en ongewijzigd is. Houd zo'n 6 GB vrij.
+3. **Zet het op een USB-stick** met bijvoorbeeld [balenaEtcher](https://etcher.balena.io/) of Rufus, steek hem in de NUC en start vanaf USB. → [Stap-voor-stap installatiegids (Engels)](docs/installation.md)
+4. **Koppel je afstandsbediening, log in bij Stremio** met je eigen account en kijk. 🍿
 
-Dolby Vision, HLG, AV1, VLC/ExoPlayer, 4K60, HDMI-CEC, echte S3-slaap en andere GPU's zijn nog niet bevestigd. De ontwikkelbuild gebruikt permissieve SELinux en geauthenticeerde ADB op poort 5555; gebruik een vertrouwd netwerk. Het gedeelde image bevat geen persoonlijke accounts, privésleutels of Bluetooth-koppelingen.
+> **Tip voor surroundgeluid:** zet de digitale audio-uitgang van je tv op **Auto** of **Passthrough**, zodat je soundbar Dolby Digital krijgt.
 
-De verpakte fixes blijven na reboot actief. Nieuwe Stremio-versies moeten opnieuw op compatibiliteit worden gecontroleerd. Er is geen automatisch OS-updatekanaal. Elke uitgave na de eerste is gemaakt met een vastgelegde, gecontroleerde wijziging van het vorige image; een volledige Android-build vanuit deze publieke repository staat nog open.
+## 🆕 Nieuw
 
-**Pull requests zijn welkom.** Iedereen kan het project forken en fixes, hardwareverbeteringen, vertalingen of documentatie insturen. Je kunt meteen een PR openen; wijzigingen worden bekeken voordat ze worden samengevoegd. [Zo draag je bij](CONTRIBUTING.md).
+**Surround Sound & NuvioTV** — de eerste uitgave die we iedereen aanraden:
 
-[Problemen oplossen](docs/troubleshooting.md) · [Noodsysteem](docs/rescue.md) · [Broncode bouwen](docs/building.md) · [Roadmap](docs/roadmap.md) · [Probleem melden](https://github.com/zubSero/StremioBox/issues/new/choose)
+- 🔊 Echte **5.1 Dolby Digital** via je tv naar de soundbar — geen verdronken dialoog meer.
+- 🔁 **Het geluid komt vanzelf terug** als de tv van ingang wisselde en het geluid kwijt was.
+- ⏱️ De **audio/ondertitel-sync** in Stremio werkt zonder dat het beeld bevriest.
+- 🧩 Optioneel **NuvioTV** met HDR.
 
-StremioBox is een onafhankelijk communityproject, zonder officiële band met Stremio of LineageOS. [Licenties en credits](THIRD_PARTY_NOTICES.md).
+[Alle wijzigingen bekijken (Engels) →](CHANGELOG.md)
+
+## ❓ Vragen
+
+<details>
+<summary><b>Moet ik iets van Linux of Android kennen?</b></summary>
+
+Nee. Downloaden, op USB zetten, vanaf USB starten, afstandsbediening gebruiken. Alleen de optionele extra's (NuvioTV instellen, een oudere installatie bijwerken) gebruiken een commando op je computer, en de gidsen tonen precies wat je moet typen.
+</details>
+
+<details>
+<summary><b>Welke afstandsbediening werkt?</b></summary>
+
+Getest met de Homatics B21 (Bluetooth). De meeste Bluetooth-afstandsbedieningen en USB-toetsenborden zouden moeten werken; een toetsenbord is handig bij de eerste installatie.
+</details>
+
+<details>
+<summary><b>Ik heb al een oudere StremioBox. Moet ik opnieuw installeren?</b></summary>
+
+Voor het nieuwe geluid en NuvioTV wel — die zitten in het systeem. Kleinere dingen kunnen soms zonder herinstallatie. [Updatemogelijkheden (Engels)](docs/installation.md#update-an-existing-installation)
+</details>
+
+<details>
+<summary><b>Geen geluid, of mijn soundbar toont alleen stereo?</b></summary>
+
+Zet de digitale audio-uitgang van je tv op Auto/Passthrough en gebruik de nieuwste uitgave. Meer oplossingen in de [probleemgids (Engels)](docs/troubleshooting.md).
+</details>
+
+<details>
+<summary><b>Ik heb geen USB-stick.</b></summary>
+
+Er zijn een paar andere manieren, elk met hun beperkingen. [Installeren zonder USB (Engels)](docs/without-usb.md)
+</details>
+
+<details>
+<summary><b>Is het veilig?</b></summary>
+
+Het image bevat geen accounts, sleutels of persoonlijke gegevens — je stelt alles zelf in. Het is een build in ontwikkelaarsstijl, dus houd hem op je thuisnetwerk. [Beveiliging (Engels)](SECURITY.md)
+</details>
+
+## 🤝 Hulp en gemeenschap
+
+- 🐛 Werkt iets niet? [Meld een probleem](https://github.com/zubSero/StremioBox/issues/new/choose)
+- 💬 Een vraag? [Discussions](https://github.com/zubSero/StremioBox/discussions)
+- 🛠️ Helpen? Pull requests zijn welkom — fixes, andere hardware, vertalingen, documentatie. [Zo draag je bij](CONTRIBUTING.md)
+
+---
+
+<details>
+<summary><b>🔧 Voor de technisch nieuwsgierigen</b></summary>
+
+StremioBox is een opstartbaar Android TV-image op basis van **Android 16 / LineageOS 23.2** met Stremio TV 1.10.4, een startscherm voor de afstandsbediening en fixes voor Intel-HDR-video (HEVC Main10, HDR10), HDMI-audio (AC-3-bitstream in de audio-HAL), Bluetooth, display-standby en ondertitels. Afspelen gebeurt via de eigen mpv-interface van Stremio.
+
+[Hardware](docs/hardware.md) · [Testresultaten](docs/testing.md) · [Architectuur](docs/architecture.md) · [Platformpatches](platform/README.md) · [Bouwen](docs/building.md) · [Changelog](CHANGELOG.md) · [Roadmap](docs/roadmap.md)
+
+**Huidig image:** `StremioBox-Android16-r9-nuc10_tv.iso`, 2.886.336.512 bytes, SHA-256 `06267691ec264d0233d6c34c4d32740fc9df393bcb55bd3b717ee103fa0eef1e` · [manifest](releases/r9.json). De technische downloadcode is `r9`.
+
+</details>
+
+## 📜 Credits en licentie
+
+Gebouwd op [LineageOS](https://lineageos.org/), [los-tv-x86](https://github.com/los-tv-x86/lineage_bass_android), [Android-x86](https://www.android-x86.org/), [Mesa](https://www.mesa3d.org/), [drm_hwcomposer](https://gitlab.freedesktop.org/drm-hwcomposer/drm-hwcomposer), Intels mediastack en de Android Generic / AAROPA-gemeenschap. Stremio, mpv en NuvioTV houden hun eigen licenties.
+
+Onze eigen tools, documentatie, artwork en het startscherm vallen onder MIT; platformwijzigingen houden hun oorspronkelijke licenties. [Licentie](LICENSE) · [Licenties van derden](THIRD_PARTY_NOTICES.md)
+
+StremioBox is een onafhankelijk gemeenschapsproject, niet verbonden aan Stremio, LineageOS, Nuvio of Dolby.
