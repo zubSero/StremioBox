@@ -1,0 +1,507 @@
+diff --git a/lineage_nuc10_tv.mk b/lineage_nuc10_tv.mk
+index f4b3f15..d5c6acc 100644
+--- a/lineage_nuc10_tv.mk
++++ b/lineage_nuc10_tv.mk
+@@ -59,7 +59,11 @@ PRODUCT_PACKAGES += \
+     nuc_stremio_guard \
+     nuc-stremio-guard \
+     nuc-stremio-reconcile \
+-    nuc-stremio-boot-approved
++    nuc-stremio-boot-approved \
++    nuc-media-watch \
++    libnuc_nuvio_adapter \
++    nuc-nuvio-hdr \
++    stremiobox-nuvio-setup
+ 
+ # No Google services, translators, activation package or account data is added.
+ 
+diff --git a/stremio/Android.bp b/stremio/Android.bp
+index f43a617..3245b43 100644
+--- a/stremio/Android.bp
++++ b/stremio/Android.bp
+@@ -49,3 +49,34 @@ prebuilt_etc {
+     filename: "boot-approved.sh",
+     sub_dir: "nuc-stremio",
+ }
++
++// HDMI audio watchdog (ELD) and optional NuvioTV coupling, started after boot.
++sh_binary {
++    name: "nuc-media-watch",
++    src: "media-watch.sh",
++}
++
++// Optional NuvioTV support: HDR adapter for its libmpv engine, its coupling
++// script and the opt-in setup command. Nothing runs unless Nuvio is installed.
++cc_library_shared {
++    name: "libnuc_nuvio_adapter",
++    stem: "libplayer-nuvio",
++    relative_install_path: "nuc-stremio",
++    compile_multilib: "64",
++    srcs: ["nuvio-bridge.c", "hdr-mpv-surface.c"],
++    header_libs: ["jni_headers"],
++    shared_libs: ["libdl", "liblog", "libnativewindow"],
++    c_std: "gnu11",
++    cflags: ["-Wall", "-Wextra", "-Werror"],
++    stl: "none",
++}
++
++sh_binary {
++    name: "nuc-nuvio-hdr",
++    src: "nuvio-hdr.sh",
++}
++
++sh_binary {
++    name: "stremiobox-nuvio-setup",
++    src: "nuvio-setup.sh",
++}
+diff --git a/stremio/init.nuc-stremio.rc b/stremio/init.nuc-stremio.rc
+index 96580f3..61c073e 100644
+--- a/stremio/init.nuc-stremio.rc
++++ b/stremio/init.nuc-stremio.rc
+@@ -15,3 +15,14 @@ service nuc-stremio-guard /system/bin/nuc-stremio-guard
+     seclabel u:r:su:s0
+     disabled
+     oneshot
++
++# HDMI audio watchdog and optional NuvioTV HDR coupling.
++on property:sys.boot_completed=1
++    start nuc-media-watch
++
++service nuc-media-watch /system/bin/nuc-media-watch
++    class late_start
++    user root
++    group root system audio input log
++    seclabel u:r:su:s0
++    disabled
+diff --git a/stremio/media-watch.sh b/stremio/media-watch.sh
+new file mode 100644
+index 0000000..eb425ba
+--- /dev/null
++++ b/stremio/media-watch.sh
+@@ -0,0 +1,45 @@
++#!/system/bin/sh
++# SPDX-License-Identifier: Apache-2.0
++# Background helper started after boot.
++#
++# HDMI audio: when the TV stops reporting its ELD (audio capabilities) while the
++# display is on and Android is playing, the Intel HDMI codec sends no audio at
++# all. A display off/on cycle makes the TV report it again. Acting only during
++# playback means a TV showing another input or its own apps is never woken.
++#
++# NuvioTV (optional): couple the HDR adapter after boots and app updates.
++missing=0
++attempts=0
++tick=0
++while true; do
++    if [ $((tick % 12)) = 0 ]; then
++        /system/bin/nuc-nuvio-hdr >/dev/null 2>&1
++    fi
++    tick=$((tick + 1))
++    sleep 5
++    if grep -qs 'monitor_present.*1' /proc/asound/card*/eld#*; then
++        missing=0
++        attempts=0
++        continue
++    fi
++    display=0
++    for c in /sys/class/drm/card*-*; do
++        [ "$(cat "$c/status" 2>/dev/null)" = connected ] &&
++            [ "$(cat "$c/dpms" 2>/dev/null)" = On ] && display=1
++    done
++    if [ "$display" = 1 ] && grep -qs RUNNING /proc/asound/card*/pcm*p/sub0/status; then
++        missing=$((missing + 1))
++    else
++        missing=0
++    fi
++    # Two checks in a row (about 10 s); at most three tries until the ELD returns.
++    if [ "$missing" -ge 2 ] && [ "$attempts" -lt 3 ]; then
++        log -t nuc-media-watch "HDMI ELD missing during playback; cycling the display"
++        input keyevent KEYCODE_SLEEP
++        sleep 3
++        input keyevent KEYCODE_WAKEUP
++        attempts=$((attempts + 1))
++        missing=0
++        sleep 20
++    fi
++done
+diff --git a/stremio/nuvio-bridge.c b/stremio/nuvio-bridge.c
+new file mode 100644
+index 0000000..bd5ea6d
+--- /dev/null
++++ b/stremio/nuvio-bridge.c
+@@ -0,0 +1,230 @@
++// SPDX-License-Identifier: Apache-2.0
++// HDR output for NuvioTV's libmpv engine (is.xyz.mpv.MPV). This library takes
++// the place of the app's libplayer.so and forwards every JNI call to the
++// original, renamed libplayer.nuvio-original.so. After each loadfile it reads
++// mpv's video-params; for PQ/HLG video it recreates the GPU output on a 10-bit
++// BT.2020 PQ EGL surface (hdr-mpv-surface.c) with matching mpv targets, so the
++// display receives HDR10 instead of a tone-mapped SDR picture.
++#define _GNU_SOURCE
++#include <jni.h>
++#include <dlfcn.h>
++#include <link.h>
++#include <pthread.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/mman.h>
++#include <unistd.h>
++
++extern int __android_log_print(int, const char *, const char *, ...);
++extern int32_t Java_local_nuc_player_PlayerActivity_nativeHdrSurface(void *, void *, uint8_t);
++#define LOG(...) __android_log_print(4, "NuvioHdr", __VA_ARGS__)
++#define FAIL(...) __android_log_print(6, "NuvioHdr", __VA_ARGS__)
++#define NAME(method) Java_is_xyz_mpv_MPV_##method
++#define EXPORT JNIEXPORT
++
++static void *original;
++static void *(*real_mpv_create)(void);
++static void *handle;  // the mpv_handle created by the original adapter
++static char *(*get_string)(void *, const char *);
++static int (*set_string)(void *, const char *, const char *);
++static void (*mpv_free_fn)(void *);
++static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
++static int hdr_active;
++static int transfer_hlg;
++static unsigned generation;
++
++static void *symbol(const char *name) {
++    if (!original) original = dlopen("libplayer.nuvio-original.so", RTLD_NOW | RTLD_LOCAL);
++    void *result = original ? dlsym(original, name) : NULL;
++    if (!result) FAIL("Original JNI adapter symbol unavailable: %s", name);
++    return result;
++}
++
++static void *capture_create(void) {
++    void *created = real_mpv_create();
++    pthread_mutex_lock(&lock);
++    handle = created;
++    hdr_active = 0;
++    pthread_mutex_unlock(&lock);
++    return created;
++}
++
++static uintptr_t address(uintptr_t base, uintptr_t value) { return value < base ? base + value : value; }
++
++// Redirect the original adapter's import of mpv_create to learn the handle.
++static int hook_original(struct dl_phdr_info *info, size_t size, void *argument) {
++    (void)size; (void)argument;
++    if (!info->dlpi_name || !strstr(info->dlpi_name, "/libplayer.nuvio-original.so")) return 0;
++    const ElfW(Dyn) *dynamic = NULL;
++    for (int n = 0; n < info->dlpi_phnum; n++)
++        if (info->dlpi_phdr[n].p_type == PT_DYNAMIC)
++            dynamic = (void *)(info->dlpi_addr + info->dlpi_phdr[n].p_vaddr);
++    if (!dynamic) return 1;
++    const char *strings = NULL; const ElfW(Sym) *symbols = NULL; const ElfW(Rela) *relocations = NULL;
++    size_t relocation_size = 0;
++    for (const ElfW(Dyn) *d = dynamic; d->d_tag != DT_NULL; d++) {
++        if (d->d_tag == DT_STRTAB) strings = (void *)address(info->dlpi_addr, d->d_un.d_ptr);
++        if (d->d_tag == DT_SYMTAB) symbols = (void *)address(info->dlpi_addr, d->d_un.d_ptr);
++        if (d->d_tag == DT_JMPREL) relocations = (void *)address(info->dlpi_addr, d->d_un.d_ptr);
++        if (d->d_tag == DT_PLTRELSZ) relocation_size = d->d_un.d_val;
++    }
++    if (!strings || !symbols || !relocations) return 1;
++    for (size_t i = 0; i < relocation_size / sizeof(*relocations); i++) {
++        const ElfW(Rela) *r = relocations + i;
++        if (strcmp(strings + symbols[ELF64_R_SYM(r->r_info)].st_name, "mpv_create")) continue;
++        void **slot = (void **)(info->dlpi_addr + r->r_offset);
++        size_t page_size = getpagesize();
++        void *page = (void *)((uintptr_t)slot & ~(page_size - 1));
++        if (mprotect(page, page_size, PROT_READ | PROT_WRITE)) return 1;
++        real_mpv_create = *slot;
++        *slot = (void *)capture_create;
++        mprotect(page, page_size, PROT_READ);
++    }
++    return 1;
++}
++
++static int load_mpv_api(void) {
++    void *mpv = dlopen("libmpv.so", RTLD_NOW | RTLD_NOLOAD);
++    if (!mpv) return 0;
++    get_string = dlsym(mpv, "mpv_get_property_string");
++    set_string = dlsym(mpv, "mpv_set_property_string");
++    mpv_free_fn = dlsym(mpv, "mpv_free");
++    return get_string && set_string && mpv_free_fn;
++}
++
++static void set(void *h, const char *name, const char *value) {
++    if (set_string(h, name, value) < 0) FAIL("mpv rejected %s=%s", name, value);
++}
++
++// Recreate the video output so the EGL surface is created with the new state.
++static void apply(void *h, int hdr) {
++    char *vo = get_string(h, "vo");
++    char saved[32] = "gpu";
++    if (vo) { strncpy(saved, vo[0] ? vo : "gpu", sizeof(saved) - 1); mpv_free_fn(vo); }
++    if (hdr && Java_local_nuc_player_PlayerActivity_nativeHdrSurface(NULL, NULL, 1) != 0) {
++        FAIL("EGL hook unavailable; keeping SDR output");
++        return;
++    }
++    if (!hdr) Java_local_nuc_player_PlayerActivity_nativeHdrSurface(NULL, NULL, 0);
++    set(h, "vo", "null");
++    set(h, "egl-output-format", hdr ? "rgb10_a2" : "auto");
++    set(h, "target-prim", hdr ? "bt.2020" : "auto");
++    set(h, "target-trc", hdr ? "pq" : "auto");
++    set(h, "target-peak", hdr ? "10000" : "auto");
++    set(h, "tone-mapping", hdr ? "clip" : "auto");
++    set(h, "hdr-compute-peak", hdr ? "no" : "auto");
++    // Tag the source so mpv does not treat the PQ signal as SDR gamma.
++    set(h, "vf", !hdr ? "" : transfer_hlg ?
++        "format=gamma=hlg:primaries=bt.2020:colormatrix=bt.2020-ncl" :
++        "format=gamma=pq:primaries=bt.2020:colormatrix=bt.2020-ncl");
++    set(h, "vo", saved);
++    LOG("%s output on vo=%s", hdr ? "HDR10 PQ" : "SDR", saved);
++}
++
++static void *watch(void *argument) {
++    unsigned mine = (unsigned)(uintptr_t)argument;
++    for (int i = 0; i < 300; i++) {  // up to 60 s for the first video frame
++        usleep(200000);
++        pthread_mutex_lock(&lock);
++        void *h = handle;
++        int current = hdr_active;
++        pthread_mutex_unlock(&lock);
++        if (mine != generation || !h) return NULL;
++        // Hardware decoders may only expose the colour tags on the decoder side.
++        char *gamma = get_string(h, "video-params/gamma");
++        if (!gamma) continue;
++        char *decoded = get_string(h, "video-dec-params/gamma");
++        char *primaries = get_string(h, "video-dec-params/primaries");
++        // The NUC's hardware decoder passes BT.2020 primaries but no transfer,
++        // which mpv then reports as bt.1886. Streamed BT.2020 video is HDR10 in
++        // practice, so that combination is treated (and tagged) as PQ.
++        int hlg = !strcmp(gamma, "hlg") || (decoded && !strcmp(decoded, "hlg"));
++        int hdr = hlg || !strcmp(gamma, "pq") || (decoded && !strcmp(decoded, "pq")) ||
++                  (primaries && !strcmp(primaries, "bt.2020"));
++        transfer_hlg = hlg;
++        LOG("video gamma=%s decoder gamma=%s primaries=%s", gamma,
++            decoded ? decoded : "?", primaries ? primaries : "?");
++        mpv_free_fn(gamma);
++        if (decoded) mpv_free_fn(decoded);
++        if (primaries) mpv_free_fn(primaries);
++        if (hdr != current) {
++            apply(h, hdr);
++            pthread_mutex_lock(&lock);
++            hdr_active = hdr;
++            pthread_mutex_unlock(&lock);
++        }
++        return NULL;
++    }
++    return NULL;
++}
++
++static void start_watch(void) {
++    if (!get_string && !load_mpv_api()) return;
++    pthread_t thread;
++    unsigned mine = __atomic_add_fetch(&generation, 1, __ATOMIC_SEQ_CST);
++    if (pthread_create(&thread, NULL, watch, (void *)(uintptr_t)mine) == 0) pthread_detach(thread);
++}
++
++EXPORT void NAME(nativeCreate)(JNIEnv *env, jobject self, jobject context) {
++    typedef void (*function)(JNIEnv *, jobject, jobject);
++    function fn = symbol("Java_is_xyz_mpv_MPV_nativeCreate");
++    if (!real_mpv_create) dl_iterate_phdr(hook_original, NULL);
++    if (fn) fn(env, self, context);
++}
++
++EXPORT void NAME(nativeDestroy)(JNIEnv *env, jobject self) {
++    pthread_mutex_lock(&lock);
++    handle = NULL;
++    hdr_active = 0;
++    pthread_mutex_unlock(&lock);
++    __atomic_add_fetch(&generation, 1, __ATOMIC_SEQ_CST);
++    Java_local_nuc_player_PlayerActivity_nativeHdrSurface(NULL, NULL, 0);
++    typedef void (*function)(JNIEnv *, jobject);
++    function fn = symbol("Java_is_xyz_mpv_MPV_nativeDestroy");
++    if (fn) fn(env, self);
++}
++
++EXPORT void NAME(command)(JNIEnv *env, jobject self, jobjectArray command) {
++    int load = 0;
++    if ((*env)->GetArrayLength(env, command) > 0) {
++        jstring first = (*env)->GetObjectArrayElement(env, command, 0);
++        const char *text = first ? (*env)->GetStringUTFChars(env, first, NULL) : NULL;
++        load = text && !strcmp(text, "loadfile");
++        if (text) (*env)->ReleaseStringUTFChars(env, first, text);
++        if (first) (*env)->DeleteLocalRef(env, first);
++    }
++    typedef void (*function)(JNIEnv *, jobject, jobjectArray);
++    function fn = symbol("Java_is_xyz_mpv_MPV_command");
++    if (fn) fn(env, self, command);
++    if (load) start_watch();
++}
++
++#define PASS_VOID(method, extra, args) \
++EXPORT void NAME(method)(JNIEnv *env, jobject self extra) { \
++    typedef void (*function)(JNIEnv *, jobject extra); \
++    function fn = symbol("Java_is_xyz_mpv_MPV_" #method); \
++    if (fn) fn(env, self args); }
++#define PASS_RESULT(type, method, extra, args) \
++EXPORT type NAME(method)(JNIEnv *env, jobject self extra) { \
++    typedef type (*function)(JNIEnv *, jobject extra); \
++    function fn = symbol("Java_is_xyz_mpv_MPV_" #method); \
++    return fn ? fn(env, self args) : 0; }
++#define COMMA ,
++PASS_VOID(nativeInit, , )
++PASS_VOID(attachSurface, COMMA jobject surface, COMMA surface)
++PASS_VOID(detachSurface, , )
++PASS_RESULT(jobject, commandNode, COMMA jobjectArray command, COMMA command)
++PASS_RESULT(jobject, getPropertyBoolean, COMMA jstring name, COMMA name)
++PASS_RESULT(jobject, getPropertyDouble, COMMA jstring name, COMMA name)
++PASS_RESULT(jobject, getPropertyInt, COMMA jstring name, COMMA name)
++PASS_RESULT(jobject, getPropertyNode, COMMA jstring name, COMMA name)
++PASS_RESULT(jstring, getPropertyString, COMMA jstring name, COMMA name)
++PASS_RESULT(jobject, grabThumbnail, COMMA jint dimension, COMMA dimension)
++PASS_VOID(observeProperty, COMMA jstring name COMMA jint format, COMMA name COMMA format)
++PASS_RESULT(jint, setOptionString, COMMA jstring name COMMA jstring value, COMMA name COMMA value)
++PASS_VOID(setPropertyBoolean, COMMA jstring name COMMA jboolean value, COMMA name COMMA value)
++PASS_VOID(setPropertyDouble, COMMA jstring name COMMA jdouble value, COMMA name COMMA value)
++PASS_VOID(setPropertyInt, COMMA jstring name COMMA jint value, COMMA name COMMA value)
++PASS_VOID(setPropertyNode, COMMA jstring name COMMA jobject node, COMMA name COMMA node)
++PASS_VOID(setPropertyString, COMMA jstring name COMMA jstring value, COMMA name COMMA value)
+diff --git a/stremio/nuvio-hdr.sh b/stremio/nuvio-hdr.sh
+new file mode 100644
+index 0000000..27204c0
+--- /dev/null
++++ b/stremio/nuvio-hdr.sh
+@@ -0,0 +1,33 @@
++#!/system/bin/sh
++# SPDX-License-Identifier: Apache-2.0
++# Couples the NuvioTV HDR adapter to an installed NuvioTV. The app's original
++# libplayer.so is kept as libplayer.nuvio-original.so and the adapter is
++# bind-mounted over libplayer.so. Only originals whose mpv JNI layer was
++# reviewed are coupled; any other version keeps its normal (SDR) playback.
++# Idempotent; a restarted Nuvio picks the adapter up. Does nothing without Nuvio.
++adapter=/system/lib64/nuc-stremio/libplayer-nuvio.so
++# NuvioTV 1.1.0-beta.7 (x86_64)
++reviewed="0fc8597443daa197da457efed7819a1ee3e2c662bccef6d79954d76c63f26a84"
++[ -f "$adapter" ] || exit 0
++[ ! -e /data/local/nuvio-hdr-disabled ] || exit 0
++apk=$(pm path com.nuvio.tv 2>/dev/null | sed -n 's/^package://p' | head -n 1)
++[ -n "$apk" ] || exit 0
++lib=${apk%/*}/lib/x86_64
++[ -f "$lib/libplayer.so" ] && [ -f "$lib/libmpv.so" ] || exit 0
++grep -q " $lib/libplayer.so " /proc/mounts && exit 0
++original=$lib/libplayer.so
++[ -f "$lib/libplayer.nuvio-original.so" ] && original=$lib/libplayer.nuvio-original.so
++sum=$(sha256sum "$original" | cut -d' ' -f1)
++case " $reviewed " in
++    *" $sum "*) ;;
++    *) log -t nuvio-hdr "Nuvio player library $sum not reviewed; HDR adapter not coupled"; exit 0 ;;
++esac
++if [ "$original" = "$lib/libplayer.so" ]; then
++    cp -p "$lib/libplayer.so" "$lib/libplayer.nuvio-original.so.new" &&
++    chown system:system "$lib/libplayer.nuvio-original.so.new" &&
++    chmod 755 "$lib/libplayer.nuvio-original.so.new" &&
++    chcon u:object_r:apk_data_file:s0 "$lib/libplayer.nuvio-original.so.new" &&
++    mv "$lib/libplayer.nuvio-original.so.new" "$lib/libplayer.nuvio-original.so" || exit 1
++fi
++mount -o bind "$adapter" "$lib/libplayer.so" &&
++    log -t nuvio-hdr "HDR adapter coupled to $lib"
+diff --git a/stremio/nuvio-setup.sh b/stremio/nuvio-setup.sh
+new file mode 100644
+index 0000000..64400c2
+--- /dev/null
++++ b/stremio/nuvio-setup.sh
+@@ -0,0 +1,100 @@
++#!/system/bin/sh
++# SPDX-License-Identifier: Apache-2.0
++# Opt-in helper for NuvioTV on StremioBox. Run over ADB:
++#   adb shell stremiobox-nuvio-setup settings   recommended player settings
++#   adb shell stremiobox-nuvio-setup addons     copy Stremio's addons into Nuvio
++#   adb shell stremiobox-nuvio-setup all        both
++# Addon URLs (which can contain debrid keys) stay on the box; only hostnames
++# are printed. Open Nuvio once and sign in or continue without an account
++# before copying addons: Nuvio ignores installs on its welcome screen.
++set -u
++pkg=com.nuvio.tv
++data=/data/data/$pkg/files/datastore
++
++fail() { echo "$*" >&2; exit 1; }
++byte() { printf "\\$(printf %03o "$1")"; }
++
++# DataStore PreferenceMap entries; later entries replace earlier ones.
++pref_string() {
++    value_length=$((2 + ${#2}))
++    byte 10; byte $((2 + ${#1} + 2 + value_length))
++    byte 10; byte ${#1}; printf %s "$1"
++    byte 18; byte $value_length; byte 42; byte ${#2}; printf %s "$2"
++}
++pref_bool() {
++    byte 10; byte $((2 + ${#1} + 4))
++    byte 10; byte ${#1}; printf %s "$1"
++    byte 18; byte 2; byte 8; byte "$2"
++}
++
++settings() {
++    am force-stop $pkg
++    uid=$(stat -c %u /data/data/$pkg)
++    mkdir -p "$data"
++    found=0
++    for file in "$data"/player_settings*.preferences_pb; do
++        [ -f "$file" ] || continue
++        found=1
++    done
++    [ "$found" = 1 ] || : > "$data/player_settings.preferences_pb"
++    for file in "$data"/player_settings*.preferences_pb "$data"/player_settings*.preferences_pb.bak; do
++        [ -f "$file" ] || continue
++        {
++            pref_string internal_player_engine MVP_PLAYER
++            pref_bool auto_switch_internal_player_on_error 0
++            pref_string mpv_hardware_decode_mode HARDWARE_DIRECT
++            pref_bool frame_rate_matching 1
++            pref_string frame_rate_matching_mode START_STOP
++        } >> "$file"
++        chown "$uid:$uid" "$file"
++        chmod 600 "$file"
++    done
++    chown "$uid:$uid" "$data"
++    restorecon -R "$data" >/dev/null 2>&1
++    echo "Nuvio player: libmpv, direct hardware decoding, frame rate matching on, no ExoPlayer fallback."
++}
++
++addons() {
++    core=/data/data/com.stremio.one/shared_prefs/core.xml
++    [ -f "$core" ] || fail "No Stremio profile found; sign in to Stremio first."
++    list=$(mktemp /data/local/tmp/addons.XXXXXX)
++    chmod 600 "$list"
++    grep '<string name="profile"' "$core" |
++        sed 's/&quot;/"/g; s/&amp;/\&/g; s/\\\//\//g' |
++        grep -o '"transportUrl":"[^"]*"' |
++        sed 's/^"transportUrl":"//; s/"$//' |
++        grep -v '^http://127\.0\.0\.1' |
++        awk '!seen[$0]++' > "$list"
++    am start -n $pkg/.MainActivity >/dev/null 2>&1
++    sleep 8
++    sent=0
++    while IFS= read -r url; do
++        case "$url" in
++            https://*) link="stremio://${url#https://}" ;;
++            http://*) link="stremio://${url#http://}" ;;
++            *) continue ;;
++        esac
++        # Nuvio's URI parser rejects a literal '|' (used by Torrentio configs).
++        link=$(printf %s "$link" | sed 's/|/%7C/g')
++        host=${url#*://}; host=${host%%/*}
++        am start -n $pkg/.MainActivity -a android.intent.action.VIEW -d "$link" >/dev/null 2>&1
++        sent=$((sent + 1))
++        sleep 8
++        if grep -qF "$host" "$data/addon_preferences.preferences_pb" 2>/dev/null; then
++            echo "added    $host"
++        else
++            echo "skipped  $host (unreachable or not a valid manifest)"
++        fi
++    done < "$list"
++    rm -f "$list"
++    echo "$sent Stremio addons sent to Nuvio."
++}
++
++[ "$(id -u)" = 0 ] || fail "Run as root: adb shell stremiobox-nuvio-setup ..."
++pm path $pkg >/dev/null 2>&1 || fail "NuvioTV ($pkg) is not installed."
++case "${1:-}" in
++    settings) settings ;;
++    addons) addons ;;
++    all) settings; addons ;;
++    *) fail "usage: stremiobox-nuvio-setup settings|addons|all" ;;
++esac

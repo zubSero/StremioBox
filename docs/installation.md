@@ -75,8 +75,8 @@ GitHub limits each release asset to under 2 GiB, so this 2.89 GB ISO is publishe
 
 ```text
 StremioBox-Android16-r8-nuc10_tv.iso
-2,886,402,048 bytes
-SHA-256: 04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932
+2,886,467,584 bytes
+SHA-256: 2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec
 ```
 
 The [JSON manifest](../releases/r8.json) and [shell manifest](../releases/r8-download.txt) record the same filenames, sizes and hashes; repository checks enforce that they agree. Checksums detect corruption and bind pieces to this release; they are not a separate publisher signature. Obtain scripts and manifests from this project.

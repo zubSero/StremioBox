@@ -39,6 +39,8 @@ StremioBox is a bootable Android TV system image based on Android 16 / LineageOS
 
 - **Real 5.1 through the TV, clear dialogue.** Audio now leaves the NUC as Dolby Digital 5.1. A soundbar or surround system on the TV's optical output decodes it with dialogue on the centre speaker, instead of receiving a stereo mix in which voices drowned. Set the TV's digital audio output to Auto or Passthrough. [How it works](platform/next/audio-ac3/README.md)
 - **The sync option works.** Adjusting audio or subtitle sync in the Stremio player no longer freezes the picture.
+- **Sound comes back by itself** after the TV switched to another input or app and back.
+- **Optional NuvioTV:** prefer [NuvioTV](docs/nuvio.md)? Install it yourself and StremioBox gives it HDR10 output; one command applies working settings and copies your Stremio addons. Stremio remains the default.
 
 Earlier releases added the standby fix, Aurora Store and Flicky, quiet standby and an optional [rescue system](docs/rescue.md); all remain included. The physical NUC runs the changed audio files from its development installation, but was not reflashed with the new ISO. [Test boundary](docs/testing.md#surround-sound-release)
 
@@ -68,8 +70,8 @@ The release's technical identifier is `r8`; filenames and download URLs use it.
 
 ```text
 StremioBox-Android16-r8-nuc10_tv.iso
-2,886,402,048 bytes
-SHA-256: 04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932
+2,886,467,584 bytes
+SHA-256: 2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec
 ```
 
 [Download manifest](releases/r8.json) · [Image verification](releases/r8-image-verification.json) · [Image delta](releases/r8-image-delta.json)
@@ -90,6 +92,7 @@ SHA-256: 04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932
 | --- | --- |
 | See exactly what changed | [Detailed changelog](CHANGELOG.md) |
 | Diagnose picture, audio or remote problems | [Troubleshooting](docs/troubleshooting.md) |
+| Use NuvioTV instead of or next to Stremio | [NuvioTV guide](docs/nuvio.md) |
 | Repair a box that no longer starts | [Rescue system](docs/rescue.md) |
 | Report a bug or another hardware configuration | [Issues](https://github.com/zubSero/StremioBox/issues/new/choose) |
 | Ask a setup question | [Discussions](https://github.com/zubSero/StremioBox/discussions) |

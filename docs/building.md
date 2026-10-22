@@ -121,7 +121,16 @@ Use the same build entry point and host/vendor prerequisites above. Native sourc
 
 ## Reproduce r8 from r7
 
-r8 uses the same tool with [r8-changes.json](../releases/r8-changes.json). Its three inputs are `audio.primary.x86.so` from [`platform/next/audio-ac3/build.sh`](../platform/next/audio-ac3/README.md#build), `audio_policy_configuration.xml` from the same build and `libplayer.so`, the Stremio bridge with patch 0021. All three are attached to the r8 release as `StremioBox-r8-image-inputs.zip`.
+r8 uses the same tool with [r8-changes.json](../releases/r8-changes.json). Its eight inputs, all attached to the r8 release as `StremioBox-r8-image-inputs.zip`:
+
+| Input | Source |
+| --- | --- |
+| `audio.primary.x86.so`, `audio_policy_configuration.xml` | [`platform/next/audio-ac3/build.sh`](../platform/next/audio-ac3/README.md#build) (patch 0020) |
+| `libplayer.so` | Stremio bridge, `platform/product/stremio` with patch 0021 |
+| `init.nuc-stremio.rc`, `nuc-media-watch`, `nuc-nuvio-hdr`, `stremiobox-nuvio-setup` | Files from `platform/product/stremio` after patches 0021 and 0022, copied unchanged |
+| `libplayer-nuvio.so` | `nuvio-bridge.c` + `hdr-mpv-surface.c` from the same tree (module `libnuc_nuvio_adapter`) |
+
+The two `.so` adapters in the release were built like the earlier bridge hotfixes, with a host compiler against Android link stubs; an in-tree build uses the `Android.bp` modules from patch 0022.
 
 ```sh
 sudo python3 tools/repack_image.py \

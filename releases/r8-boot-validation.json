@@ -1,6 +1,6 @@
 {
   "revision": 8,
-  "iso_sha256": "04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932",
+  "iso_sha256": "2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec",
   "mode": "Actual fresh-data UEFI live ISO boot in QEMU/KVM, no SSD attached",
   "boot_completed": true,
   "home_version": "1.1",
@@ -22,10 +22,19 @@
   "audio_5_1_mixer_channels": 6,
   "audio_ac3_bitstream_output": true,
   "audio_services_running": true,
-  "scope": "UEFI startup, package scan, app and store seed, Home, three virtual sleep/wake cycles, 5.1 AAudio stream through the AC-3 HAL; not disk installer or physical GPU/HDMI/Bluetooth/HDR testing",
+  "media_watch_service": "running",
+  "nuvio_setup_without_nuvio": "refuses: NuvioTV (com.nuvio.tv) is not installed",
+  "new_system_files_sha256": {
+    "system/etc/init/init.nuc-stremio.rc": "fddb430a7b78c5b992bcce487b01b759569e2acc4c7ac769ac4fb315790c9691",
+    "system/bin/nuc-media-watch": "242c7655e719584977a9999d4ee593dbba45be5d11a2d2378859a3ae6329904b",
+    "system/bin/nuc-nuvio-hdr": "f0e14d1b6e6c3b2414924f983ea62a1a371b3e08094fdd771f60e921cd821527",
+    "system/bin/stremiobox-nuvio-setup": "b4158de9f3402a35f1dcb21d3debe0100e76f536d56a4aba8d396e77644f1ff1",
+    "system/lib64/nuc-stremio/libplayer-nuvio.so": "7650d17015a0e244929bd0b673825a120b574fea5d3ac0512553bc898fbfa56b"
+  },
+  "scope": "UEFI startup, package scan, app and store seed, Home, three virtual sleep/wake cycles, 5.1 AAudio stream through the AC-3 HAL, media watchdog service and Nuvio setup refusal; not disk installer or physical GPU/HDMI/Bluetooth/HDR testing",
   "surfaceflinger_pid_unchanged_across_cycles": true,
   "new_anr_files": 0,
   "new_tombstones": 0,
   "ivirtualhal_log_lines": 0,
-  "physical_device": "The development NUC runs the same three files through a guarded boot overlay: AC-3 5.1 decoded by an optical Logitech system behind an LG TV, dialogue on the centre speaker, lip sync at 0 ms, Stremio delay steps without picture freeze, two full reboots"
+  "physical_device": "The development NUC runs the same files through a guarded boot overlay: AC-3 5.1 decoded by an optical Logitech system behind an LG TV with centre dialogue and correct lip sync; HDMI audio restored after a TV input switch; Stremio delay steps without picture freeze; NuvioTV 1.1.0-beta.7 playing 4K HDR10 (TV HDR mode) at 24 Hz with 5.1 after the setup settings"
 }

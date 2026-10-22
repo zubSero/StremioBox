@@ -79,9 +79,99 @@
         "bytes": 29376,
         "sha256": "149d60fc0833c8a7a29ca72730d58eeff7248037d092a5642965de7923e6a8cf"
       }
+    },
+    {
+      "path": "system/etc/init/init.nuc-stremio.rc",
+      "reason": "Patch 0022: start the media watchdog after boot",
+      "before": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 570,
+        "sha256": "baf2001cf9ae64e7b22b90959e20c7bf8c445a1d9d3dff2cda2e48a713725541"
+      },
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 849,
+        "sha256": "fddb430a7b78c5b992bcce487b01b759569e2acc4c7ac769ac4fb315790c9691"
+      }
+    },
+    {
+      "path": "system/bin/nuc-media-watch",
+      "reason": "Patch 0022: restore HDMI audio when the TV drops its ELD during playback; couple the optional NuvioTV HDR adapter",
+      "before": "absent",
+      "after": {
+        "mode": 493,
+        "uid": 0,
+        "gid": 2000,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 1534,
+        "sha256": "242c7655e719584977a9999d4ee593dbba45be5d11a2d2378859a3ae6329904b"
+      }
+    },
+    {
+      "path": "system/bin/nuc-nuvio-hdr",
+      "reason": "Patch 0022: bind the HDR adapter over a reviewed NuvioTV libplayer.so; no effect without NuvioTV",
+      "before": "absent",
+      "after": {
+        "mode": 493,
+        "uid": 0,
+        "gid": 2000,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 1739,
+        "sha256": "f0e14d1b6e6c3b2414924f983ea62a1a371b3e08094fdd771f60e921cd821527"
+      }
+    },
+    {
+      "path": "system/bin/stremiobox-nuvio-setup",
+      "reason": "Patch 0022: opt-in command for NuvioTV player settings and copying Stremio addons",
+      "before": "absent",
+      "after": {
+        "mode": 493,
+        "uid": 0,
+        "gid": 2000,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 3807,
+        "sha256": "b4158de9f3402a35f1dcb21d3debe0100e76f536d56a4aba8d396e77644f1ff1"
+      }
+    },
+    {
+      "path": "system/lib64/nuc-stremio/libplayer-nuvio.so",
+      "reason": "Patch 0022: HDR10 output for NuvioTV's libmpv engine (adapter around is.xyz.mpv.MPV)",
+      "before": "absent",
+      "after": {
+        "mode": 420,
+        "uid": 0,
+        "gid": 0,
+        "xattrs": {
+          "security.selinux": "753a6f626a6563745f723a73797374656d5f6c69625f66696c653a733000"
+        },
+        "kind": "file",
+        "bytes": 25112,
+        "sha256": "7650d17015a0e244929bd0b673825a120b574fea5d3ac0512553bc898fbfa56b"
+      }
     }
   ],
-  "unchanged_entries": 19581,
+  "unchanged_entries": 19580,
   "all_other_file_contents_modes_ownership_xattrs_symlinks_preserved": true,
   "kernel_initrd_recovery_preserved": true,
   "uefi_bios_gpt_preserved": true

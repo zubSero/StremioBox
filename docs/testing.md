@@ -65,21 +65,23 @@ Aurora Store and Flicky APK hashes, x86_64 support and TV launch activities were
 
 <a id="surround-sound-release"></a>
 
-## 5.1 Surround Sound release (r8) — 2026-10-21
+## 5.1 Surround Sound release (r8) — 2026-10-22
 
-The r8 ISO has SHA-256 `04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932`. It was derived from the verified r7 ISO with [`repack_image.py`](../tools/repack_image.py) and a [declared change list](../releases/r8-changes.json). Exactly three system entries were replaced: the 32-bit primary audio HAL, the audio policy and the Stremio bridge library. 19,581 other entries keep their contents, modes, ownership, SELinux labels and symlinks; kernel, initrd, recovery and boot structures are unchanged. See [the delta](../releases/r8-image-delta.json) and [image record](../releases/r8-image-verification.json).
+The r8 ISO has SHA-256 `2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec`. It was derived from the verified r7 ISO with [`repack_image.py`](../tools/repack_image.py) and a [declared change list](../releases/r8-changes.json). Exactly eight system entries changed: four replaced (32-bit primary audio HAL, audio policy, Stremio bridge library, Stremio init script) and four added (media watchdog, Nuvio HDR adapter, its coupling script, the Nuvio setup command). Every other entry keeps its contents, modes, ownership, SELinux labels and symlinks; kernel, initrd, recovery and boot structures are unchanged. See [the delta](../releases/r8-image-delta.json) and [image record](../releases/r8-image-verification.json).
 
-The HAL comes from [`build.sh`](../platform/next/audio-ac3/build.sh) with pinned sources and patch 0020; two clean builds in different directories produced identical bytes.
+The HAL comes from [`build.sh`](../platform/next/audio-ac3/build.sh) with pinned sources and patch 0020; two clean builds in different directories produced identical bytes. The other files come from patches 0021 and 0022.
 
-A diskless fresh-data UEFI live boot in QEMU/KVM repeated every r7 check (app and store seed, compositor hash, no fingerprint feature, Home, three sleep/wake cycles without ANRs) and added an audio check: with an emulated Intel HDA device, a 6-channel AAudio stream ran through a 6-channel mixer, the HAL reported its AC-3 encoder and bitstream output, and both audio services kept running without tombstones. [Boot record](../releases/r8-boot-validation.json).
+A diskless fresh-data UEFI live boot in QEMU/KVM repeated every r7 check (app and store seed, compositor hash, no fingerprint feature, Home, three sleep/wake cycles without ANRs) and added: with an emulated Intel HDA device, a 6-channel AAudio stream ran through a 6-channel mixer, the HAL reported its AC-3 encoder and bitstream output, and both audio services kept running without tombstones; the `nuc-media-watch` service was running; all new files had their declared hashes; `stremiobox-nuvio-setup` refused cleanly without Nuvio. [Boot record](../releases/r8-boot-validation.json).
 
-On the development NUC the same three files ran through a guarded boot overlay for two full reboots, connected to an LG TV with a Logitech 5.1 system on the TV's optical output:
+On the development NUC the same files ran through a guarded boot overlay across several reboots, connected to an LG TV with a Logitech 5.1 system on the TV's optical output:
 
-- A direct AC-3 channel-identification burst played on all six speakers, including centre.
+- A direct AC-3 channel-identification burst and an Android 5.1 per-speaker test played on all six speakers, including centre.
 - Stremio's mpv decoded an E-AC-3 film to 5.1; the HAL sent AC-3 with the IEC958 non-audio bit set. The receiver showed Dolby Digital, dialogue came from the centre speaker and lip sync was correct at 0 ms.
 - Stremio's audio delay steps of 100 ms changed sync without freezing the picture.
+- After the TV had shown its own YouTube app, the NUC reported no ELD and stayed silent; a display off/on cycle restored it, which the watchdog now does automatically during playback.
+- NuvioTV 1.1.0-beta.7 with the recommended settings: ExoPlayer could not allocate 4K P010 buffers and stalled; libmpv with direct hardware decoding played smoothly, switched the TV to 24 Hz and, with the adapter, to HDR (TV showed its HDR badge) with 5.1 audio. All Stremio addons with a reachable server were copied, including debrid configurations.
 
-**Test boundary:** the physical NUC was not reflashed with the r8 ISO. Receivers that accept multichannel PCM over HDMI, other TVs and long playback sessions were not tested.
+**Test boundary:** the physical NUC was not reflashed with the r8 ISO. Receivers that accept multichannel PCM over HDMI, other TVs, long playback sessions and NuvioTV versions other than 1.1.0-beta.7 were not tested.
 
 <a id="standby-and-app-stores-release"></a>
 

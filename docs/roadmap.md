@@ -12,6 +12,13 @@ The current Intel NUC preview (r8) includes 5.1 Dolby Digital output, the standb
 - [x] Publish r8 as a verified repack of r7 with a QEMU boot and 5.1 stream check.
 - [ ] Build patch 0020 in-tree against `external/ffmpeg` in a full source build.
 - [ ] Optional automatic switch to PCM stereo for stereo-only content; settings toggle for receivers that accept multichannel PCM.
+- [x] Restore HDMI audio automatically when the TV drops its ELD after an input switch.
+
+## Optional NuvioTV
+
+- [x] HDR10 output for NuvioTV's libmpv engine through a reviewed-version adapter; settings and addon migration command.
+- [ ] Review new NuvioTV releases and extend the adapter's reviewed list.
+- [ ] Platform fix so ExoPlayer can show 4K 10-bit video (P010 buffers for the compositor), which would also help other apps.
 
 ## Standby recovery and optional app stores
 

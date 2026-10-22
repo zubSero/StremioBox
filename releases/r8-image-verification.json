@@ -2,7 +2,7 @@
   "state": "Offline image and complete declared delta verified; runtime tests recorded separately",
   "revision": 8,
   "source_ports": 17,
-  "derivation": "Verified r7 platform; three declared system entries changed (5.1 AC-3 bitstream audio HAL and policy, Stremio delay unit fix); no platform compile",
+  "derivation": "Verified r7 platform; eight declared system entries (5.1 AC-3 bitstream audio HAL and policy, Stremio delay unit fix, HDMI audio watchdog, optional NuvioTV HDR adapter and setup command); no platform compile",
   "base_revision": 7,
   "base_iso_sha256": "65b07feafd70670954231afc6a69a6b850445d67197c4d53f3c1cf1aff010bb8",
   "files": {
@@ -19,12 +19,12 @@
       "sha256": "a64e5bb50c1b296f40b85b1eaf90a7020fdfc0c86efbe61961833eff33e0f291"
     },
     "system.efs": {
-      "bytes": 2458521600,
-      "sha256": "1bf7d804c99c08589606f73e5b877c17d46aa026969cb38f13922ef0145fe4ea"
+      "bytes": 2458533888,
+      "sha256": "b5a5dea2054b9df2516c5f215f213a32f87516a9f2edc5b8d3beac35dd758588"
     },
     "StremioBox-Android16-r8-nuc10_tv.iso": {
-      "bytes": 2886402048,
-      "sha256": "04525a485994c576cb53bc72a654aec569545ead16fa5375d62c0313b1422932"
+      "bytes": 2886467584,
+      "sha256": "2996c6c07b832526bdaca3012047da648fc85b50477cd7b9e750d039717674ec"
     }
   },
   "packaged_components": [
@@ -46,7 +46,7 @@
   ],
   "packaged_metadata": {
     "filesystem_layout": "EROFS container with raw ext4 system.img",
-    "inner_system_image_sha256": "3f7cd8f0717e0779013e0f0f15e3b5874fdf5d30e5bcc068b85a380f25604fa1",
+    "inner_system_image_sha256": "33ea34624b2bce136c7246e3d522a091ee7f237e5743964f03c39c12d4a4e977",
     "source_manifest_projects": 1215,
     "source_manifest_sha256": "63fadc66ce88d2d115ccde417dc8cd8c45bab09624738cf5f8bc09c3ed9b4980",
     "comet_lake_sof_sha256": "c5119cfca9c4bdf5ab87a87af08fb8fb2bf92767e0f070ea4eb52a877f10359e",

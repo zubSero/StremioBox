@@ -38,7 +38,13 @@ The preserved source-preparation manifest contains 1,216 pinned projects. The up
 
 ## 5.1 Surround Sound update
 
-**Intel NUC Preview — 5.1 Surround Sound** (`r8`) replaces three system entries against r7. The 32-bit primary audio HAL (patch 0020) now opens a 5.1 output; Android's mixer works in 5.1 and the HAL encodes each 32 ms as a Dolby Digital (AC-3) frame, wraps it in an IEC 61937 burst and plays that as stereo PCM with the IEC958 non-audio bit set. TVs that only accept stereo LPCM still decode or forward that bitstream, for example to an optical soundbar. The policy declares the 5.1 primary output. The Stremio bridge (patch 0021) converts Stremio's millisecond delay setting to mpv's seconds. [Details](../platform/next/audio-ac3/README.md) · [Full delta](../releases/r8-image-delta.json).
+**Intel NUC Preview — 5.1 Surround Sound** (`r8`) replaces four system entries against r7 and adds four.
+
+*Media watchdog (patch 0022).* `nuc-media-watch` starts after boot. Every five seconds it checks whether the TV still reports an ELD; when it is missing while the display is on and an ALSA playback stream runs, it cycles the display once so the TV reports it again. Once a minute it also runs `nuc-nuvio-hdr`.
+
+*Optional NuvioTV (patch 0022).* NuvioTV loads its own mpv binding (`is.xyz.mpv.MPV`) from `libplayer.so`. `nuc-nuvio-hdr` keeps the app's original as `libplayer.nuvio-original.so` and bind-mounts `/system/lib64/nuc-stremio/libplayer-nuvio.so` over it, but only when the original's SHA-256 is on its reviewed list. The adapter forwards all 20 JNI methods, learns the mpv handle by redirecting the original's `mpv_create` import, and after each `loadfile` reads `video-params`/`video-dec-params`. For BT.2020/PQ/HLG video it tags the source (`vf format=gamma=pq…`), sets PQ/BT.2020 targets and recreates the GPU output; the EGL hook from `hdr-mpv-surface.c` then creates a 10-bit BT.2020 PQ window surface, and Android sends HDR10 to the display. `stremiobox-nuvio-setup` writes Nuvio's DataStore preferences and installs addons through Nuvio's `stremio://` install links.
+
+*5.1 audio and sync.* The 32-bit primary audio HAL (patch 0020) now opens a 5.1 output; Android's mixer works in 5.1 and the HAL encodes each 32 ms as a Dolby Digital (AC-3) frame, wraps it in an IEC 61937 burst and plays that as stereo PCM with the IEC958 non-audio bit set. TVs that only accept stereo LPCM still decode or forward that bitstream, for example to an optical soundbar. The policy declares the 5.1 primary output. The Stremio bridge (patch 0021) converts Stremio's millisecond delay setting to mpv's seconds. [Details](../platform/next/audio-ac3/README.md) · [Full delta](../releases/r8-image-delta.json).
 
 ## Standby & App Stores update
 

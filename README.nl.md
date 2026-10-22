@@ -30,6 +30,8 @@ StremioBox is een opstartbaar Android TV-image op basis van Android 16 / Lineage
 
 - **Echte 5.1 via de tv, verstaanbare dialoog.** Het geluid verlaat de NUC nu als Dolby Digital 5.1. Een soundbar of surroundsysteem op de optische uitgang van de tv decodeert het met de dialoog op de centerspeaker, in plaats van een stereomix waarin stemmen verdronken. Zet de digitale audio-uitgang van de tv op Auto of Passthrough. [Werking (Engels)](platform/next/audio-ac3/README.md)
 - **De sync-optie werkt.** Audio- of ondertitelsync aanpassen in de Stremio-speler laat het beeld niet meer vastlopen.
+- **Het geluid komt vanzelf terug** nadat de tv naar een andere ingang of app en weer terug schakelde.
+- **Optioneel NuvioTV:** liever [NuvioTV](docs/nuvio.md)? Installeer het zelf en StremioBox geeft het HDR10-beeld; één commando zet werkende instellingen en neemt je Stremio-addons over. Stremio blijft de standaard. (Gids in het Engels.)
 
 Eerdere uitgaven brachten de standby-fix, Aurora Store en Flicky, een rustige standby en een optioneel [noodsysteem](docs/rescue.md); die blijven allemaal aanwezig. De fysieke NUC draait de gewijzigde audiobestanden vanuit zijn ontwikkelinstallatie, maar is niet opnieuw geïnstalleerd met de nieuwe ISO. [Testgrenzen](docs/testing.md#surround-sound-release)
 

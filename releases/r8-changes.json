@@ -1,7 +1,7 @@
 {
   "revision": 8,
   "base_revision": 7,
-  "derivation": "Verified r7 platform; three declared system entries changed (5.1 AC-3 bitstream audio HAL and policy, Stremio delay unit fix); no platform compile",
+  "derivation": "Verified r7 platform; eight declared system entries (5.1 AC-3 bitstream audio HAL and policy, Stremio delay unit fix, HDMI audio watchdog, optional NuvioTV HDR adapter and setup command); no platform compile",
   "changes": [
     {
       "path": "system/vendor/lib/hw/audio.primary.x86.so",
@@ -23,6 +23,49 @@
       "before": "392e36094a4e64ada30c3b994c8cc2d8e57dcb581be627744a4a4ed29269428e",
       "input": "libplayer.so",
       "sha256": "149d60fc0833c8a7a29ca72730d58eeff7248037d092a5642965de7923e6a8cf"
+    },
+    {
+      "path": "system/etc/init/init.nuc-stremio.rc",
+      "reason": "Patch 0022: start the media watchdog after boot",
+      "before": "baf2001cf9ae64e7b22b90959e20c7bf8c445a1d9d3dff2cda2e48a713725541",
+      "input": "init.nuc-stremio.rc",
+      "sha256": "fddb430a7b78c5b992bcce487b01b759569e2acc4c7ac769ac4fb315790c9691"
+    },
+    {
+      "path": "system/bin/nuc-media-watch",
+      "reason": "Patch 0022: restore HDMI audio when the TV drops its ELD during playback; couple the optional NuvioTV HDR adapter",
+      "before": "absent",
+      "label_from": "system/bin/nuc-stremio-guard",
+      "mode": "755",
+      "input": "nuc-media-watch",
+      "sha256": "242c7655e719584977a9999d4ee593dbba45be5d11a2d2378859a3ae6329904b"
+    },
+    {
+      "path": "system/bin/nuc-nuvio-hdr",
+      "reason": "Patch 0022: bind the HDR adapter over a reviewed NuvioTV libplayer.so; no effect without NuvioTV",
+      "before": "absent",
+      "label_from": "system/bin/nuc-stremio-guard",
+      "mode": "755",
+      "input": "nuc-nuvio-hdr",
+      "sha256": "f0e14d1b6e6c3b2414924f983ea62a1a371b3e08094fdd771f60e921cd821527"
+    },
+    {
+      "path": "system/bin/stremiobox-nuvio-setup",
+      "reason": "Patch 0022: opt-in command for NuvioTV player settings and copying Stremio addons",
+      "before": "absent",
+      "label_from": "system/bin/nuc-stremio-guard",
+      "mode": "755",
+      "input": "stremiobox-nuvio-setup",
+      "sha256": "b4158de9f3402a35f1dcb21d3debe0100e76f536d56a4aba8d396e77644f1ff1"
+    },
+    {
+      "path": "system/lib64/nuc-stremio/libplayer-nuvio.so",
+      "reason": "Patch 0022: HDR10 output for NuvioTV's libmpv engine (adapter around is.xyz.mpv.MPV)",
+      "before": "absent",
+      "label_from": "system/lib64/nuc-stremio/libplayer.so",
+      "mode": "644",
+      "input": "libplayer-nuvio.so",
+      "sha256": "7650d17015a0e244929bd0b673825a120b574fea5d3ac0512553bc898fbfa56b"
     }
   ]
 }
