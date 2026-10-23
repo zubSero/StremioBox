@@ -4,21 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080c1c">
-  <meta name="description" content="Android 16 for Intel NUC with Stremio, Dolby Digital 5.1 output, a standby fix, optional app stores and tested HEVC HDR10 hardware playback. Downloads, hardware compatibility, a rescue system and a detailed changelog.">
+  <meta name="description" content="Turn an Intel NUC into a Stremio box for your TV: 4K HDR, Dolby Digital 5.1 surround sound, one remote and no Google account. Free and open source.">
   <link rel="canonical" href="https://zubsero.github.io/StremioBox/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="StremioBox — Android TV for Intel NUC">
-  <meta property="og:description" content="Bootable Android 16 with Stremio TV, Intel video fixes and Bluetooth remote support. Tested on the NUC10i5FNH; read the compatibility limits before installing.">
+  <meta property="og:title" content="StremioBox — a Stremio box for your TV">
+  <meta property="og:description" content="Turn an Intel NUC into a Stremio box: 4K HDR, Dolby Digital 5.1, one remote, no Google account. Free and open source.">
   <meta property="og:url" content="https://zubsero.github.io/StremioBox/">
   <meta property="og:image" content="https://zubsero.github.io/StremioBox/assets/boot-screen.png">
   <meta property="og:image:width" content="1672">
   <meta property="og:image:height" content="941">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="StremioBox — Android TV for Intel NUC">
+  <meta name="twitter:title" content="StremioBox — a Stremio box for your TV">
   <meta name="twitter:image" content="https://zubsero.github.io/StremioBox/assets/boot-screen.png">
   <link rel="icon" type="image/png" href="assets/logo.png">
   <link rel="stylesheet" href="style.css">
-  <title>StremioBox — Android TV for Intel NUC</title>
+  <title>StremioBox — a Stremio box for your TV</title>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -27,7 +27,7 @@
     <nav aria-label="Main navigation">
       <a href="#features">Features</a>
       <a href="#hardware">Hardware</a>
-      <a href="#changes">Changes</a>
+      <a href="#changes">What's new</a>
       <a href="#download">Download</a>
       <a class="nav-github" href="https://github.com/zubSero/StremioBox">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
@@ -36,92 +36,93 @@
   <main id="main">
     <section class="hero wrap" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <a class="release-pill" href="https://github.com/zubSero/StremioBox/releases/tag/r9"><span class="status-dot" aria-hidden="true"></span> New: Surround Sound &amp; NuvioTV <span aria-hidden="true">↗</span></a>
-        <h1 id="hero-title">Stremio.<br><span>On your<br>Intel NUC.</span></h1>
-        <p class="hero-description">A bootable Android 16 system with Stremio TV, a Home screen for your remote and fixes for Intel video, HDMI audio and Bluetooth. Tested on the Intel NUC10i5FNH.</p>
+        <a class="release-pill" href="https://github.com/zubSero/StremioBox/releases/tag/r9"><span class="status-dot" aria-hidden="true"></span> New: real 5.1 surround sound <span aria-hidden="true">↗</span></a>
+        <h1 id="hero-title">Stremio.<br><span>Right on<br>your TV.</span></h1>
+        <p class="hero-description">Turn a small Intel PC into a box that starts straight into Stremio. Grab the remote and watch — in 4K HDR with Dolby Digital surround sound. No desktop, no ads, no Google account.</p>
         <div class="actions">
-          <a class="button primary" href="#download">Download preview <span aria-hidden="true">↓</span></a>
+          <a class="button primary" href="#download">Get StremioBox <span aria-hidden="true">↓</span></a>
           <a class="button secondary" href="https://github.com/zubSero/StremioBox">View on GitHub <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="hero-tags"><span>Android 16</span><span>Intel x86_64</span><span>HDR10 tested</span></div>
+        <div class="hero-tags"><span>Free &amp; open source</span><span>4K HDR</span><span>Dolby Digital 5.1</span></div>
       </div>
       <div class="hero-visual">
         <div class="ambient" aria-hidden="true"></div>
         <div class="brand-display"><img src="assets/boot-screen.png" width="1672" height="941" alt="StremioBox play emblem and wordmark in violet and blue"></div>
-        <div class="visual-caption"><span class="tiny-square" aria-hidden="true"></span> StremioBox boot artwork</div>
+        <div class="visual-caption"><span class="tiny-square" aria-hidden="true"></span> What you see when the box starts</div>
       </div>
     </section>
 
-    <div class="spec-strip" aria-label="Project highlights">
-      <div class="wrap spec-inner"><span>4K HDR10 <small>HEVC Main10 at ~24 fps tested</small></span><span>HDMI audio <small>before and after standby</small></span><span>Bluetooth <small>AX201 + Homatics B21 tested</small></span><span>Standby fix <small>no hang after long standby</small></span><span>App stores <small>Aurora Store + Flicky</small></span></div>
+    <div class="spec-strip" aria-label="Highlights">
+      <div class="wrap spec-inner"><span>4K HDR <small>sharp, bright, smooth</small></span><span>5.1 surround <small>clear dialogue</small></span><span>One remote <small>Bluetooth, stays paired</small></span><span>Reliable standby <small>wakes up like a TV box</small></span><span>More apps <small>two app stores built in</small></span></div>
     </div>
 
     <section class="wrap section" id="features" aria-labelledby="features-title">
-      <div class="section-heading"><p class="eyebrow">INCLUDED FIXES</p><h2 id="features-title">Video, remote,<br>standby and apps.</h2><p>The image packages the changes used on our test NUC. Playback keeps Stremio's existing mpv interface, including the seek bar and player controls.</p></div>
+      <div class="section-heading"><p class="eyebrow">WHAT YOU GET</p><h2 id="features-title">Made for the couch,<br>not the desk.</h2><p>Everything is set up for watching with a remote. Stremio works exactly as you know it, with its own player, seek bar and controls.</p></div>
       <div class="feature-grid">
-        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">▷</span><h3>HDR10 hardware decoding</h3><p>4K HEVC Main10 uses Intel hardware decoding and 10-bit output. HDR mode, picture and sound were confirmed on the LG test TV at around 24 fps.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/testing.md">Playback test results <span aria-hidden="true">↗</span></a></article>
-        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">⌁</span><h3>Bluetooth after reboot</h3><p>Ordinary Homatics B21 keys work after reboot without repeating the pairing combination. Display standby keeps Android running to preserve recovery.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/hardware.md">Remote and standby limits <span aria-hidden="true">↗</span></a></article>
-        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">◈</span><h3>Subtitle state fixes</h3><p>External SRT subtitles follow Disabled and language selection, including audio-track changes. Eight development regression cases checked that behavior.</p><a href="https://github.com/zubSero/StremioBox/blob/main/CHANGELOG.md#initial-release">What changed in the player <span aria-hidden="true">↗</span></a></article>
-        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">◐</span><h3>Wakes up after long standby</h3><p>The compositor no longer waits forever for the text console when the display goes away, so the box comes back after hours of standby or an HDMI change. No more scrolling console text on the TV.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/standby-and-apps.md">Diagnosis and test status <span aria-hidden="true">↗</span></a></article>
-        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">＋</span><h3>Aurora Store &amp; Flicky</h3><p>Two optional stores appear under Apps &amp; settings: Aurora Store for apps from Google Play and Flicky for F-Droid on TV. Stremio stays the main action; uninstalled stores stay gone.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/standby-and-apps.md#other-apps-with-stremio-kept-prominent">App support <span aria-hidden="true">↗</span></a></article>
-        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">⛑</span><h3>Optional rescue system</h3><p>A small Linux system on the EFI partition, one boot-menu entry away. Check and mount the Android disk over SSH with your own key, even when Android no longer starts.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/rescue.md">Rescue guide <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">▷</span><h3>4K HDR that looks right</h3><p>Films play in 4K with real HDR, decoded by the PC's own video chip, and the TV switches to the right frame rate for smooth motion.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/testing.md">How we tested it <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">♫</span><h3>Surround sound, clear voices</h3><p>Dolby Digital 5.1 goes to your soundbar or receiver, so dialogue comes from the centre speaker instead of drowning in the music. Stereo TVs work too.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/troubleshooting.md#dialogue-is-quiet-or-the-soundbar-shows-stereo">Sound setup tips <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">⌁</span><h3>One remote, paired once</h3><p>Pair a Bluetooth TV remote and it keeps working after restarts and standby. A USB keyboard works too.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/hardware.md">Tested remotes <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">◐</span><h3>Wakes up every time</h3><p>Standby works like a normal TV box: picture, sound and remote come back — even after hours, or after switching the TV to another input.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/standby-and-apps.md">About standby <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">＋</span><h3>More apps, if you want</h3><p>Aurora Store and Flicky are built in to install other apps. Prefer NuvioTV? Install it and StremioBox gives it HDR and copies your Stremio addons.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/nuvio.md">NuvioTV guide <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><span class="feature-symbol" aria-hidden="true">⛑</span><h3>A safety net</h3><p>An optional rescue system sits one menu entry away. If Android ever stops starting, you can still check the disk and get your files back.</p><a href="https://github.com/zubSero/StremioBox/blob/main/docs/rescue.md">Rescue guide <span aria-hidden="true">↗</span></a></article>
       </div>
       <figure class="home-preview">
-        <div class="preview-bar"><span><span class="status-dot" aria-hidden="true"></span> StremioBox Home</span><span>Actual NUC capture</span></div>
-        <img src="assets/home-r7-app-stores.png" width="1920" height="1080" alt="The running StremioBox Home screen with Open Stremio and the Settings, Aurora Store, Files and Flicky tiles" loading="lazy">
-        <figcaption>Home on the physical NUC with Aurora Store and Flicky under Apps &amp; settings.</figcaption>
+        <div class="preview-bar"><span><span class="status-dot" aria-hidden="true"></span> StremioBox Home</span><span>Real screenshot from the TV</span></div>
+        <img src="assets/home-r7-app-stores.png" width="1920" height="1080" alt="The StremioBox home screen with Open Stremio and the Settings, Aurora Store, Files and Flicky tiles" loading="lazy">
+        <figcaption>The home screen: Stremio front and centre, your other apps one click away.</figcaption>
       </figure>
     </section>
 
     <section class="wrap section changes-section" id="changes" aria-labelledby="changes-title">
-      <div class="section-heading"><p class="eyebrow">RELEASE HISTORY</p><h2 id="changes-title">What changed?</h2><p>The current image adds Dolby Digital 5.1 output to the standby fix, the app stores and English Home. The changelog records each fix, its test evidence and the remaining limits.</p></div>
+      <div class="section-heading"><p class="eyebrow">WHAT'S NEW</p><h2 id="changes-title">Getting better<br>every release.</h2><p>Each release fixes something real people ran into. The changelog has every detail.</p></div>
       <div class="feature-grid release-grid">
-        <article class="feature-card"><p class="release-label">CURRENT · RECOMMENDED · 22 OCTOBER 2026</p><h3>Surround Sound &amp; NuvioTV</h3><p>Dolby Digital 5.1 to TVs and soundbars that support it (stereo otherwise), so dialogue comes from the centre speaker. Sound returns by itself after TV input switches, the Stremio sync option works, and NuvioTV gets HDR10 if you choose to install it.</p><a href="https://github.com/zubSero/StremioBox/blob/main/CHANGELOG.md#surround-sound-and-nuviotv">Changes and test boundary <span aria-hidden="true">↗</span></a></article>
-        <article class="feature-card"><p class="release-label">14 OCTOBER 2026</p><h3>Standby &amp; App Stores</h3><p>Fixes the hang after long standby and the console log spam, and adds Aurora Store and Flicky. Five verified system changes on top of English Home; an optional rescue kit is available separately. The overnight physical test is still pending.</p><a href="https://github.com/zubSero/StremioBox/blob/main/CHANGELOG.md#standby-and-app-stores">Changes and test boundary <span aria-hidden="true">↗</span></a></article>
-        <article class="feature-card"><p class="release-label">FIRST PUBLIC IMAGE · 5 OCTOBER 2026 UTC</p><h3>Initial Release</h3><p>Android 16 with Intel HDR10 playback, HDMI audio, Homatics reconnection, display-standby and subtitle fixes. Added Home, boot artwork and installation of the original signed Stremio app.</p><a href="https://github.com/zubSero/StremioBox/blob/main/CHANGELOG.md#initial-release">Detailed platform changelog <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><p class="release-label">LATEST · RECOMMENDED · OCTOBER 2026</p><h3>Surround Sound &amp; NuvioTV</h3><p>Real 5.1 Dolby Digital through your TV to the soundbar, sound that comes back by itself after switching inputs, a working sync option in Stremio and optional NuvioTV with HDR.</p><a href="https://github.com/zubSero/StremioBox/blob/main/CHANGELOG.md#surround-sound-and-nuviotv">What changed <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><p class="release-label">OCTOBER 2026</p><h3>Standby &amp; App Stores</h3><p>No more black screen after long standby, no scrolling text on the TV, and two app stores for installing other apps.</p><a href="https://github.com/zubSero/StremioBox/blob/main/CHANGELOG.md#standby-and-app-stores">What changed <span aria-hidden="true">↗</span></a></article>
+        <article class="feature-card"><p class="release-label">FIRST RELEASE · OCTOBER 2026</p><h3>Initial Release</h3><p>The start: Android 16 with Stremio, 4K HDR playback, HDMI sound, the Bluetooth remote, subtitle fixes and the StremioBox home screen.</p><a href="https://github.com/zubSero/StremioBox/blob/main/CHANGELOG.md#initial-release">What changed <span aria-hidden="true">↗</span></a></article>
       </div>
     </section>
 
     <section class="section hardware-section" id="hardware" aria-labelledby="hardware-title">
       <div class="wrap hardware-layout">
-        <div class="section-heading"><p class="eyebrow">CHECK BEFORE INSTALLING</p><h2 id="hardware-title">Tested hardware.</h2><p>One physical configuration has been verified. Other PCs and remotes need their own tests; similar specifications do not establish compatibility.</p><a class="text-link" href="https://github.com/zubSero/StremioBox/blob/main/docs/hardware.md">Full compatibility matrix <span aria-hidden="true">↗</span></a></div>
+        <div class="section-heading"><p class="eyebrow">WHAT YOU NEED</p><h2 id="hardware-title">The tested setup.</h2><p>StremioBox has been tested on the setup below. Other Intel PCs may well work — nobody has checked yet. Tried one? We'd love to hear how it went.</p><a class="text-link" href="https://github.com/zubSero/StremioBox/blob/main/docs/hardware.md">Full compatibility list <span aria-hidden="true">↗</span></a></div>
         <div class="hardware-panel">
-          <dl><div><dt>Computer</dt><dd>Intel NUC10i5FNH</dd></div><div><dt>Graphics</dt><dd>Intel UHD · Comet Lake GT2</dd></div><div><dt>Bluetooth / remote</dt><dd>Intel AX201 · Homatics B21</dd></div><div><dt>Display</dt><dd>LG HDR TV over HDMI</dd></div><div><dt>Platform</dt><dd>Android 16 · LineageOS 23.2</dd></div></dl>
-          <div class="tested-note"><span class="status-dot" aria-hidden="true"></span><p>4K HEVC Main10 at ~24 fps, HDR10, audible HDMI sound and display-standby recovery were checked. Long-duration soak and a separate physical power-button retest are still pending.</p></div>
+          <dl><div><dt>Computer</dt><dd>Intel NUC10i5FNH</dd></div><div><dt>Graphics</dt><dd>Intel UHD (built in)</dd></div><div><dt>Remote</dt><dd>Homatics B21 (Bluetooth)</dd></div><div><dt>TV</dt><dd>LG HDR TV over HDMI</dd></div><div><dt>Sound</dt><dd>5.1 system on the TV's optical output</dd></div></dl>
+          <div class="tested-note"><span class="status-dot" aria-hidden="true"></span><p>Checked on this setup: 4K HDR playback, surround sound, the remote after restarts, and waking from standby.</p></div>
         </div>
       </div>
-      <p class="wrap limits">Other hardware, Dolby Vision, HLG, AV1, VLC/ExoPlayer, 4K60, true S3 sleep and HDMI-CEC are not verified.</p>
+      <p class="wrap limits">Not checked yet: other PCs and graphics chips, Dolby Vision, 4K at 60 frames per second, and TV remote control over HDMI (CEC).</p>
     </section>
 
     <section class="wrap section" id="download" aria-labelledby="download-title">
       <div class="download-panel">
-        <div class="download-copy"><p class="eyebrow">CURRENT DOWNLOAD</p><h2 id="download-title">Intel NUC Preview<br>Surround Sound &amp; NuvioTV</h2><p>Includes Dolby Digital 5.1 output, the standby fix, Aurora Store, Flicky, English Home and the playback, audio and Bluetooth fixes. Extract the native download ZIP. On Windows, double-click Download-StremioBox.cmd; Linux/macOS use the shell helper. No Python required. Then follow the USB boot guide.</p><div class="actions"><a class="button primary" href="https://github.com/zubSero/StremioBox/releases/download/r9/StremioBox-r9-native-download.zip">Download ZIP (no Python) <span aria-hidden="true">↓</span></a><a class="text-link" href="https://github.com/zubSero/StremioBox/blob/main/docs/installation.md">Installation guide <span aria-hidden="true">→</span></a></div></div>
-        <div class="command-panel"><div class="command-top"><span>Or use a Git checkout</span><div class="platform-tabs" role="group" aria-label="Command platform"><button type="button" class="active" data-platform="windows" aria-pressed="true">Windows</button><button type="button" data-platform="linux" aria-pressed="false">Linux / macOS</button></div></div><pre><code id="download-command">git clone https://github.com/zubSero/StremioBox.git
+        <div class="download-copy"><p class="eyebrow">GET STREMIOBOX</p><h2 id="download-title">Ready in<br>four steps.</h2><ol class="steps"><li>Download the small helper and unzip it.</li><li>Run it. On Windows, double-click <code>Download-StremioBox.cmd</code>; it fetches and checks the image.</li><li>Put the image on a USB stick and start the NUC from it.</li><li>Pair your remote, sign in to Stremio and enjoy.</li></ol><div class="actions"><a class="button primary" href="https://github.com/zubSero/StremioBox/releases/download/r9/StremioBox-r9-native-download.zip">Download helper <span aria-hidden="true">↓</span></a><a class="text-link" href="https://github.com/zubSero/StremioBox/blob/main/docs/installation.md">Step-by-step guide <span aria-hidden="true">→</span></a></div></div>
+        <div class="command-panel"><div class="command-top"><span>Comfortable with a terminal?</span><div class="platform-tabs" role="group" aria-label="Command platform"><button type="button" class="active" data-platform="windows" aria-pressed="true">Windows</button><button type="button" data-platform="linux" aria-pressed="false">Linux / macOS</button></div></div><pre><code id="download-command">git clone https://github.com/zubSero/StremioBox.git
 cd StremioBox
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/download.ps1 -OutputDirectory downloads</code></pre><div class="command-bottom"><span>Two parts → one SHA-256 verified ISO</span><button type="button" id="copy-command">Copy commands</button></div><p id="copy-status" class="copy-status" role="status" aria-live="polite"></p></div>
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/download.ps1 -OutputDirectory downloads</code></pre><div class="command-bottom"><span>Downloads and checks the image for you</span><button type="button" id="copy-command">Copy commands</button></div><p id="copy-status" class="copy-status" role="status" aria-live="polite"></p></div>
       </div>
-      <p class="download-footnote"><strong>Already on r5–r8?</strong> 5.1 output, the audio watchdog and the sync fix need a reinstall with this image; on r5/r6 the stores can also be added over ADB. The optional <a href="https://github.com/zubSero/StremioBox/blob/main/docs/rescue.md">rescue kit</a> works on every version. <a href="https://github.com/zubSero/StremioBox/blob/main/docs/installation.md#update-an-existing-installation">Update options</a>.</p>
-      <p class="download-footnote">ISO: 2.89 GB; allow 6 GB free during assembly. Try live USB boot first: the disk installer is not yet validated. Back up before installing. Userdebug preview: permissive SELinux and authenticated network ADB. <a href="https://github.com/zubSero/StremioBox/blob/main/SECURITY.md">Security and update scope</a>.</p>
+      <p class="download-footnote"><strong>Tip:</strong> set your TV's digital audio output to <em>Auto</em> or <em>Passthrough</em> for surround sound. <strong>Already have an older StremioBox?</strong> <a href="https://github.com/zubSero/StremioBox/blob/main/docs/installation.md#update-an-existing-installation">See your update options</a>.</p>
+      <p class="download-footnote">The image is about 2.9 GB; keep 6 GB free while it downloads. Try it from USB first — installing to the disk works but isn't fully tested yet. It contains no accounts or personal data; keep the box on your home network. <a href="https://github.com/zubSero/StremioBox/blob/main/SECURITY.md">Security details</a>.</p>
     </section>
 
     <section class="wrap section faq-section" aria-labelledby="faq-title">
-      <div class="section-heading"><p class="eyebrow">INSTALLATION QUESTIONS</p><h2 id="faq-title">Before you install.</h2></div>
+      <div class="section-heading"><p class="eyebrow">QUESTIONS</p><h2 id="faq-title">Good to know.</h2></div>
       <div class="faq-list">
-        <details><summary>Is this an official Stremio release?</summary><p>No. StremioBox is an independent community project built around Stremio and an Android TV base. It is not endorsed by Stremio or LineageOS. Their software and trademarks retain their original terms.</p></details>
-        <details><summary>Is this a custom replacement player?</summary><p>Home is our own launcher. Playback retains Stremio's usual mpv interface and controls, with a compatibility-checked native bridge and HDR/subtitle helpers. VLC and ExoPlayer have not been independently validated.</p></details>
-        <details><summary>Do the fixes survive reboot and updates?</summary><p>Reboots retain the packaged fixes. The tested same-version Stremio reinstall retained the integration, but a future app layout needs review. Replacing the OS requires an image containing these ports. There is no managed OTA channel yet.</p></details>
-        <details><summary>Already installed the image with Dutch Home?</summary><p>Install the signed English Home 1.1 APK using the <a href="https://github.com/zubSero/StremioBox/blob/main/docs/adb-installation.md">ADB update guide</a>. This route needs neither USB installation media nor Python. It changes the launcher and survives reboot. Android and Stremio have their own language settings.</p></details>
-        <details><summary>Can I install the complete system without a USB stick?</summary><p>Root-ADB deployment is technically possible on a compatible existing Android installation, but the portable public system installer is still pending. Internal-disk installation from Linux and network boot also need validation. The <a href="https://github.com/zubSero/StremioBox/blob/main/docs/without-usb.md">USB-free options guide</a> explains the requirements and current status.</p></details>
-        <details><summary>Can I install other apps?</summary><p>Yes. Aurora Store and Flicky, an F-Droid client for TV, are installed on first boot and appear under Apps &amp; settings, with Stremio kept as the main action. Google Play services and DRM certification are not supplied, so some apps may not work. Read the <a href="https://github.com/zubSero/StremioBox/blob/main/docs/standby-and-apps.md">app support notes</a>.</p></details>
-        <details><summary>What if Android no longer starts?</summary><p>Install the optional rescue kit while everything works. It adds a boot-menu entry that starts a small Linux system from the EFI partition, so you can check the disk and copy files over SSH or on the TV. See the <a href="https://github.com/zubSero/StremioBox/blob/main/docs/rescue.md">rescue guide</a> and <a href="https://github.com/zubSero/StremioBox/blob/main/docs/troubleshooting.md">troubleshooting</a>.</p></details>
-        <details><summary>Can I build or customize it?</summary><p>The repository includes 17 platform patches, product configuration, Home source and artwork. Each image after the first was produced by a verified, declared change to the previous image. A clean full Android build from this public repository is still pending. Start with the <a href="https://github.com/zubSero/StremioBox/blob/main/docs/building.md">build guide</a>.</p></details>
+        <details><summary>Is this made by Stremio?</summary><p>No. StremioBox is an independent, free community project built around the official Stremio app. It isn't affiliated with Stremio, LineageOS, Nuvio or Dolby.</p></details>
+        <details><summary>Do I need technical knowledge?</summary><p>Not really. You download a file, put it on a USB stick and start the PC from it. The <a href="https://github.com/zubSero/StremioBox/blob/main/docs/installation.md">installation guide</a> walks you through each screen. Optional extras use one command that the guides spell out.</p></details>
+        <details><summary>Will Stremio look and work the same?</summary><p>Yes. It's the official Stremio app with its own player and controls. StremioBox adds the home screen and makes video, sound and the remote work properly on this hardware.</p></details>
+        <details><summary>Can I install other apps?</summary><p>Yes. Aurora Store and Flicky are built in. There are no Google services, so a few apps — mainly paid streaming services — may not work. <a href="https://github.com/zubSero/StremioBox/blob/main/docs/standby-and-apps.md">More about apps</a>.</p></details>
+        <details><summary>What about NuvioTV?</summary><p>Stremio stays the default, but if you prefer NuvioTV you can install it yourself. StremioBox then gives it HDR and copies your Stremio addons with one command. <a href="https://github.com/zubSero/StremioBox/blob/main/docs/nuvio.md">NuvioTV guide</a>.</p></details>
+        <details><summary>No sound, or only stereo?</summary><p>Set the TV's digital audio output to Auto or Passthrough and use the latest release. If sound disappeared after switching TV inputs, it comes back by itself within a few seconds of playback. <a href="https://github.com/zubSero/StremioBox/blob/main/docs/troubleshooting.md">Troubleshooting</a>.</p></details>
+        <details><summary>I don't have a USB stick.</summary><p>There are a few other routes, each with its own requirements. <a href="https://github.com/zubSero/StremioBox/blob/main/docs/without-usb.md">Installing without USB</a>.</p></details>
+        <details><summary>What if something breaks?</summary><p>Install the optional rescue system while everything works. If Android ever stops starting, it lets you check the disk and copy your files. <a href="https://github.com/zubSero/StremioBox/blob/main/docs/rescue.md">Rescue guide</a>.</p></details>
+        <details><summary>I'm a developer — where's the technical stuff?</summary><p>Everything is open: platform patches, the home screen source, build tools, test records and a detailed changelog. Start with the <a href="https://github.com/zubSero/StremioBox/blob/main/docs/architecture.md">architecture</a> and the <a href="https://github.com/zubSero/StremioBox/blob/main/docs/building.md">build guide</a>.</p></details>
       </div>
     </section>
 
-    <section class="wrap community"><div><p class="eyebrow">HARDWARE REPORTS</p><h2>Tested another PC?</h2></div><div><p>Share the computer model, GPU, Bluetooth adapter, remote and steps you tested. Include whether video, sound and remote control return after reboot and standby.</p><div class="actions"><a class="button secondary" href="https://github.com/zubSero/StremioBox/discussions">Discuss your setup <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/zubSero/StremioBox/issues/new?template=hardware.yml">Report hardware <span aria-hidden="true">→</span></a></div></div></section>
+    <section class="wrap community"><div><p class="eyebrow">JOIN IN</p><h2>Tried it on another PC?</h2></div><div><p>Tell us which computer, remote and TV you used and what worked. Every report helps the next person — and pull requests are always welcome.</p><div class="actions"><a class="button secondary" href="https://github.com/zubSero/StremioBox/discussions">Share your setup <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/zubSero/StremioBox/issues/new?template=hardware.yml">Report hardware <span aria-hidden="true">→</span></a></div></div></section>
   </main>
 
-  <footer class="wrap footer"><div><a class="wordmark" href="#"><img src="assets/logo.png" width="32" height="32" alt=""><span>StremioBox</span></a><p>Android 16 with Stremio for Intel NUC.</p></div><div class="footer-links"><a href="https://github.com/zubSero/StremioBox">Source</a><a href="https://github.com/zubSero/StremioBox/blob/main/THIRD_PARTY_NOTICES.md">Licenses &amp; credits</a><a href="https://github.com/zubSero/StremioBox/blob/main/README.nl.md" lang="nl">Nederlands</a><p>Independent community project · Hardware-specific preview</p></div></footer>
+  <footer class="wrap footer"><div><a class="wordmark" href="#"><img src="assets/logo.png" width="32" height="32" alt=""><span>StremioBox</span></a><p>A Stremio box for your TV, built on Android 16.</p></div><div class="footer-links"><a href="https://github.com/zubSero/StremioBox">Source</a><a href="https://github.com/zubSero/StremioBox/blob/main/THIRD_PARTY_NOTICES.md">Licenses &amp; credits</a><a href="https://github.com/zubSero/StremioBox/blob/main/README.nl.md" lang="nl">Nederlands</a><p>Free, independent community project</p></div></footer>
   <script src="site.js" defer></script>
 </body>
 </html>

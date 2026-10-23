@@ -116,3 +116,6 @@ details a { color:#d0c1ff; text-decoration:underline; }
 .feature-card .release-label { font-size:10px; color:var(--violet); letter-spacing:.8px; font-weight:650; margin-bottom:13px; }
 .changes-section { padding-top:0; }
 @media(max-width:720px) { .release-grid { grid-template-columns:1fr; } .release-pill { font-size:11px; gap:8px; padding-inline:10px; } }
+.steps { margin:18px 0 26px; padding-left:22px; color:var(--muted); font-size:14px; line-height:1.8; }
+.steps li { margin-bottom:4px; padding-left:4px; }
+.steps code { font-size:.92em; }
